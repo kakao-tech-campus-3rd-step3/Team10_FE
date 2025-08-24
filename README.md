@@ -1,69 +1,24 @@
-# React + TypeScript + Vite
+### 1. Emotion 사용법
+- src/styles 폴더 확인
+- theme.ts 파일, colors는 피그마 컬러팔레트 기준
+- 스페이싱은 상수 입력하면 상수*4값으로 나옴
+- 폰트는 우리팀은 pretendard만 써서, bold, regular 로 사용하면 됨.
+- 폰트 사이즈, 폰트 컬러, 등 나머지는 굳이 할 의미 없어서 (사용한 숫자 너무 많음) 그냥 그때그때 따로 설정하는 걸로
+- css 작업 예시 : 
+import styled from '@emotion/styled';
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+const Title = styled.h1`
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: ${({ theme }) => theme.font.bold.fontFamily};
+  font-weight: ${({ theme }) => theme.font.bold.fontWeight};
+`;
 
-Currently, two official plugins are available:
+### 2. 폴더 구조 관련
+- src 안에 MockData, Pages, Shared 폴더 만들었습니다.
+- 페이지 작업은 Pages 파일 안에 tsx파일 만들어서 해주시고, 만들 때 MockData 필요하면 MockData 폴더에, 공통 요소 만들게 되면 (버튼, 등. 일단은 안해도됨) Shared안에 components에 파일 만드시면 됩니다.
+- 일단은 Pages파일에 만들기!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 3. @/... 절대 경로 관련
+- 저희 2단계 때 import 해오던 방식대로 절대경로 alias 설정 해두었습니다.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 4. 병합시 충돌 안나게 조심~ 본인 파일만 건들기 ~
