@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import QuestionButton from "./questionButton";
-import ConfirmButton from "./confirmButton";
+import styled from '@emotion/styled';
+import QuestionButton from './questionButton';
+import ConfirmButton from './confirmButton';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
@@ -20,38 +20,38 @@ interface QuizSolvePageProps {
   };
 }
 
-export default function QuizSolvePage({data}: QuizSolvePageProps) {
+export default function QuizSolvePage({ data }: QuizSolvePageProps) {
   const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
   const difficultyLabel = toKoreanDifficulty(difficultyLevel);
   return (
-  <Container>
-    <QuestionContainer>
-      <QuestionNumber>문제 {questionOrder}/{totalQuestions}</QuestionNumber>
-      <QuestionText>{questionText}</QuestionText>
-      {difficultyLabel && (
-        <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>
-      )}
-    </QuestionContainer>
-    <QuestionButtonContainer>
-      {questionData.choices.map((choice) => (
-        <QuestionButton key={choice.choiceId} text={choice.text} />
-      ))}
-    </QuestionButtonContainer>
-    <ConfirmButtonContainer>
-      <ConfirmButton text="제출하기" />
-    </ConfirmButtonContainer>
-  </Container>    
+    <Container>
+      <QuestionContainer>
+        <QuestionNumber>
+          문제 {questionOrder}/{totalQuestions}
+        </QuestionNumber>
+        <QuestionText>{questionText}</QuestionText>
+        {difficultyLabel && <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>}
+      </QuestionContainer>
+      <QuestionButtonContainer>
+        {questionData.choices.map((choice) => (
+          <QuestionButton key={choice.choiceId} text={choice.text} />
+        ))}
+      </QuestionButtonContainer>
+      <ConfirmButtonContainer>
+        <ConfirmButton text="제출하기" />
+      </ConfirmButtonContainer>
+    </Container>
   );
 }
 function toKoreanDifficulty(level?: string) {
-    if (!level) return undefined;
-    const key = level.toLowerCase() as keyof typeof DIFFICULTY_LABEL;
-    return DIFFICULTY_LABEL[key];
+  if (!level) return undefined;
+  const key = level.toLowerCase() as keyof typeof DIFFICULTY_LABEL;
+  return DIFFICULTY_LABEL[key];
 }
 
 const Container = styled.div`
   width: 440px;
-  height:956px;
+  height: 956px;
   margin: auto;
   background-color: ${({ theme }) => theme.colors.background};
   display: flex;
@@ -64,7 +64,6 @@ const QuestionContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
 
 const QuestionNumber = styled.h1`
   font-size: 24px;
@@ -105,4 +104,3 @@ const DIFFICULTY_LABEL: Record<'low' | 'medium' | 'high', string> = {
   medium: '중',
   high: '상',
 };
-

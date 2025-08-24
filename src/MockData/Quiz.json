@@ -1,18 +1,18 @@
 {
-    "questionId": 123,
-    "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?",
-    "questionType": "MULTIPLE_CHOICE",
-    "difficultyLevel": "MEDIUM",
-    "questionOrder": 15,
-    "totalQuestions": 30,
-    "questionData": {
-      "choices": [
-        {"choiceId": "A", "text": "화폐 가치 하락"},
-        {"choiceId": "B", "text": "물가 상승"},
-        {"choiceId": "C", "text": "구매력 증가"},
-        {"choiceId": "D", "text": "실질소득 감소"}
-      ]
-    },
-    "solved": false,
-    "bookmarked": false
+  "questionId": 123,
+  "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?",
+  "questionType": "MULTIPLE_CHOICE",
+  "difficultyLevel": "MEDIUM",
+  "questionOrder": 15,
+  "totalQuestions": 30,
+  "questionData": {
+    "choices": [
+      { "choiceId": "A", "text": "화폐 가치 하락" },
+      { "choiceId": "B", "text": "물가 상승" },
+      { "choiceId": "C", "text": "구매력 증가" },
+      { "choiceId": "D", "text": "실질소득 감소" }
+    ]
+  },
+  "solved": false,
+  "bookmarked": false
 }

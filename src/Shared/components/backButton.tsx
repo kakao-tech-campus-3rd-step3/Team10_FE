@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 type BackButtonProps = {
   onClick?: () => void;
@@ -13,7 +13,7 @@ export default function BackButton({
   size = 24,
   color,
   className,
-  ariaLabel = "뒤로가기",
+  ariaLabel = '뒤로가기',
 }: BackButtonProps) {
   return (
     <IconButton type="button" onClick={onClick} className={className} aria-label={ariaLabel}>
@@ -46,7 +46,7 @@ function ArrowLeftIcon({ size, color }: { size: number; color?: string }) {
     >
       <polyline
         points="15 18 9 12 15 6"
-        stroke={color ?? "currentColor"}
+        stroke={color ?? 'currentColor'}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -54,4 +54,3 @@ function ArrowLeftIcon({ size, color }: { size: number; color?: string }) {
     </svg>
   );
 }
-

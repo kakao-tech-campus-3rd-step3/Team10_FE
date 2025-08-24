@@ -1,11 +1,7 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export default function QuestionButton({ text }: { text: string }) {
-  return (
-    <Container>
-      {text}
-    </Container>
-  );
+  return <Container>{text}</Container>;
 }
 
 const Container = styled.button`

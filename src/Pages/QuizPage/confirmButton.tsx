@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export default function ConfirmButton({ text }: { text: string }) {
   return <Container>{text}</Container>;
