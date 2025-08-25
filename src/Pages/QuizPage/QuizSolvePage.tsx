@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import QuestionButton from './questionButton';
 import ConfirmButton from './confirmButton';
+import QuizHeader from './QuizHeader';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
@@ -22,16 +23,14 @@ interface QuizSolvePageProps {
 
 export default function QuizSolvePage({ data }: QuizSolvePageProps) {
   const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
-  const difficultyLabel = toKoreanDifficulty(difficultyLevel);
   return (
     <Container>
-      <QuestionContainer>
-        <QuestionNumber>
-          문제 {questionOrder}/{totalQuestions}
-        </QuestionNumber>
-        <QuestionText>{questionText}</QuestionText>
-        {difficultyLabel && <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>}
-      </QuestionContainer>
+      <QuizHeader
+        questionOrder={questionOrder}
+        totalQuestions={totalQuestions}
+        questionText={questionText}
+        difficultyLevel={difficultyLevel}
+      />
       <QuestionButtonContainer>
         {questionData.choices.map((choice) => (
           <QuestionButton key={choice.choiceId} text={choice.text} />
@@ -42,11 +41,6 @@ export default function QuizSolvePage({ data }: QuizSolvePageProps) {
       </ConfirmButtonContainer>
     </Container>
   );
-}
-function toKoreanDifficulty(level?: string) {
-  if (!level) return undefined;
-  const key = level.toLowerCase() as keyof typeof DIFFICULTY_LABEL;
-  return DIFFICULTY_LABEL[key];
 }
 
 const Container = styled.div`
@@ -63,32 +57,7 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const QuestionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const QuestionNumber = styled.h1`
-  font-size: 2.51vh;
-  font: ${({ theme }) => theme.font.bold};
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const QuestionText = styled.div`
-  width: 29.92vh;
-  font-weight: ${({ theme }) => theme.font.bold.fontWeight};
-  font-size: 2.51vh;
-  margin-top: 5.86vh;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const DifficultyText = styled.div`
-  margin-top: 0.21vh;
-  color: ${({ theme }) => theme.colors.text};
-  opacity: 0.7;
-  font-size: 1.46vh;
-`;
+/* 헤더는 QuizHeader로 분리 */
 const QuestionButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -102,8 +71,4 @@ const ConfirmButtonContainer = styled.div`
   margin-top: 10.46vh;
 `;
 
-const DIFFICULTY_LABEL: Record<'low' | 'medium' | 'high', string> = {
-  low: '하',
-  medium: '중',
-  high: '상',
-};
+// 난이도 표기는 QuizHeader로 이동
