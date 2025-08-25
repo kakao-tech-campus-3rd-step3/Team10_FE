@@ -50,13 +50,17 @@ function toKoreanDifficulty(level?: string) {
 }
 
 const Container = styled.div`
-  width: 440px;
-  height: 956px;
-  margin: auto;
+  width: 100%;
+  max-width: 46.02vh;
+
+  height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
   background-color: ${({ theme }) => theme.colors.background};
   display: flex;
   flex-direction: column;
-  padding: 100px 76px;
+  padding-top: 11.72vh;
+  overflow: hidden;
 `;
 
 const QuestionContainer = styled.div`
@@ -66,37 +70,36 @@ const QuestionContainer = styled.div`
 `;
 
 const QuestionNumber = styled.h1`
-  font-size: 24px;
+  font-size: 2.51vh;
   font: ${({ theme }) => theme.font.bold};
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const QuestionText = styled.div`
-  width: 286px;
-  font: ${({ theme }) => theme.font.bold};
-  font-size: 24px;
-  margin-top: 84px;
+  width: 29.92vh;
+  font-weight: ${({ theme }) => theme.font.bold.fontWeight};
+  font-size: 2.51vh;
+  margin-top: 5.86vh;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const DifficultyText = styled.div`
-  margin-top: 2px;
+  margin-top: 0.21vh;
   color: ${({ theme }) => theme.colors.text};
   opacity: 0.7;
-  font-size: 14px;
-  align-self: flex-start;
+  font-size: 1.46vh;
 `;
 const QuestionButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 48px;
-  margin-top: 68px;
+  gap: 5.02vh;
+  margin-top: clamp(1.67vh, 5vh, 7.11vh);
 `;
 const ConfirmButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 112px;
+  margin-top: 10.46vh;
 `;
 
 const DIFFICULTY_LABEL: Record<'low' | 'medium' | 'high', string> = {
