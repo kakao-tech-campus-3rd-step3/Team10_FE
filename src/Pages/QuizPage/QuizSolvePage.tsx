@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import QuestionButton from './questionButton';
 import ConfirmButton from './confirmButton';
 import QuizHeader from './QuizHeader';
+import { Container } from '@/Shared/components/Container';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
@@ -25,6 +26,7 @@ export default function QuizSolvePage({ data }: QuizSolvePageProps) {
   const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
   return (
     <Container>
+      <Space />
       <QuizHeader
         questionOrder={questionOrder}
         totalQuestions={totalQuestions}
@@ -43,32 +45,18 @@ export default function QuizSolvePage({ data }: QuizSolvePageProps) {
   );
 }
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 46.02vh;
-
-  height: 100vh;
-  min-height: 100svh;
-  margin: 0 auto;
-  background-color: ${({ theme }) => theme.colors.background};
-  display: flex;
-  flex-direction: column;
-  padding-top: 11.72vh;
-  overflow: hidden;
+const Space = styled.div`
+  height: 60px;
 `;
-
-/* 헤더는 QuizHeader로 분리 */
 const QuestionButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5.02vh;
-  margin-top: clamp(1.67vh, 5vh, 7.11vh);
+  gap: 50px;
+  margin-top: 50px;
 `;
 const ConfirmButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 10.46vh;
+  margin-top: 100px;
 `;
-
-// 난이도 표기는 QuizHeader로 이동

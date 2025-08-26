@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
 import ConfirmButton from './confirmButton';
+import { Container } from '@/Shared/components/Container';
 
 interface QuizResultPageProps {
   data: {
@@ -34,7 +35,8 @@ export default function QuizResultPage({ data }: QuizResultPageProps) {
     explanation,
   } = data;
   return (
-    <Container>
+    <Container $scrollable>
+      <Space />
       <QuizHeader
         questionOrder={questionOrder}
         totalQuestions={totalQuestions}
@@ -59,20 +61,9 @@ export default function QuizResultPage({ data }: QuizResultPageProps) {
     </Container>
   );
 }
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 46.02vh;
-  height: 100vh;
-  min-height: 100svh;
-  margin: 0 auto;
-  background-color: ${({ theme }) => theme.colors.background};
-  display: flex;
-  flex-direction: column;
-  padding-top: 11.72vh;
-  overflow: hidden;
+const Space = styled.div`
+  height: 60px;
 `;
-
 const ResultContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -84,21 +75,21 @@ const ResultContainer = styled.div`
 `;
 
 const ResultTitle = styled.div`
-  font-size: 2.51vh;
+  font-size: 24px;
   font: ${({ theme }) => theme.font.bold};
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const CorrectAnswer = styled.div`
-  font-size: 1.46vh;
+  font-size: 16px;
 `;
 
 const SelectedAnswer = styled.div`
-  font-size: 1.46vh;
+  font-size: 16px;
 `;
 
 const ExplanationText = styled.div`
-  font-size: 1.46vh;
+  font-size: 16px;
 `;
 const ButtonContainer = styled.div`
   width: 100%;
