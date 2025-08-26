@@ -5,8 +5,8 @@ export default function QuestionButton({ text }: { text: string }) {
 }
 
 const Container = styled.button`
-  width: 273px;
-  height: 53px;
+  width: 280px;
+  height: 54px;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.background};
   border: 2px solid ${({ theme }) => theme.colors.secondary};
@@ -19,5 +19,5 @@ const Container = styled.button`
   font-size: 18px;
   color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
