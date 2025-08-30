@@ -4,6 +4,7 @@ import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/MockData/character.png';
 import CalenderIcon from '@/MockData/calendar.png';
+import { useNavigate } from 'react-router-dom';
 
 const Header = styled.header`
   padding: ${theme.spacing(5)};
@@ -163,7 +164,10 @@ const ButtonText = styled.span`
 
 const HomePage = () => {
   const isTested = false;
-
+  const navigate = useNavigate();
+  const handleInvestmentTest = () => {
+    navigate('/quizSolve');
+  };
   return (
     <Container>
       <Header>
@@ -172,7 +176,10 @@ const HomePage = () => {
       <NavigationBar />
       <StatusAndCalendarWrapper>
         <StatusLabel>
-          <span role="img" aria-label="growth chart">📈</span> 성장주 투자자
+          <span role="img" aria-label="growth chart">
+            📈
+          </span>{' '}
+          성장주 투자자
         </StatusLabel>
         <CalendarButton>
           <CalendarIcon src={CalenderIcon} alt="캘린더" />
@@ -192,16 +199,22 @@ const HomePage = () => {
             {isTested ? '안정형' : '나의 투자 성향을 테스트 해보세요'}
           </InvestmentText>
           <NextPageButton>
-            <span role="img" aria-label="right arrow">➡️</span>
+            <span role="img" aria-label="right arrow">
+              ➡️
+            </span>
           </NextPageButton>
         </InvestmentTypeBox>
         <TwoButtonsWrapper>
-          <QuizButton>
-            <span role="img" aria-label="quiz icon">❓</span>
+          <QuizButton onClick={handleInvestmentTest}>
+            <span role="img" aria-label="quiz icon">
+              ❓
+            </span>
             <ButtonText>퀴즈 풀기</ButtonText>
           </QuizButton>
           <FinanceButton>
-            <span role="img" aria-label="news icon">📰</span>
+            <span role="img" aria-label="news icon">
+              📰
+            </span>
             <ButtonText>금융 콘텐츠</ButtonText>
           </FinanceButton>
         </TwoButtonsWrapper>
