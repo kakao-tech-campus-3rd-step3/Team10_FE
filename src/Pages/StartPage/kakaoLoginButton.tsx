@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import KakaoLoginImg from './assets/kakao_login_large_narrow.png';
 
-export default function KakaoLoginButton() {
+export default function KakaoLoginButton({ onClick }: { onClick: () => void }) {
   return (
-    <Container type="button">
+    <Container type="button" onClick={onClick}>
       <img src={KakaoLoginImg} alt="카카오 로그인" />
     </Container>
   );

@@ -3,6 +3,7 @@ import QuestionButton from './questionButton';
 import ConfirmButton from './confirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
+import { useNavigate } from 'react-router-dom';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
@@ -24,6 +25,10 @@ interface QuizSolvePageProps {
 
 export default function QuizSolvePage({ data }: QuizSolvePageProps) {
   const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
+  const navigate = useNavigate();
+  const handleConfirm = () => {
+    navigate('/quizResult');
+  };
   return (
     <Container>
       <Space />
@@ -38,7 +43,7 @@ export default function QuizSolvePage({ data }: QuizSolvePageProps) {
           <QuestionButton key={choice.choiceId} text={choice.text} />
         ))}
       </QuestionButtonContainer>
-      <ConfirmButtonContainer>
+      <ConfirmButtonContainer onClick={handleConfirm}>
         <ConfirmButton text="제출하기" />
       </ConfirmButtonContainer>
     </Container>

@@ -4,9 +4,14 @@ import ConfirmButton from './confirmButton';
 import CharacterImage from './assets/kongsik_hi.png';
 import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
+import { useNavigate } from 'react-router-dom';
 
 export default function CharacterCreatePage() {
   const [name, setName] = useState('');
+  const navigate = useNavigate();
+  const handleConfirm = () => {
+    navigate('/home');
+  };
 
   return (
     <CenteredContainer>
@@ -18,7 +23,7 @@ export default function CharacterCreatePage() {
         placeholder="이름을 지어주세요."
       />
       <ConfirmButtonContainer>
-        <ConfirmButton text="다음" />
+        <ConfirmButton text="다음" onClick={handleConfirm} />
       </ConfirmButtonContainer>
     </CenteredContainer>
   );

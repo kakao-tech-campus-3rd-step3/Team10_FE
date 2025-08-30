@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
 import ConfirmButton from './confirmButton';
 import { Container } from '@/Shared/components/Container';
+import { useNavigate } from 'react-router-dom';
 
 interface QuizResultPageProps {
   data: {
@@ -34,6 +35,10 @@ export default function QuizResultPage({ data }: QuizResultPageProps) {
     questionData,
     explanation,
   } = data;
+  const navigate = useNavigate();
+  const handleNextQuestion = () => {
+    navigate('/home');
+  };
   return (
     <Container $scrollable>
       <Space />
@@ -55,7 +60,7 @@ export default function QuizResultPage({ data }: QuizResultPageProps) {
         </SelectedAnswer>
         <ExplanationText>{explanation}</ExplanationText>
       </ResultContainer>
-      <ButtonContainer>
+      <ButtonContainer onClick={handleNextQuestion}>
         <ConfirmButton text="다음 문제" />
       </ButtonContainer>
     </Container>

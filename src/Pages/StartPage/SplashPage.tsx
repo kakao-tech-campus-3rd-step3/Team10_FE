@@ -1,8 +1,16 @@
 import styled from '@emotion/styled';
 import LogoFace from './assets/kongsik_face.png';
 import { Container } from '@/Shared/components/Container';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function SplashPage() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  }, [navigate]);
   return (
     <CenteredContainer>
       <Logo src={LogoFace} alt="앱 로고" />
