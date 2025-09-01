@@ -3,25 +3,13 @@ import NavigationBar from '@/Shared/components/NavigationBar';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import CalenderIcon from '@/MockData/calendar.png';
-import { RankButton } from './RankButton';
-import { useMemo, useState } from 'react';
-import { ChracterBox } from './ChracterBox';
-import RankData from '@/MockData/Rank.json';
-import { MyRank } from './MyRank';
-import MyRankData from '@/MockData/MyRank.json';
+import { RankTabs } from './RankTabs';
+import { useState } from 'react';
+import { TopRankList } from './TopRankList';
+import { MyRankSection } from './MyRankSection';
 export const RankPage = () => {
   const [isActive, setIsActive] = useState(false);
-  const { data: rankData } = RankData;
-  const sortedData = useMemo(() => {
-    const desiredOrder = [2, 1, 3];
-    const getRank = (item: { ScoreRank: number; AttandanceRank: number }) =>
-      isActive ? item.ScoreRank : item.AttandanceRank;
-    return [...rankData].sort(
-      (a, b) => desiredOrder.indexOf(getRank(a)) - desiredOrder.indexOf(getRank(b)),
-    );
-  }, [rankData, isActive]);
-  const { data: myRankData } = MyRankData;
-  const { scoreRank, attandanceRank } = myRankData;
+
   return (
     <Container>
       <Header>
@@ -40,40 +28,9 @@ export const RankPage = () => {
         </CalendarButton>
       </StatusAndCalendarWrapper>
       <RankPageContainer>
-        <RankButtonWrapper>
-          <RankButton
-            $isActive={isActive}
-            buttonText="점수 랭킹"
-            onClick={() => setIsActive(true)}
-          />
-          <RankButton
-            $isActive={!isActive}
-            buttonText="성실 랭킹"
-            onClick={() => setIsActive(false)}
-          />
-        </RankButtonWrapper>
-        <ChracterBoxWrapper>
-          {sortedData.map((item) => (
-            <ChracterBox
-              key={`${item.name}-${isActive ? item.ScoreRank : item.AttandanceRank}`}
-              $rank={isActive ? item.ScoreRank : item.AttandanceRank}
-              name={item.name}
-              score={item.score}
-            />
-          ))}
-        </ChracterBoxWrapper>
-        <MyRank
-          myName={isActive ? scoreRank.myName : attandanceRank.myName}
-          myRank={isActive ? scoreRank.myRank : attandanceRank.myRank}
-          myScore={isActive ? scoreRank.myScore : attandanceRank.myScore}
-          prevName={isActive ? scoreRank.prevName : attandanceRank.prevName}
-          prevRank={isActive ? scoreRank.prevRank : attandanceRank.prevRank}
-          prevScore={isActive ? scoreRank.prevScore : attandanceRank.prevScore}
-          nextName={isActive ? scoreRank.nextName : attandanceRank.nextName}
-          nextRank={isActive ? scoreRank.nextRank : attandanceRank.nextRank}
-          nextScore={isActive ? scoreRank.nextScore : attandanceRank.nextScore}
-          isScoreRank={isActive}
-        />
+        <RankTabs isActive={isActive} onSelect={setIsActive} />
+        <TopRankList isScoreRank={isActive} />
+        <MyRankSection isScoreRank={isActive} />
       </RankPageContainer>
     </Container>
   );
@@ -130,29 +87,4 @@ const RankPageContainer = styled.div`
   background-color: #ffffff;
   border-radius: ${theme.spacing(5)};
   padding-bottom: ${theme.spacing(6)};
-`;
-const RankButtonWrapper = styled.div`
-  width: 100%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: absolute;
-  top: -20px;
-  align-items: center;
-  /* Overlap the second button by ~10px horizontally */
-  button + button {
-    /* Sum of button widths: active(240px) + inactive(180px) = 420px */
-    margin-left: min(0px, calc(100% - 420px));
-  }
-`;
-const ChracterBoxWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0 ${theme.spacing(2)};
-  gap: ${theme.spacing(3)};
-  margin-top: ${theme.spacing(12)};
 `;

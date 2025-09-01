@@ -1,17 +1,19 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-export const MyRank = (data: {
-  myName: string;
-  myRank: number;
-  myScore: number;
-  prevName: string;
+
+type RankNeighborData = {
   prevRank: number;
+  prevName: string;
   prevScore: number;
-  nextName: string;
+  myRank: number;
+  myName: string;
+  myScore: number;
   nextRank: number;
+  nextName: string;
   nextScore: number;
-  isScoreRank: boolean;
-}) => {
+};
+
+export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreRank: boolean }) => {
   return (
     <Container>
       <Circle />
@@ -22,7 +24,7 @@ export const MyRank = (data: {
         <OtherInfoScript $isName={true}>{data.prevName}</OtherInfoScript>
         <OtherInfoScript $isName={false}>
           {data.prevScore}
-          {data.isScoreRank ? '점' : '일'}
+          {isScoreRank ? '점' : '일'}
         </OtherInfoScript>
       </OtherRankBox>
       <MyRankBox>
@@ -30,7 +32,7 @@ export const MyRank = (data: {
         <MyInfoScript $isName={true}>{data.myName}</MyInfoScript>
         <MyInfoScript $isName={false}>
           {data.myScore}
-          {data.isScoreRank ? '점' : '일'}
+          {isScoreRank ? '점' : '일'}
         </MyInfoScript>
       </MyRankBox>
       <OtherRankBox>
@@ -38,7 +40,7 @@ export const MyRank = (data: {
         <OtherInfoScript $isName={true}>{data.nextName}</OtherInfoScript>
         <OtherInfoScript $isName={false}>
           {data.nextScore}
-          {data.isScoreRank ? '점' : '일'}
+          {isScoreRank ? '점' : '일'}
         </OtherInfoScript>
       </OtherRankBox>
       <Circle />
