@@ -8,6 +8,7 @@ import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
 import data from '@/MockData/Quiz.json';
 import { RankPage } from '@/Pages/RankPage';
+import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -19,4 +20,5 @@ export const router = createBrowserRouter([
   { path: '/home', element: <Navigate to="/" replace /> },
   { path: '*', element: <NotFoundPage /> },
   { path: '/rank', element: <RankPage /> },
+  { path: '/dev/api-test', element: <ApiTestPage /> },
 ]);
