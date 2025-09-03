@@ -7,7 +7,7 @@ type RankButtonProps = {
   onClick?: () => void;
 };
 
-export const RankButton = ({ $isActive, buttonText, onClick }: RankButtonProps) => {
+export const SelectableButton = ({ $isActive, buttonText, onClick }: RankButtonProps) => {
   return (
     <Button $isActive={$isActive} onClick={onClick}>
       <ButtonText $isActive={$isActive}>{buttonText}</ButtonText>

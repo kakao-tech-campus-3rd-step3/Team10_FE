@@ -3,7 +3,7 @@ import NavigationBar from '@/Shared/components/NavigationBar';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import CalenderIcon from '@/MockData/calendar.png';
-import { RankTabs } from './RankTabs';
+import { SelectableButtonTabs } from '@/Shared/components/SelectableButton/SelectableButtonTabs';
 import { useState } from 'react';
 import { TopRankList } from './TopRankList';
 import { MyRankSection } from './MyRankSection';
@@ -28,7 +28,7 @@ export const RankPage = () => {
         </CalendarButton>
       </StatusAndCalendarWrapper>
       <RankPageContainer>
-        <RankTabs isActive={isActive} onSelect={setIsActive} />
+        <SelectableButtonTabs isActive={isActive} onSelect={setIsActive} />
         <TopRankList isScoreRank={isActive} />
         <MyRankSection isScoreRank={isActive} />
       </RankPageContainer>

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { RankButton } from './RankButton';
+import { SelectableButton } from './SelectableButton';
 
-export const RankTabs = ({
+export const SelectableButtonTabs = ({
   isActive,
   onSelect,
 }: {
@@ -10,8 +10,16 @@ export const RankTabs = ({
 }) => {
   return (
     <Wrapper>
-      <RankButton $isActive={isActive} buttonText="점수 랭킹" onClick={() => onSelect(true)} />
-      <RankButton $isActive={!isActive} buttonText="성실 랭킹" onClick={() => onSelect(false)} />
+      <SelectableButton
+        $isActive={isActive}
+        buttonText="점수 랭킹"
+        onClick={() => onSelect(true)}
+      />
+      <SelectableButton
+        $isActive={!isActive}
+        buttonText="성실 랭킹"
+        onClick={() => onSelect(false)}
+      />
     </Wrapper>
   );
 };
