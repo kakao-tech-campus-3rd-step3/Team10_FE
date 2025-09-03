@@ -38,7 +38,7 @@ export default function TestPage({ onSubmit }: TestPageProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.(answers);
-    navigate('/home', { state: { answers } });
+    navigate('/test/result', { state: { answers } });
   };
 
   return (
@@ -95,7 +95,7 @@ export default function TestPage({ onSubmit }: TestPageProps) {
           <Q>3. 다음 중 투자경험과 가장 가까운 것은 어느 것입니까? (중복 가능)</Q>
           <Options>
             {[
-              '은행예·적금, 국채, 지방채, 보증채, MMF, CMA 등',
+              '은행의 예·적금, 국채, 지방채, 보증채, MMF, CMA 등',
               '금융채, 신용도가 높은 회사채, 채권형펀드, 원금보존추구형ELS 등',
               '신용도 중간 등급의 회사채, 원금의 일부만 보장되는 ELS, 혼합형펀드 등',
               '신용도가 낮은 회사채, 주식, 원금이 보장되지 않는 ELS, 시장수익률 수준의 수익을 추구하는 주식형펀드 등',

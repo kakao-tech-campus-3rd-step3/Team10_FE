@@ -10,6 +10,7 @@ import data from '@/MockData/Quiz.json';
 import { RankPage } from '@/Pages/RankPage';
 import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 import TestPage from '@/Pages/TestPage/TestPage';
+import TestResultPage from '@/Pages/TestPage/TestResultPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -23,4 +24,5 @@ export const router = createBrowserRouter([
   { path: '/rank', element: <RankPage /> },
   { path: '/dev/api-test', element: <ApiTestPage /> },
   { path: '/test', element: <TestPage /> },
+  { path: '/test/result', element: <TestResultPage /> },
 ]);
