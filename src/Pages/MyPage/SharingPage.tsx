@@ -1,36 +1,41 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
-import BackButton from '@/Shared/components/backButton';
-import CharacterMain from '@/MockData/character.png';
-import { useNavigate } from 'react-router-dom';
+import { Header } from '@/Shared/components/Header';
+import CharacterMain from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
 
+const SharingPage = () => {
+  const handleSaveClick = () => {
+    alert('결과 이미지 저장하기 버튼 클릭!');
+  };
 
+  return (
+    <Container>
+      <Header title="공유하기" hasPrevPage={true} />
+      <Spacing />
+      <CharacterAndNicknameWrapper>
+        <Character src={CharacterMain} alt="캐릭터" />
+        <NicknameBox>
+          <Nickname>카테캠 귀요미</Nickname>
+        </NicknameBox>
+      </CharacterAndNicknameWrapper>
+      <ResultWrapper>
+        <ResultTitle>위험 중립형</ResultTitle>
+        <ResultDescription>
+          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
+          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
+        </ResultDescription>
+      </ResultWrapper>
+      <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
+    </Container>
+  );
+};
 
-const Header = styled.header`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding-top: ${theme.spacing(5)};
-  padding-bottom: ${theme.spacing(5)};
-  background-color: ${theme.colors.background};
+export default SharingPage;
+
+const Spacing = styled.div`
+  height: ${theme.spacing(20)};
 `;
-
-const StyledHeaderBackButton = styled(BackButton)`
-  position: absolute;
-  left: ${theme.spacing(5)};
-`;
-
-const Title = styled.h1`
-  color: #${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 24px;
-  margin: 0;
-`;
-
 const CharacterAndNicknameWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -105,42 +110,3 @@ const SaveButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
-const SharingPage = () => {
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleSaveClick = () => {
-    alert('결과 이미지 저장하기 버튼 클릭!');
-  };
-
-  return (
-    <Container>
-      <Header>
-        <StyledHeaderBackButton onClick={handleBackClick} />
-        <Title>공유하기</Title>
-      </Header>
-      <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
-        <NicknameBox>
-          <Nickname>카테캠 귀요미</Nickname>
-        </NicknameBox>
-      </CharacterAndNicknameWrapper>
-      <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며,
-          예·적금보다 높은 수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
-      </ResultWrapper>
-      <SaveButton onClick={handleSaveClick}>
-        저장하기
-      </SaveButton>
-    </Container>
-  );
-};
-
-export default SharingPage;

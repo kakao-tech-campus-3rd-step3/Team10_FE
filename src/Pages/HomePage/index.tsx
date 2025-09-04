@@ -2,34 +2,63 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/MockData/character.png';
-import CalenderIcon from '@/MockData/calendar.png';
+import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
+import { Header } from '@/Shared/components/Header';
+import { StatusActionBar } from '@/Shared/components/StatusActionBar';
+const HomePage = () => {
+  const isTested = false;
+  const navigate = useNavigate();
+  const handleInvestmentTest = () => {
+    navigate('/quizSolve');
+  };
+  const goToTestPage = () => {
+    navigate('/test');
+  };
+  return (
+    <Container>
+      <Header title="홈 화면" hasPrevPage={false} />
+      <NavigationBar />
+      <StatusActionBar />
+      <CharacterAndNicknameWrapper>
+        <CharacterSectionWrapper>
+          <Character src={CharacterMain} alt="캐릭터" />
+        </CharacterSectionWrapper>
+        <NicknameBox>
+          <Nickname>카테캠 기요미</Nickname>
+        </NicknameBox>
+      </CharacterAndNicknameWrapper>
+      <BottomSectionWrapper>
+        <InvestmentTypeBox>
+          <InvestmentText>
+            {isTested ? '안정형' : '나의 투자 성향을 테스트 해보세요'}
+          </InvestmentText>
+          <NextPageButton onClick={goToTestPage}>
+            <span role="img" aria-label="right arrow">
+              ➡️
+            </span>
+          </NextPageButton>
+        </InvestmentTypeBox>
+        <TwoButtonsWrapper>
+          <QuizButton onClick={handleInvestmentTest}>
+            <span role="img" aria-label="quiz icon">
+              ❓
+            </span>
+            <ButtonText>퀴즈 풀기</ButtonText>
+          </QuizButton>
+          <FinanceButton>
+            <span role="img" aria-label="news icon">
+              📰
+            </span>
+            <ButtonText>금융 콘텐츠</ButtonText>
+          </FinanceButton>
+        </TwoButtonsWrapper>
+      </BottomSectionWrapper>
+    </Container>
+  );
+};
 
-const Header = styled.header`
-  padding: ${theme.spacing(5)};
-  text-align: center;
-  background-color: ${theme.colors.background};
-  border-bottom-left-radius: ${theme.spacing(5)};
-  border-bottom-right-radius: ${theme.spacing(5)};
-`;
-
-const Title = styled.h1`
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 24px;
-  margin: 0;
-`;
-
-const StatusAndCalendarWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 ${theme.spacing(5)};
-  margin-top: ${theme.spacing(4)};
-`;
+export default HomePage;
 
 const CharacterAndNicknameWrapper = styled.div`
   display: flex;
@@ -68,28 +97,6 @@ const Nickname = styled.p`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 18px;
   margin: 0;
-`;
-
-const StatusLabel = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing(1)};
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-`;
-
-const CalendarButton = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-`;
-
-const CalendarIcon = styled.img`
-  width: ${theme.spacing(12)};
-  height: ${theme.spacing(12)};
 `;
 
 const BottomSectionWrapper = styled.div`
@@ -161,69 +168,3 @@ const ButtonText = styled.span`
   font-size: 14px;
   color: ${theme.colors.text};
 `;
-
-const HomePage = () => {
-  const isTested = false;
-  const navigate = useNavigate();
-  const handleInvestmentTest = () => {
-    navigate('/quizSolve');
-  };
-  const goToTestPage = () => {
-    navigate('/test');
-  };
-  return (
-    <Container>
-      <Header>
-        <Title>홈 화면</Title>
-      </Header>
-      <NavigationBar />
-      <StatusAndCalendarWrapper>
-        <StatusLabel>
-          <span role="img" aria-label="growth chart">
-            📈
-          </span>{' '}
-          성장주 투자자
-        </StatusLabel>
-        <CalendarButton>
-          <CalendarIcon src={CalenderIcon} alt="캘린더" />
-        </CalendarButton>
-      </StatusAndCalendarWrapper>
-      <CharacterAndNicknameWrapper>
-        <CharacterSectionWrapper>
-          <Character src={CharacterMain} alt="캐릭터" />
-        </CharacterSectionWrapper>
-        <NicknameBox>
-          <Nickname>카테캠 기요미</Nickname>
-        </NicknameBox>
-      </CharacterAndNicknameWrapper>
-      <BottomSectionWrapper>
-        <InvestmentTypeBox>
-          <InvestmentText>
-            {isTested ? '안정형' : '나의 투자 성향을 테스트 해보세요'}
-          </InvestmentText>
-          <NextPageButton onClick={goToTestPage}>
-            <span role="img" aria-label="right arrow">
-              ➡️
-            </span>
-          </NextPageButton>
-        </InvestmentTypeBox>
-        <TwoButtonsWrapper>
-          <QuizButton onClick={handleInvestmentTest}>
-            <span role="img" aria-label="quiz icon">
-              ❓
-            </span>
-            <ButtonText>퀴즈 풀기</ButtonText>
-          </QuizButton>
-          <FinanceButton>
-            <span role="img" aria-label="news icon">
-              📰
-            </span>
-            <ButtonText>금융 콘텐츠</ButtonText>
-          </FinanceButton>
-        </TwoButtonsWrapper>
-      </BottomSectionWrapper>
-    </Container>
-  );
-};
-
-export default HomePage;

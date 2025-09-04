@@ -1,81 +1,35 @@
 import { Container } from '@/Shared/components/Container';
+import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import CalenderIcon from '@/MockData/calendar.png';
-import { RankTabs } from './RankTabs';
+import { SelectableButtonTabs } from '@/Shared/components/SelectableButton/SelectableButtonTabs';
 import { useState } from 'react';
 import { TopRankList } from './TopRankList';
 import { MyRankSection } from './MyRankSection';
+import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 export const RankPage = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [isScoreRank, setIsScoreRank] = useState<boolean>(true);
 
   return (
     <Container>
-      <Header>
-        <Title>랭크</Title>
-      </Header>
+      <Header title="랭킹" hasPrevPage={true} />
       <NavigationBar />
-      <StatusAndCalendarWrapper>
-        <StatusLabel>
-          <span role="img" aria-label="growth chart">
-            📈
-          </span>{' '}
-          성장주 투자자
-        </StatusLabel>
-        <CalendarButton>
-          <CalendarIcon src={CalenderIcon} alt="캘린더" />
-        </CalendarButton>
-      </StatusAndCalendarWrapper>
+      <StatusActionBar />
       <RankPageContainer>
-        <RankTabs isActive={isActive} onSelect={setIsActive} />
-        <TopRankList isScoreRank={isActive} />
-        <MyRankSection isScoreRank={isActive} />
+        <SelectableButtonTabs
+          isActive={isScoreRank}
+          onSelect={setIsScoreRank}
+          firstButtonText="점수 랭킹"
+          secondButtonText="성실 랭킹"
+        />
+        <TopRankList isScoreRank={isScoreRank} />
+        <MyRankSection isScoreRank={isScoreRank} />
       </RankPageContainer>
     </Container>
   );
 };
-const Header = styled.header`
-  padding: ${theme.spacing(5)};
-  text-align: center;
-  background-color: ${theme.colors.background};
-  border-bottom-left-radius: ${theme.spacing(5)};
-  border-bottom-right-radius: ${theme.spacing(5)};
-`;
-const Title = styled.h1`
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 24px;
-  margin: 0;
-`;
-const StatusAndCalendarWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 ${theme.spacing(5)};
-  margin-top: ${theme.spacing(4)};
-`;
-const StatusLabel = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing(1)};
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-`;
-const CalendarButton = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-`;
-const CalendarIcon = styled.img`
-  width: ${theme.spacing(12)};
-  height: ${theme.spacing(12)};
-`;
+
 const RankPageContainer = styled.div`
   display: flex;
   flex-direction: column;

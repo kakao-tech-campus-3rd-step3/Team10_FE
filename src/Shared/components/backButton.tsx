@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 type BackButtonProps = {
-  onClick?: () => void;
   size?: number; // 아이콘 크기(px)
   color?: string; // 아이콘 색상(hex/rgb 등). 미지정 시 theme.colors.text
   className?: string;
@@ -9,12 +9,15 @@ type BackButtonProps = {
 };
 
 export default function BackButton({
-  onClick,
   size = 24,
   color,
   className,
   ariaLabel = '뒤로가기',
 }: BackButtonProps) {
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate(-1);
+  };
   return (
     <IconButton type="button" onClick={onClick} className={className} aria-label={ariaLabel}>
       <ArrowLeftIcon size={size} color={color} />

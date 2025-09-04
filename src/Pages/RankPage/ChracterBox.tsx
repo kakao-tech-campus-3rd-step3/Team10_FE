@@ -13,9 +13,6 @@ export const ChracterBox = ({
   name: string;
   score: number;
 }) => {
-  // If using src imports, uncomment above imports and use this map:
-  // const rankIconMap: Record<number, string> = { 1: Rank1, 2: Rank2, 3: Rank3 };
-  // If using public/Ranking, use absolute public paths instead:
   const rankIconMap: Record<number, string> = {
     1: Rank1,
     2: Rank2,
