@@ -52,6 +52,15 @@ const NavigationBar = () => {
       case '마이 페이지':
         navigate('/mypage');
         break;
+      case '꾸미기':
+        navigate('/character');
+        break;
+      case '랭크':
+        navigate('/rank');
+        break;
+      case '학습 기록':
+        navigate('/record');
+        break;
       default:
         break;
     }
