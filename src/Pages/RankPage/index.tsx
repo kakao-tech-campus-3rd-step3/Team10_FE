@@ -13,7 +13,7 @@ export const RankPage = () => {
 
   return (
     <Container>
-      <Header title="랭킹" />
+      <Header title="랭킹" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
       <RankPageContainer>

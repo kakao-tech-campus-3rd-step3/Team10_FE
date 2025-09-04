@@ -12,7 +12,7 @@ export const LearningRecordPage = () => {
   const [isIncorrect, setIsIncorrect] = useState<boolean>(true);
   return (
     <Container>
-      <Header title="학습 기록" />
+      <Header title="학습 기록" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
       <LearningRecordPageContainer>
