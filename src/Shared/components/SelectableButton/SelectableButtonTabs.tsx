@@ -4,20 +4,24 @@ import { SelectableButton } from './SelectableButton';
 export const SelectableButtonTabs = ({
   isActive,
   onSelect,
+  firstButtonText,
+  secondButtonText,
 }: {
   isActive: boolean;
   onSelect: (active: boolean) => void;
+  firstButtonText: string;
+  secondButtonText: string;
 }) => {
   return (
     <Wrapper>
       <SelectableButton
         $isActive={isActive}
-        buttonText="점수 랭킹"
+        buttonText={firstButtonText}
         onClick={() => onSelect(true)}
       />
       <SelectableButton
         $isActive={!isActive}
-        buttonText="성실 랭킹"
+        buttonText={secondButtonText}
         onClick={() => onSelect(false)}
       />
     </Wrapper>

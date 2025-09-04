@@ -9,7 +9,7 @@ import { TopRankList } from './TopRankList';
 import { MyRankSection } from './MyRankSection';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 export const RankPage = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [isScoreRank, setIsScoreRank] = useState<boolean>(true);
 
   return (
     <Container>
@@ -17,9 +17,14 @@ export const RankPage = () => {
       <NavigationBar />
       <StatusActionBar />
       <RankPageContainer>
-        <SelectableButtonTabs isActive={isActive} onSelect={setIsActive} />
-        <TopRankList isScoreRank={isActive} />
-        <MyRankSection isScoreRank={isActive} />
+        <SelectableButtonTabs
+          isActive={isScoreRank}
+          onSelect={setIsScoreRank}
+          firstButtonText="점수 랭킹"
+          secondButtonText="성실 랭킹"
+        />
+        <TopRankList isScoreRank={isScoreRank} />
+        <MyRankSection isScoreRank={isScoreRank} />
       </RankPageContainer>
     </Container>
   );
