@@ -1,41 +1,41 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
+import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
+import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/assets/HomeImg/character.png';
-import CalenderIcon from '@/assets/HomeImg/calendar.png';
 import { useNavigate } from 'react-router-dom';
-import BackButton from '@/Shared/components/backButton';
 
-const Header = styled.header`
-  padding: ${theme.spacing(5)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background-color: ${theme.colors.background};
-`;
+const MyPage = () => {
+  const navigate = useNavigate();
+  const handleShareClick = () => {
+    navigate('/sharing');
+  };
+  return (
+    <Container>
+      <Header title="마이 페이지" hasPrevPage={true} />
+      <NavigationBar />
+      <StatusActionBar />
+      <CharacterAndNicknameWrapper>
+        <Character src={CharacterMain} alt="캐릭터" />
+        <NicknameBox>
+          <Nickname>카테캠 기요미</Nickname>
+        </NicknameBox>
+      </CharacterAndNicknameWrapper>
+      <ResultWrapper>
+        <ResultTitle>위험 중립형</ResultTitle>
+        <ResultDescription>
+          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
+          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
+        </ResultDescription>
+      </ResultWrapper>
+      <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
+    </Container>
+  );
+};
 
-const Title = styled.h1`
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 24px;
-  margin: 0;
-`;
-
-const StyledHeaderBackButton = styled(BackButton)`
-  position: absolute;
-  left: ${theme.spacing(5)};
-`;
-
-const StatusAndCalendarWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: ${theme.spacing(4)} ${theme.spacing(5)};
-`;
+export default MyPage;
 
 const CharacterAndNicknameWrapper = styled.div`
   display: flex;
@@ -66,28 +66,6 @@ const Nickname = styled.p`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 18px;
   margin: 0;
-`;
-
-const StatusLabel = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing(1)};
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-`;
-
-const CalendarButton = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-`;
-
-const CalendarIcon = styled.img`
-  width: ${theme.spacing(12)};
-  height: ${theme.spacing(12)};
 `;
 
 const ResultWrapper = styled.div`
@@ -134,52 +112,3 @@ const ShareButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
-const MyPage = () => {
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleShareClick = () => {
-    navigate('/sharing');
-  };
-
-  return (
-    <Container>
-      <Header>
-        <StyledHeaderBackButton onClick={handleBackClick} />
-        <Title>마이 페이지</Title>
-      </Header>
-      <NavigationBar />
-      <StatusAndCalendarWrapper>
-        <StatusLabel>
-          <span role="img" aria-label="growth chart">
-            📈
-          </span>{' '}
-          성장주 투자자
-        </StatusLabel>
-        <CalendarButton>
-          <CalendarIcon src={CalenderIcon} alt="캘린더" />
-        </CalendarButton>
-      </StatusAndCalendarWrapper>
-      <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
-        <NicknameBox>
-          <Nickname>카테캠 기요미</Nickname>
-        </NicknameBox>
-      </CharacterAndNicknameWrapper>
-      <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
-          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
-      </ResultWrapper>
-      <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
-    </Container>
-  );
-};
-
-export default MyPage;

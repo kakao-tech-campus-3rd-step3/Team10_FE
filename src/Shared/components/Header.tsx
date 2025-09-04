@@ -15,6 +15,7 @@ export const Header = ({ title, hasPrevPage }: { title: string; hasPrevPage: boo
   );
 };
 const Container = styled.header`
+  height: ${theme.spacing(15)};
   padding: ${theme.spacing(5)};
   display: flex;
   align-items: center;
