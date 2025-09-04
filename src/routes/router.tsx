@@ -1,5 +1,7 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import NotFoundPage from '@/routes/NotFoundPage';
+import { createBrowserRouter } from 'react-router-dom';
+import NotFoundPage from './NotFoundPage';
+import MyPage from '@/Pages/MyPage/MyPage';
+import SharingPage from '@/Pages/MyPage/SharingPage';
 import SplashPage from '@/Pages/StartPage/SplashPage';
 import LoginPage from '@/Pages/StartPage/LoginPage';
 import CharacterCreatePage from '@/Pages/StartPage/CharacterCreatePage';
@@ -19,7 +21,8 @@ export const router = createBrowserRouter([
   { path: '/home', element: <HomePage /> },
   { path: '/quizSolve', element: <QuizSolvePage data={data} /> },
   { path: '/quizResult', element: <QuizResultPage data={data} /> },
-  { path: '/home', element: <Navigate to="/" replace /> },
+  { path: '/mypage', element: <MyPage /> },
+  { path: '/sharing', element: <SharingPage /> },
   { path: '*', element: <NotFoundPage /> },
   { path: '/rank', element: <RankPage /> },
   { path: '/dev/api-test', element: <ApiTestPage /> },
