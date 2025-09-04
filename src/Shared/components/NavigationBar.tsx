@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
+import { useNavigate } from 'react-router-dom';
 
 const NavWrapper = styled.nav`
   display: flex;
@@ -38,17 +39,28 @@ const NavText = styled.span`
 `;
 
 const NavigationBar = () => {
+  const navigate = useNavigate();
   const navItems = [
-    { name: '꾸미기', icon: '🌱' },     
+    { name: '꾸미기', icon: '🌱' },
     { name: '랭크', icon: '🏆' },
     { name: '학습 기록', icon: '✅' },
     { name: '마이 페이지', icon: '📋' },
   ];
 
+  const handleNavigate = (name: string) => {
+    switch (name) {
+      case '마이 페이지':
+        navigate('/mypage');
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <NavWrapper>
       {navItems.map((item) => (
-        <NavItem key={item.name}>
+        <NavItem key={item.name} onClick={() => handleNavigate(item.name)}>
           <IconPlaceholder>{item.icon}</IconPlaceholder>
           <NavText>{item.name}</NavText>
         </NavItem>
