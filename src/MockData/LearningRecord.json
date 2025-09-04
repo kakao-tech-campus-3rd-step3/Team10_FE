@@ -1,0 +1,60 @@
+{
+  "data": {
+    "Incorrect": [
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?"
+      }
+    ],
+    "Bookmarked": [
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      },
+      {
+        "questionId": 123,
+        "questionText": "인플레이션이 경제에 미치는 영향으로 옳은 것은?"
+      }
+    ]
+  }
+}
