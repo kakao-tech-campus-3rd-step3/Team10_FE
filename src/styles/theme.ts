@@ -5,6 +5,7 @@ export const theme = {
     tertiary: '#F8CC39', // yellow
     text: '#000000', // black
     background: '#FAF2E2', // beige
+    inactive: '#EFEFF0', // inactive
   },
   spacing: (factor: number) => `${4 * factor}px`,
   font: {
@@ -21,7 +22,6 @@ export const theme = {
       fontWeight: 300,
     },
   },
-} as const
+} as const;
 
-export type AppTheme = typeof theme
-
+export type AppTheme = typeof theme;
