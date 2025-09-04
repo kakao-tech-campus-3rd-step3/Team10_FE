@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import NotFoundPage from './NotFoundPage';
 import MyPage from '@/Pages/MyPage/MyPage';
 import SharingPage from '@/Pages/MyPage/SharingPage';
