@@ -168,6 +168,9 @@ const HomePage = () => {
   const handleInvestmentTest = () => {
     navigate('/quizSolve');
   };
+  const goToTestPage = () => {
+    navigate('/test');
+  };
   return (
     <Container>
       <Header>
@@ -198,7 +201,7 @@ const HomePage = () => {
           <InvestmentText>
             {isTested ? '안정형' : '나의 투자 성향을 테스트 해보세요'}
           </InvestmentText>
-          <NextPageButton>
+          <NextPageButton onClick={goToTestPage}>
             <span role="img" aria-label="right arrow">
               ➡️
             </span>

@@ -9,6 +9,10 @@ import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
 import data from '@/MockData/Quiz.json';
+import { RankPage } from '@/Pages/RankPage';
+import ApiTestPage from '@/Pages/Dev/ApiTestPage';
+import TestPage from '@/Pages/TestPage/TestPage';
+import TestResultPage from '@/Pages/TestPage/TestResultPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -20,4 +24,8 @@ export const router = createBrowserRouter([
   { path: '/mypage', element: <MyPage /> },
   { path: '/sharing', element: <SharingPage /> },
   { path: '*', element: <NotFoundPage /> },
+  { path: '/rank', element: <RankPage /> },
+  { path: '/dev/api-test', element: <ApiTestPage /> },
+  { path: '/test', element: <TestPage /> },
+  { path: '/test/result', element: <TestResultPage /> },
 ]);
