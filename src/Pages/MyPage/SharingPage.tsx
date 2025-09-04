@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import BackButton from '@/Shared/components/backButton';
-import CharacterMain from '@/MockData/character.png';
+import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
-
-
 
 const Header = styled.header`
   width: 100%;
@@ -132,13 +130,11 @@ const SharingPage = () => {
       <ResultWrapper>
         <ResultTitle>위험 중립형</ResultTitle>
         <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며,
-          예·적금보다 높은 수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
+          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
+          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
         </ResultDescription>
       </ResultWrapper>
-      <SaveButton onClick={handleSaveClick}>
-        저장하기
-      </SaveButton>
+      <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
     </Container>
   );
 };

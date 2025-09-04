@@ -1,7 +1,7 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
-import CalenderIcon from '@/MockData/calendar.png';
+import CalenderIcon from '@/assets/HomeImg/calendar.png';
 
 export type StatusActionBarProps = {
   leftIcon?: ReactNode;

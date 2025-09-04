@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/MockData/character.png'; 
-import CalenderIcon from '@/MockData/calendar.png';
+import CharacterMain from '@/assets/HomeImg/character.png';
+import CalenderIcon from '@/assets/HomeImg/calendar.png';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '@/Shared/components/backButton';
 
@@ -155,7 +155,10 @@ const MyPage = () => {
       <NavigationBar />
       <StatusAndCalendarWrapper>
         <StatusLabel>
-          <span role="img" aria-label="growth chart">📈</span> 성장주 투자자
+          <span role="img" aria-label="growth chart">
+            📈
+          </span>{' '}
+          성장주 투자자
         </StatusLabel>
         <CalendarButton>
           <CalendarIcon src={CalenderIcon} alt="캘린더" />
@@ -170,13 +173,11 @@ const MyPage = () => {
       <ResultWrapper>
         <ResultTitle>위험 중립형</ResultTitle>
         <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며,
-          예·적금보다 높은 수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
+          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
+          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
         </ResultDescription>
       </ResultWrapper>
-      <ShareButton onClick={handleShareClick}>
-        공유하기
-      </ShareButton>
+      <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
     </Container>
   );
 };

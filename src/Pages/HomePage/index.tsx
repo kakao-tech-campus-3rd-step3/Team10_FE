@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/MockData/character.png';
-import CalenderIcon from '@/MockData/calendar.png';
+import CharacterMain from '@/assets/HomeImg/character.png';
+import CalenderIcon from '@/assets/HomeImg/calendar.png';
 import { useNavigate } from 'react-router-dom';
 
 const Header = styled.header`
