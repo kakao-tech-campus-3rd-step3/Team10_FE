@@ -40,7 +40,7 @@ const IconButton = styled.button`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-function ArrowLeftIcon({ size, color }: { size: number; color?: string }) {
+const ArrowLeftIcon = ({ size, color }: { size: number; color?: string }) => {
   return (
     <svg
       width={size}

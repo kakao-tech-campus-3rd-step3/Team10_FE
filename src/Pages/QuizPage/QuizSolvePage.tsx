@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
+import QuestionButton from './QuestionButton';
+import ConfirmButton from './ConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
-import QuestionButton from './QuestionButton';
-import ConfirmButton from './ConfirmButton';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
