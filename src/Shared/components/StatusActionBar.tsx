@@ -2,6 +2,7 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
 import CalenderIcon from '@/assets/HomeImg/calendar.png';
+import { useNavigate } from 'react-router-dom';
 
 export type StatusActionBarProps = {
   leftIcon?: ReactNode;
@@ -16,9 +17,15 @@ export const StatusActionBar = ({
   rightIconAlt = '캘린더',
   rightIconSizePx = 48,
 }: StatusActionBarProps) => {
+  const navigate = useNavigate();
+
+  const handleLabelClick = () => {
+    navigate('/tier');
+  };
+
   return (
     <Wrapper>
-      <Label>
+      <Label onClick={handleLabelClick}>
         <span role="img" aria-label="growth chart">
           📈
         </span>{' '}
