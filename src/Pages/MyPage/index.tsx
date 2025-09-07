@@ -7,7 +7,7 @@ import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
 
-const MyPage = () => {
+export const MyPage = () => {
   const navigate = useNavigate();
   const handleShareClick = () => {
     navigate('/sharing');

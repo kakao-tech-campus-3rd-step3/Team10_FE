@@ -22,13 +22,13 @@ export type QuizHeaderProps = {
   className?: string;
 };
 
-export default function QuizHeader({
+export const QuizHeader = ({
   questionOrder,
   totalQuestions,
   questionText,
   difficultyLevel,
   className,
-}: QuizHeaderProps) {
+}: QuizHeaderProps) => {
   const difficultyLabel = toKoreanDifficulty(difficultyLevel);
   return (
     <HeaderContainer className={className}>
@@ -39,7 +39,9 @@ export default function QuizHeader({
       {difficultyLabel && <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>}
     </HeaderContainer>
   );
-}
+};
+
+export default QuizHeader;
 
 const HeaderContainer = styled.div`
   display: flex;

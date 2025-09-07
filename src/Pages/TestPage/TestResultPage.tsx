@@ -10,10 +10,10 @@ interface TestResultPageProps {
   description?: string;
 }
 
-export default function TestResultPage({
+export const TestResultPage = ({
   typeText = '안정형',
   description = '“예금이나 적금 수준의 수익률을 기대하며, 투자원금에 손실이 발생하는 것을 원하지 않는다. 원금손실의 우려가 없는 상품에 투자하는 것이 바람직하다.”',
-}: TestResultPageProps) {
+}: TestResultPageProps) => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
@@ -32,7 +32,8 @@ export default function TestResultPage({
       </ButtonContainer>
     </CenteredContainer>
   );
-}
+};
+export default TestResultPage;
 
 const CenteredContainer = styled(Container)`
   align-items: center;

@@ -8,7 +8,7 @@ type Log = {
   error?: string;
 };
 
-export default function ApiTestPage() {
+export const ApiTestPage = () => {
   const [logs, setLogs] = useState<Log[]>([]);
 
   const appendLog = (log: Log) => setLogs((prev) => [log, ...prev]);
@@ -123,7 +123,9 @@ export default function ApiTestPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ApiTestPage;
 
 async function safeJson(res: Response): Promise<unknown> {
   const text = await res.text();

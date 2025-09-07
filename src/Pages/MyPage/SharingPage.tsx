@@ -4,7 +4,7 @@ import { Header } from '@/Shared/components/Header';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
 
-const SharingPage = () => {
+export const SharingPage = () => {
   const handleSaveClick = () => {
     alert('결과 이미지 저장하기 버튼 클릭!');
   };

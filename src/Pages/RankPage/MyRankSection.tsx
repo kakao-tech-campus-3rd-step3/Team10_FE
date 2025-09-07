@@ -6,3 +6,5 @@ export const MyRankSection = ({ isScoreRank }: { isScoreRank: boolean }) => {
   const { scoreRank, attandanceRank } = data;
   return <MyRank data={isScoreRank ? scoreRank : attandanceRank} isScoreRank={isScoreRank} />;
 };
+
+export default MyRankSection;

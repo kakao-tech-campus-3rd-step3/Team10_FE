@@ -4,7 +4,7 @@ import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-export default function SplashPage() {
+export const SplashPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
@@ -16,7 +16,9 @@ export default function SplashPage() {
       <Logo src={LogoFace} alt="앱 로고" />
     </CenteredContainer>
   );
-}
+};
+
+export default SplashPage;
 
 const CenteredContainer = styled(Container)`
   align-items: center;

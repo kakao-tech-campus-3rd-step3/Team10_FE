@@ -6,9 +6,11 @@ interface NameInputProps {
   placeholder?: string;
 }
 
-export default function NameInput({ value, onChange, placeholder }: NameInputProps) {
+export const NameInput = ({ value, onChange, placeholder }: NameInputProps) => {
   return <Container type="text" value={value} onChange={onChange} placeholder={placeholder} />;
-}
+};
+
+export default NameInput;
 
 const Container = styled.input`
   width: 272px;

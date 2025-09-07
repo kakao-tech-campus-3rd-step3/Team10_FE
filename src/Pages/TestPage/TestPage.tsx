@@ -18,7 +18,7 @@ interface TestPageProps {
   onSubmit?: (answers: Answer) => void;
 }
 
-export default function TestPage({ onSubmit }: TestPageProps) {
+export const TestPage = ({ onSubmit }: TestPageProps) => {
   const [answers, setAnswers] = useState<Answer>({ q3: [] });
   const navigate = useNavigate();
 
@@ -213,7 +213,8 @@ export default function TestPage({ onSubmit }: TestPageProps) {
       </FormCard>
     </Container>
   );
-}
+};
+export default TestPage;
 
 const Header = styled.header`
   padding: ${theme.spacing(5)};

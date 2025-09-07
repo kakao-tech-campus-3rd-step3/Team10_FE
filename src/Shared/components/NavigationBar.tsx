@@ -7,7 +7,7 @@ const NavWrapper = styled.nav`
   justify-content: space-around;
   align-items: center;
   padding: ${theme.spacing(4)} 0;
-  background-color: #dbc399ff; 
+  background-color: #dbc399ff;
 `;
 
 const NavItem = styled.div`
@@ -15,20 +15,20 @@ const NavItem = styled.div`
   flex-direction: column;
   align-items: center;
   gap: ${theme.spacing(1)};
-  cursor: pointer; 
+  cursor: pointer;
 `;
 
 const IconPlaceholder = styled.div`
-  width: ${theme.spacing(15)}; 
+  width: ${theme.spacing(15)};
   height: ${theme.spacing(15)};
-  background-color: #E0E0E0; 
+  background-color: #e0e0e0;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 2px solid ${theme.colors.primary};
-  font-size: 24px; 
-  color: ${theme.colors.primary}; 
+  font-size: 24px;
+  color: ${theme.colors.primary};
 `;
 
 const NavText = styled.span`
@@ -38,7 +38,7 @@ const NavText = styled.span`
   color: ${theme.colors.text};
 `;
 
-const NavigationBar = () => {
+export const NavigationBar = () => {
   const navigate = useNavigate();
   const navItems = [
     { name: '꾸미기', icon: '🌱' },

@@ -49,6 +49,9 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
     </Container>
   );
 };
+
+export default MyRank;
+
 const Container = styled.div`
   width: 100%;
   height: 100%;

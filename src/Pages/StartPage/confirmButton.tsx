@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 
-export default function ConfirmButton({ text, onClick }: { text: string; onClick: () => void }) {
+export const ConfirmButton = ({ text, onClick }: { text: string; onClick: () => void }) => {
   return <Container onClick={onClick}>{text}</Container>;
-}
+};
+
+export default ConfirmButton;
 
 const Container = styled.button`
   width: 160px;

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import QuestionButton from './questionButton';
-import ConfirmButton from './confirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
+import QuestionButton from './QuestionButton';
+import ConfirmButton from './ConfirmButton';
 interface QuizSolvePageProps {
   data: {
     questionId: number;
@@ -23,7 +23,7 @@ interface QuizSolvePageProps {
   };
 }
 
-export default function QuizSolvePage({ data }: QuizSolvePageProps) {
+export const QuizSolvePage = ({ data }: QuizSolvePageProps) => {
   const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
   const navigate = useNavigate();
   const handleConfirm = () => {
@@ -48,7 +48,9 @@ export default function QuizSolvePage({ data }: QuizSolvePageProps) {
       </ConfirmButtonContainer>
     </Container>
   );
-}
+};
+
+export default QuizSolvePage;
 
 const Space = styled.div`
   height: 60px;
