@@ -30,6 +30,8 @@ export const RankPage = () => {
   );
 };
 
+export default RankPage;
+
 const RankPageContainer = styled.div`
   display: flex;
   flex-direction: column;

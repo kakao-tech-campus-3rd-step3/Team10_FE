@@ -29,6 +29,8 @@ export const TopRankList = ({ isScoreRank }: { isScoreRank: boolean }) => {
   );
 };
 
+export default TopRankList;
+
 const Wrapper = styled.div`
   width: 100%;
   display: flex;

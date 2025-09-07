@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 
-export default function QuestionButton({ text }: { text: string }) {
+export const QuestionButton = ({ text }: { text: string }) => {
   return <Container>{text}</Container>;
-}
+};
+
+export default QuestionButton;
 
 const Container = styled.button`
   width: 280px;

@@ -28,6 +28,8 @@ export const SelectableButtonTabs = ({
   );
 };
 
+export default SelectableButtonTabs;
+
 const Wrapper = styled.div`
   width: 100%;
   flex-shrink: 0;

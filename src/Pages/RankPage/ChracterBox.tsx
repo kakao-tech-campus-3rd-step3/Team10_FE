@@ -30,6 +30,8 @@ export const ChracterBox = ({
   );
 };
 
+export default ChracterBox;
+
 const Container = styled.div<{ $rank: number }>`
   display: flex;
   flex-direction: column;

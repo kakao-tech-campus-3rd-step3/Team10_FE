@@ -14,6 +14,9 @@ export const SelectableButton = ({ $isActive, buttonText, onClick }: RankButtonP
     </Button>
   );
 };
+
+export default SelectableButton;
+
 const Button = styled.button<{ $isActive: boolean }>`
   background-color: ${({ $isActive }) =>
     $isActive ? theme.colors.secondary : theme.colors.inactive};

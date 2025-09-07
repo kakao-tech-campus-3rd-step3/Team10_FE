@@ -6,7 +6,7 @@ import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
-const HomePage = () => {
+export const HomePage = () => {
   const isTested = false;
   const navigate = useNavigate();
   const handleInvestmentTest = () => {

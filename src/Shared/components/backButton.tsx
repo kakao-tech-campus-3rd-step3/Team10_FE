@@ -8,12 +8,12 @@ type BackButtonProps = {
   ariaLabel?: string; // 접근성 라벨 (기본: "뒤로가기")
 };
 
-export default function BackButton({
+export const BackButton = ({
   size = 24,
   color,
   className,
   ariaLabel = '뒤로가기',
-}: BackButtonProps) {
+}: BackButtonProps) => {
   const navigate = useNavigate();
   const onClick = () => {
     navigate(-1);
@@ -23,7 +23,9 @@ export default function BackButton({
       <ArrowLeftIcon size={size} color={color} />
     </IconButton>
   );
-}
+};
+
+export default BackButton;
 
 const IconButton = styled.button`
   appearance: none;
@@ -38,7 +40,7 @@ const IconButton = styled.button`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-function ArrowLeftIcon({ size, color }: { size: number; color?: string }) {
+const ArrowLeftIcon = ({ size, color }: { size: number; color?: string }) => {
   return (
     <svg
       width={size}

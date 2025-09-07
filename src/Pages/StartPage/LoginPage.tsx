@@ -4,7 +4,7 @@ import KakaoLoginButton from './kakaoLoginButton';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
 
-export default function LoginPage() {
+export const LoginPage = () => {
   const navigate = useNavigate();
   const handleKakaoLogin = () => {
     navigate('/character-create');
@@ -17,7 +17,9 @@ export default function LoginPage() {
       <KakaoLoginButton onClick={handleKakaoLogin} />
     </CenteredContainer>
   );
-}
+};
+
+export default LoginPage;
 
 const CenteredContainer = styled(Container)`
   align-items: center;

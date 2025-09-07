@@ -31,6 +31,8 @@ export const StatusActionBar = ({
   );
 };
 
+export default StatusActionBar;
+
 const Wrapper = styled.div`
   width: 100%;
   display: flex;

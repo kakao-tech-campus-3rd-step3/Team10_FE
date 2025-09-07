@@ -6,3 +6,5 @@ export const RecordListSection = ({ isIncorrect }: { isIncorrect: boolean }) => 
   const { Incorrect, Bookmarked } = data;
   return <RecordList data={isIncorrect ? Incorrect : Bookmarked} />;
 };
+
+export default RecordListSection;

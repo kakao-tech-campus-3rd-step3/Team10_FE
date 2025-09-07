@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
-import ConfirmButton from './confirmButton';
+import ConfirmButton from './ConfirmButton';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ interface QuizResultPageProps {
     explanation: string;
   };
 }
-export default function QuizResultPage({ data }: QuizResultPageProps) {
+export const QuizResultPage = ({ data }: QuizResultPageProps) => {
   const {
     questionOrder,
     totalQuestions,
@@ -65,7 +65,10 @@ export default function QuizResultPage({ data }: QuizResultPageProps) {
       </ButtonContainer>
     </Container>
   );
-}
+};
+
+export default QuizResultPage;
+
 const Space = styled.div`
   height: 60px;
 `;

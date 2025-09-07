@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
 
-export default function CharacterCreatePage() {
+export const CharacterCreatePage = () => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
   const handleConfirm = () => {
@@ -27,7 +27,9 @@ export default function CharacterCreatePage() {
       </ConfirmButtonContainer>
     </CenteredContainer>
   );
-}
+};
+
+export default CharacterCreatePage;
 
 const CenteredContainer = styled(Container)`
   align-items: center;

@@ -27,6 +27,9 @@ export const LearningRecordPage = () => {
     </Container>
   );
 };
+
+export default LearningRecordPage;
+
 const LearningRecordPageContainer = styled.div`
   display: flex;
   flex-direction: column;
