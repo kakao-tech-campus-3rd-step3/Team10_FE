@@ -14,6 +14,7 @@ import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 import TestPage from '@/Pages/TestPage/TestPage';
 import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
+import { TierPage } from '@/Pages/TierPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -30,4 +31,5 @@ export const router = createBrowserRouter([
   { path: '/test', element: <TestPage /> },
   { path: '/test/result', element: <TestResultPage /> },
   { path: '/record', element: <LearningRecordPage /> },
+  { path: '/tier', element: <TierPage /> },
 ]);
