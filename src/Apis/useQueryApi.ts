@@ -3,7 +3,6 @@ import type { UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
 import { handleApiError } from './queryClient';
-
 export interface QueryApiOptions<TData>
   extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
   onError?: (error: AxiosError) => void;
@@ -18,11 +17,8 @@ const queryFnFactory =
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
-
-      // 전역 에러 핸들러 호출
       handleApiError(axiosError);
 
-      // 개별 onError 콜백 호출
       if (options?.onError) {
         options.onError(axiosError);
       }
