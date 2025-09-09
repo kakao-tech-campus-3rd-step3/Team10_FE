@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQueryApi, usePostApi } from '@/Apis';
 
 type Log = {
   label: string;
@@ -13,94 +14,152 @@ export const ApiTestPage = () => {
 
   const appendLog = (log: Log) => setLogs((prev) => [log, ...prev]);
 
-  const getDirect = async () => {
-    try {
-      const res = await fetch('https://sadajobe.shop/test', {
-        // mode 기본값이 브라우저에선 'cors'라 명시 안 해도 됨(절대 'no-cors' 금지)
-        // credentials: "include", // 쿠키 쓸 때만 같이 켜고, 서버도 Allow-Credentials 설정 필요
-      });
-      const data = await safeJson(res);
+  // 커스텀 훅을 사용한 GET 요청 (Direct)
+  const {
+    refetch: refetchDirect,
+    isLoading: isLoadingDirect,
+    data: directData,
+    error: directError,
+  } = useQueryApi(['test', 'direct'], '/test', {
+    enabled: false, // 수동으로 실행
+  });
+
+  // Direct GET 결과 처리
+  useEffect(() => {
+    if (directData) {
       appendLog({
-        label: 'Direct GET https://sadajobe.shop/test',
-        ok: res.ok,
-        status: res.status,
-        data,
+        label: 'Custom Hook GET /test (baseURL 자동 적용)',
+        ok: true,
+        status: 200,
+        data: directData,
       });
-    } catch (e) {
+    }
+  }, [directData]);
+
+  useEffect(() => {
+    if (directError) {
       appendLog({
-        label: 'Direct GET https://sadajobe.shop/test',
+        label: 'Custom Hook GET /test (baseURL 자동 적용)',
         ok: false,
-        error: toErr(e),
+        error: directError.message,
       });
     }
+  }, [directError]);
+
+  const getDirect = () => {
+    refetchDirect();
   };
 
-  const getProxy = async () => {
-    try {
-      const res = await fetch('/api/test');
-      const data = await safeJson(res);
-      appendLog({ label: 'Proxy GET /api/test', ok: res.ok, status: res.status, data });
-    } catch (e) {
-      appendLog({ label: 'Proxy GET /api/test', ok: false, error: toErr(e) });
+  // 커스텀 훅을 사용한 GET 요청 (Proxy)
+  const {
+    refetch: refetchProxy,
+    isLoading: isLoadingProxy,
+    data: proxyData,
+    error: proxyError,
+  } = useQueryApi(['test', 'proxy'], '/test', {
+    enabled: false, // 수동으로 실행
+  });
+
+  // Proxy GET 결과 처리
+  useEffect(() => {
+    if (proxyData) {
+      appendLog({
+        label: 'Custom Hook GET /test (baseURL 자동 적용)',
+        ok: true,
+        status: 200,
+        data: proxyData,
+      });
     }
-  };
+  }, [proxyData]);
 
-  const postDirectPreflight = async () => {
-    try {
-      const res = await fetch('sadajobe.shop/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Test': '1', // 커스텀 헤더 → Preflight 유도
-        },
-        body: JSON.stringify({ ping: true }),
-      });
-      const data = await safeJson(res);
+  useEffect(() => {
+    if (proxyError) {
       appendLog({
-        label: 'Direct POST sadajobe.shop/test (preflight)',
-        ok: res.ok,
-        status: res.status,
-        data,
-      });
-    } catch (e) {
-      appendLog({
-        label: 'Direct POST sadajobe.shop/test (preflight)',
+        label: 'Custom Hook GET /test (baseURL 자동 적용)',
         ok: false,
-        error: toErr(e),
+        error: proxyError.message,
       });
     }
+  }, [proxyError]);
+
+  const getProxy = () => {
+    refetchProxy();
   };
 
-  const postProxyPreflight = async () => {
-    try {
-      const res = await fetch('/api/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Test': '1',
-        },
-        body: JSON.stringify({ ping: true }),
-      });
-      const data = await safeJson(res);
+  // 커스텀 훅을 사용한 POST 요청 (Direct)
+  const postDirectMutation = usePostApi<unknown, { ping: boolean }>('/test');
+
+  // Direct POST 결과 처리
+  useEffect(() => {
+    if (postDirectMutation.data) {
       appendLog({
-        label: 'Proxy POST /api/test (preflight)',
-        ok: res.ok,
-        status: res.status,
-        data,
+        label: 'Custom Hook POST /test (baseURL 자동 적용)',
+        ok: true,
+        status: 200,
+        data: postDirectMutation.data,
       });
-    } catch (e) {
-      appendLog({ label: 'Proxy POST /api/test (preflight)', ok: false, error: toErr(e) });
     }
+  }, [postDirectMutation.data]);
+
+  useEffect(() => {
+    if (postDirectMutation.error) {
+      appendLog({
+        label: 'Custom Hook POST /test (baseURL 자동 적용)',
+        ok: false,
+        error: postDirectMutation.error.message,
+      });
+    }
+  }, [postDirectMutation.error]);
+
+  const postDirectPreflight = () => {
+    postDirectMutation.mutate({ ping: true });
+  };
+
+  // 커스텀 훅을 사용한 POST 요청 (Proxy)
+  const postProxyMutation = usePostApi<unknown, { ping: boolean }>('/test');
+
+  // Proxy POST 결과 처리
+  useEffect(() => {
+    if (postProxyMutation.data) {
+      appendLog({
+        label: 'Custom Hook POST /test (baseURL 자동 적용)',
+        ok: true,
+        status: 200,
+        data: postProxyMutation.data,
+      });
+    }
+  }, [postProxyMutation.data]);
+
+  useEffect(() => {
+    if (postProxyMutation.error) {
+      appendLog({
+        label: 'Custom Hook POST /test (baseURL 자동 적용)',
+        ok: false,
+        error: postProxyMutation.error.message,
+      });
+    }
+  }, [postProxyMutation.error]);
+
+  const postProxyPreflight = () => {
+    postProxyMutation.mutate({ ping: true });
   };
 
   return (
     <div style={{ padding: 16 }}>
-      <h2>API CORS 테스트</h2>
+      <h2>API 테스트 (Custom Hooks + baseURL 자동 적용)</h2>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button onClick={getDirect}>Direct GET</button>
-        <button onClick={getProxy}>Proxy GET</button>
-        <button onClick={postDirectPreflight}>Direct POST (preflight)</button>
-        <button onClick={postProxyPreflight}>Proxy POST (preflight)</button>
+        <button onClick={getDirect} disabled={isLoadingDirect}>
+          GET /test
+        </button>
+        <button onClick={getProxy} disabled={isLoadingProxy}>
+          GET /test (동일)
+        </button>
+        <button onClick={postDirectPreflight} disabled={postDirectMutation.isPending}>
+          POST /test
+        </button>
+        <button onClick={postProxyPreflight} disabled={postProxyMutation.isPending}>
+          POST /test (동일)
+        </button>
       </div>
       <div style={{ marginTop: 16 }}>
         {logs.map((l, idx) => (
@@ -126,16 +185,3 @@ export const ApiTestPage = () => {
 };
 
 export default ApiTestPage;
-
-async function safeJson(res: Response): Promise<unknown> {
-  const text = await res.text();
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-}
-
-function toErr(e: unknown): string {
-  return e instanceof Error ? e.message : String(e);
-}
