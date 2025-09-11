@@ -1,0 +1,42 @@
+{
+  "data": {
+    "topics": [
+      {
+        "topicId": 1,
+        "topicName": "경제기초",
+        "totalQuizCount": 50,
+        "solvedQuizCount": 15,
+        "isAble": true
+      },
+
+      {
+        "topicId": 2,
+        "topicName": "주식시장",
+        "totalQuizCount": 75,
+        "solvedQuizCount": 8,
+        "isAble": false
+      },
+      {
+        "topicId": 3,
+        "topicName": "글로벌 경제",
+        "totalQuizCount": 100,
+        "solvedQuizCount": 20,
+        "isAble": false
+      },
+      {
+        "topicId": 4,
+        "topicName": "생활 경제",
+        "totalQuizCount": 125,
+        "solvedQuizCount": 30,
+        "isAble": false
+      },
+      {
+        "topicId": 5,
+        "topicName": "부동산",
+        "totalQuizCount": 150,
+        "solvedQuizCount": 40,
+        "isAble": false
+      }
+    ]
+  }
+}

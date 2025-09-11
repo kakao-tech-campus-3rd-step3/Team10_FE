@@ -10,7 +10,7 @@ export const HomePage = () => {
   const isTested = false;
   const navigate = useNavigate();
   const handleInvestmentTest = () => {
-    navigate('/quizSolve');
+    navigate('/quizList');
   };
   const goToTestPage = () => {
     navigate('/test');
