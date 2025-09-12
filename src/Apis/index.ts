@@ -1,4 +1,5 @@
 export { api } from './axios';
+export { apiConfig } from './config';
 export { useQueryApi } from './useQueryApi';
 export { useMutationApi, usePostApi, usePutApi, usePatchApi, useDeleteApi } from './useMutationApi';
 export { QueryProvider } from './QueryProvider';

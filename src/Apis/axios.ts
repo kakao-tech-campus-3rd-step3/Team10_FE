@@ -1,19 +1,11 @@
 import axios from 'axios';
-
-const getBaseURL = () => {
-  if (import.meta.env.PROD) {
-    return 'https://sadajobe.shop';
-  }
-  return '/api';
-};
+import { apiConfig } from './config';
 
 export const api = axios.create({
-  baseURL: getBaseURL(),
-  timeout: 10000,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: apiConfig.getBaseURL(),
+  timeout: apiConfig.timeout,
+  withCredentials: apiConfig.withCredentials,
+  headers: apiConfig.defaultHeaders,
 });
 
 api.interceptors.request.use(
