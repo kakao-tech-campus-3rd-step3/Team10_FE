@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import LogoFace from './assets/kongsik_face.png';
+import LogoFace from '@/assets/StartPage/kongsik_face.png';
 import KakaoLoginButton from './kakaoLoginButton';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';

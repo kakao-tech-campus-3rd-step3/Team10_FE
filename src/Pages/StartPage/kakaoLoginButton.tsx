@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import KakaoLoginImg from './assets/kakao_login_large_narrow.png';
+import KakaoLoginImg from '@/assets/StartPage/kakao_login_large_narrow.png';
 
 export const KakaoLoginButton = ({ onClick }: { onClick: () => void }) => {
   return (
