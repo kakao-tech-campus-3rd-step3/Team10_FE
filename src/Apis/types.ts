@@ -1,18 +1,18 @@
-// API 응답 타입 정의
+import type { UseQueryOptions } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+
 export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   status: number;
 }
 
-// 에러 응답 타입
 export interface ApiError {
   message: string;
   status: number;
   code?: string;
 }
 
-// 쿼리 옵션 타입
 export interface QueryOptions {
   enabled?: boolean;
   refetchOnWindowFocus?: boolean;
@@ -21,7 +21,12 @@ export interface QueryOptions {
   cacheTime?: number;
 }
 
-// 뮤테이션 옵션 타입
+// 쿼리 API 옵션 타입
+export interface QueryApiOptions<TData>
+  extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
+  onError?: (error: AxiosError) => void;
+  headers?: Record<string, string>;
+}
 export interface MutationOptions<TData = unknown, TVariables = unknown> {
   onSuccess?: (data: TData, variables: TVariables) => void;
   onError?: (error: ApiError, variables: TVariables) => void;
