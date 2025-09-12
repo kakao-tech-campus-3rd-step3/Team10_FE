@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "ScoreRank": 1,
+      "AttandanceRank": 3,
+      "name": "이시웅",
+      "score": 100,
+      "attandance": 10
+    },
+    {
+      "ScoreRank": 2,
+      "AttandanceRank": 1,
+      "name": "성민기",
+      "score": 90,
+      "attandance": 90
+    },
+    {
+      "ScoreRank": 3,
+      "AttandanceRank": 2,
+      "name": "박재일",
+      "score": 80,
+      "attandance": 80
+    }
+  ]
+}

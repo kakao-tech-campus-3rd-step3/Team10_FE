@@ -1,0 +1,26 @@
+{
+  "data": {
+    "scoreRank": {
+      "prevRank": 30,
+      "prevName": "권소현",
+      "prevScore": 1090,
+      "myRank": 31,
+      "myName": "김도완",
+      "myScore": 1040,
+      "nextRank": 32,
+      "nextName": "카리나",
+      "nextScore": 1010
+    },
+    "attandanceRank": {
+      "prevRank": 40,
+      "prevName": "배근호",
+      "prevScore": 41,
+      "myRank": 41,
+      "myName": "김도완",
+      "myScore": 100,
+      "nextRank": 38,
+      "nextName": "흥민손",
+      "nextScore": 37
+    }
+  }
+}
