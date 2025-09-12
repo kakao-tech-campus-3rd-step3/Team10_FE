@@ -5,8 +5,8 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5분
-      gcTime: 10 * 60 * 1000, // 10분
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
     },
     mutations: {
       retry: 1,
@@ -16,7 +16,6 @@ export const queryClient = new QueryClient({
 
 export const handleApiError = (error: unknown) => {
   if (error instanceof AxiosError && error.response?.status === 401) {
-    // 401 에러 시 로그인 페이지로 리다이렉트
     window.location.href = '/login';
     return { shouldRedirect: true, path: '/login' };
   }
@@ -31,4 +30,15 @@ export const handleApiError = (error: unknown) => {
   console.error('API Error:', errorMessage);
 
   return { shouldRedirect: false };
+};
+
+export const processApiError = (error: unknown, onError?: (error: AxiosError) => void): never => {
+  const axiosError = error as AxiosError;
+  const globalErrorResult = handleApiError(axiosError);
+
+  if (!globalErrorResult.shouldRedirect && onError) {
+    onError(axiosError);
+  }
+
+  throw axiosError;
 };

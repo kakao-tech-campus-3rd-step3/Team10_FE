@@ -1,36 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
-import type { UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
-import { handleApiError } from './queryClient';
+import { processApiError } from './queryClient';
+import type { QueryApiOptions } from './types';
 
-export interface QueryApiOptions<TData>
-  extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
-  onError?: (error: AxiosError) => void;
-  headers?: Record<string, string>; // 커스텀 헤더 추가
-}
-
-// queryFnFactory 패턴
 const queryFnFactory =
   <TData>(url: string, options?: QueryApiOptions<TData>) =>
   async () => {
     try {
       const response = await api.get<TData>(url, {
-        headers: options?.headers, // 커스텀 헤더 적용
+        headers: options?.headers,
       });
       return response.data;
     } catch (error) {
-      const axiosError = error as AxiosError;
-
-      // 전역 에러 핸들러 호출
-      handleApiError(axiosError);
-
-      // 개별 onError 콜백 호출
-      if (options?.onError) {
-        options.onError(axiosError);
-      }
-
-      throw axiosError;
+      processApiError(error, options?.onError);
+      throw error;
     }
   };
 
@@ -42,20 +26,7 @@ export const useQueryApi = <TData>(
   return useQuery<TData, AxiosError>({
     queryKey,
     queryFn: queryFnFactory<TData>(url, options),
-    retry: 1,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5분
-    gcTime: 10 * 60 * 1000, // 10분
-    ...options, // 사용자 옵션이 기본값을 덮어씀
+    refetchOnWindowFocus: false, // 쿼리 클라이언트 기본값과 다른 값만 명시
+    ...options,
   });
 };
-
-// 사용 예시:
-// const { data, isLoading, error } = useQueryApi(
-//   ['users', page],
-//   `/users?page=${page}`,
-//   {
-//     onError: (error) => console.log('사용자 목록 조회 실패:', error),
-//     enabled: true,
-//   }
-// );
