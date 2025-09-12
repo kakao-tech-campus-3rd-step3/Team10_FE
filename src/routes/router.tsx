@@ -15,12 +15,14 @@ import TestPage from '@/Pages/TestPage/TestPage';
 import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
 import { TierPage } from '@/Pages/TierPage';
+import { TopicSelectPage } from '@/Pages/TopicSelectPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/character-create', element: <CharacterCreatePage /> },
   { path: '/home', element: <HomePage /> },
+  { path: '/quizList', element: <TopicSelectPage /> },
   { path: '/quizSolve', element: <QuizSolvePage data={data} /> },
   { path: '/quizResult', element: <QuizResultPage data={data} /> },
   { path: '/mypage', element: <MyPage /> },

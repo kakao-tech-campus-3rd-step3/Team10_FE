@@ -3,9 +3,11 @@ import type { UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
 import { handleApiError } from './queryClient';
+
 export interface QueryApiOptions<TData>
   extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
   onError?: (error: AxiosError) => void;
+  headers?: Record<string, string>; // 커스텀 헤더 추가
 }
 
 // queryFnFactory 패턴
@@ -13,12 +15,17 @@ const queryFnFactory =
   <TData>(url: string, options?: QueryApiOptions<TData>) =>
   async () => {
     try {
-      const response = await api.get<TData>(url);
+      const response = await api.get<TData>(url, {
+        headers: options?.headers, // 커스텀 헤더 적용
+      });
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
+
+      // 전역 에러 핸들러 호출
       handleApiError(axiosError);
 
+      // 개별 onError 콜백 호출
       if (options?.onError) {
         options.onError(axiosError);
       }

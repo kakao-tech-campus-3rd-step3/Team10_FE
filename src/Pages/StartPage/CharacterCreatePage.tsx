@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import NameInput from './NameInput';
 import ConfirmButton from './confirmButton';
-import CharacterImage from './assets/kongsik_hi.png';
+import CharacterImage from '@/assets/StartPage/kongsik_hi.png';
 import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
