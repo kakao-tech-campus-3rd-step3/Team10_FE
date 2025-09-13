@@ -5,8 +5,9 @@ export {
   getKakaoAuthorizationCode,
   isKakaoLoginSuccess,
   getKakaoErrorMessage,
-} from './utils';
+  getKakaoLoginStatus,
+} from './utils.ts';
 
-export { useKakaoAuth, useKakaoLogin } from './useKakaoAuth';
+export { useKakaoAuth, useKakaoLogin } from './useKakaoAuth.ts';
 
-export type { KakaoLoginRequest, KakaoLoginResponse, KakaoUser } from './types';
+export type { KakaoLoginRequest, KakaoLoginResponse, KakaoUser } from './types.ts';
