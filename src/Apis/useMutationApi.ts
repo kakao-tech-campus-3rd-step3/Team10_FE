@@ -3,6 +3,7 @@ import type { UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
 import { processApiError } from './queryClient';
+import type { HttpMethod } from './constants';
 
 export type MutationApiOptions<TData, TVariables> = Omit<
   UseMutationOptions<TData, AxiosError, TVariables>,
@@ -10,7 +11,7 @@ export type MutationApiOptions<TData, TVariables> = Omit<
 >;
 
 export const useMutationApi = <TData, TVariables = void>(
-  method: 'post' | 'put' | 'delete' | 'patch',
+  method: HttpMethod,
   url: string,
   options?: MutationApiOptions<TData, TVariables>,
 ) => {
@@ -28,30 +29,12 @@ export const useMutationApi = <TData, TVariables = void>(
   });
 };
 
-export const usePostApi = <TData, TVariables = void>(
-  url: string,
-  options?: MutationApiOptions<TData, TVariables>,
-) => {
-  return useMutationApi<TData, TVariables>('post', url, options);
+const createMethodHook = <TData, TVariables = void>(method: HttpMethod) => {
+  return (url: string, options?: MutationApiOptions<TData, TVariables>) =>
+    useMutationApi<TData, TVariables>(method, url, options);
 };
 
-export const usePutApi = <TData, TVariables = void>(
-  url: string,
-  options?: MutationApiOptions<TData, TVariables>,
-) => {
-  return useMutationApi<TData, TVariables>('put', url, options);
-};
-
-export const usePatchApi = <TData, TVariables = void>(
-  url: string,
-  options?: MutationApiOptions<TData, TVariables>,
-) => {
-  return useMutationApi<TData, TVariables>('patch', url, options);
-};
-
-export const useDeleteApi = <TData, TVariables = void>(
-  url: string,
-  options?: MutationApiOptions<TData, TVariables>,
-) => {
-  return useMutationApi<TData, TVariables>('delete', url, options);
-};
+export const usePostApi = createMethodHook('post');
+export const usePutApi = createMethodHook('put');
+export const usePatchApi = createMethodHook('patch');
+export const useDeleteApi = createMethodHook('delete');
