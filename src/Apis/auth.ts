@@ -1,10 +1,11 @@
+const isValidCookieValue = (value: string | null): boolean => {
+  return !!(value && value !== 'null' && value !== 'undefined');
+};
+
 export const isAuthenticated = (): boolean => {
   const token = getCookie('token');
   const auth = getCookie('auth');
-  return (
-    !!(token && token !== 'null' && token !== 'undefined') ||
-    !!(auth && auth !== 'null' && auth !== 'undefined')
-  );
+  return isValidCookieValue(token) || isValidCookieValue(auth);
 };
 
 export const logout = async (): Promise<void> => {
