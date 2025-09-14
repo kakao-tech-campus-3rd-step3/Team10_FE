@@ -33,17 +33,20 @@ export const getCookie = (name: string): string | null => {
   return null;
 };
 
+const getSecureFlag = (): string => {
+  const isSecure = window.location.protocol === 'https:';
+  return isSecure ? ';Secure' : '';
+};
+
 export const setCookie = (name: string, value: string, days: number = 7): void => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  const isSecure = window.location.protocol === 'https:';
-  const secureFlag = isSecure ? ';Secure' : '';
+  const secureFlag = getSecureFlag();
   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict${secureFlag}`;
 };
 
 export const deleteCookie = (name: string): void => {
-  const isSecure = window.location.protocol === 'https:';
-  const secureFlag = isSecure ? ';Secure' : '';
+  const secureFlag = getSecureFlag();
 
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;SameSite=Strict${secureFlag}`;
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=${window.location.hostname};SameSite=Strict${secureFlag}`;
