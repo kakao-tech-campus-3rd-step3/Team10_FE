@@ -3,7 +3,7 @@ import type { UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
 import { processApiError } from './queryClient';
-import type { HttpMethod } from './constants';
+import type { HttpMethod } from './types';
 
 export type MutationApiOptions<TData, TVariables> = Omit<
   UseMutationOptions<TData, AxiosError, TVariables>,

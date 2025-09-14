@@ -14,8 +14,6 @@ export const HTTP_METHODS = {
   DELETE: 'DELETE',
 } as const;
 
-export type HttpMethod = 'post' | 'put' | 'delete' | 'patch';
-
 export const CONTENT_TYPES = {
   JSON: 'application/json',
 } as const;
