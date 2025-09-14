@@ -6,7 +6,7 @@ import type { KakaoLoginRequest, KakaoLoginResponse } from './types';
  * 카카오 로그인 API 호출 훅
  */
 export const useKakaoLogin = () => {
-  return usePostApi<KakaoLoginResponse, KakaoLoginRequest>('/auth/kakao/login', {
+  return usePostApi<KakaoLoginResponse, KakaoLoginRequest>('/login', {
     onSuccess: (data) => {
       // 로그인 성공 시 처리
       console.log('카카오 로그인 성공:', data);
@@ -55,7 +55,7 @@ export const useKakaoAuth = () => {
    * authorization code로 백엔드에 로그인 요청
    */
   const loginWithCode = (authorizationCode: string) => {
-    kakaoLogin({ authorization_code: authorizationCode });
+    kakaoLogin({ code: authorizationCode });
   };
 
   return {

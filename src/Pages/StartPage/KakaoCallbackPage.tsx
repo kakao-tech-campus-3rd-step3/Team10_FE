@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getKakaoAuthorizationCode, getKakaoErrorMessage, getKakaoLoginStatus } from '@/Apis/kakao';
+import {
+  getKakaoAuthorizationCode,
+  getKakaoErrorMessage,
+  getKakaoLoginStatus,
+  useKakaoAuth,
+} from '@/Apis/kakao';
 
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
+  const { loginWithCode, isPending } = useKakaoAuth();
 
   useEffect(() => {
     const loginStatus = getKakaoLoginStatus();
@@ -16,13 +22,11 @@ export const KakaoCallbackPage: React.FC = () => {
       console.log('📝 Authorization Code:', authorizationCode);
       console.log('🔗 전체 URL:', window.location.href);
 
-      setStatus('success');
-      setMessage(`로그인 성공! Authorization Code: ${authorizationCode}`);
-
-      // 3초 후 메인 페이지로 이동
-      setTimeout(() => {
-        window.location.href = '/home';
-      }, 3000);
+      // 백엔드로 POST 요청 보내기
+      if (authorizationCode) {
+        console.log('📤 백엔드로 POST 요청 전송 중...');
+        loginWithCode(authorizationCode);
+      }
     } else if (loginStatus === 'error') {
       // 에러 시 에러 메시지 추출
       const errorMessage = getKakaoErrorMessage();

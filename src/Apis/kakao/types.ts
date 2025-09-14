@@ -1,7 +1,7 @@
 // 카카오 로그인 관련 타입 정의
 
 export interface KakaoLoginRequest {
-  authorization_code: string;
+  code: string;
 }
 
 export interface KakaoLoginResponse {
