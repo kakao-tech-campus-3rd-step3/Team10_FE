@@ -1,12 +1,14 @@
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import { apiConfig } from './config';
 
-export const api = axios.create({
+const axiosConfig: AxiosRequestConfig = {
   baseURL: apiConfig.getBaseURL(),
   timeout: apiConfig.timeout,
   withCredentials: apiConfig.withCredentials,
   headers: apiConfig.defaultHeaders,
-});
+};
+
+export const api = axios.create(axiosConfig);
 
 api.interceptors.request.use(
   (config) => {
