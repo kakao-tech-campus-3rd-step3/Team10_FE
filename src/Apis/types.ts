@@ -1,4 +1,4 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
 export interface ApiResponse<T = unknown> {
@@ -45,3 +45,9 @@ export interface ApiConfig {
 
 // HTTP 메서드 타입
 export type HttpMethod = 'post' | 'put' | 'delete' | 'patch';
+
+// 뮤테이션 API 옵션 타입
+export type MutationApiOptions<TData, TVariables> = Omit<
+  UseMutationOptions<TData, AxiosError, TVariables>,
+  'mutationFn'
+>;

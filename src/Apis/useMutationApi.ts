@@ -1,14 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import type { UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from './axios';
 import { processApiError } from './queryClient';
-import type { HttpMethod } from './types';
-
-export type MutationApiOptions<TData, TVariables> = Omit<
-  UseMutationOptions<TData, AxiosError, TVariables>,
-  'mutationFn'
->;
+import type { HttpMethod, MutationApiOptions } from './types';
 
 export const useMutationApi = <TData, TVariables = void>(
   method: HttpMethod,

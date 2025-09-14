@@ -19,4 +19,7 @@ export type {
   QueryOptions,
   QueryApiOptions,
   MutationOptions,
+  MutationApiOptions,
+  ApiConfig,
+  HttpMethod,
 } from './types';
