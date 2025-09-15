@@ -1,4 +1,4 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
 export interface ApiResponse<T = unknown> {
@@ -32,3 +32,22 @@ export interface MutationOptions<TData = unknown, TVariables = unknown> {
   onError?: (error: ApiError, variables: TVariables) => void;
   onSettled?: (data: TData | undefined, error: ApiError | null, variables: TVariables) => void;
 }
+
+// API 설정 관련 타입
+export interface ApiConfig {
+  getBaseURL: () => string;
+  timeout: number;
+  withCredentials: boolean;
+  defaultHeaders: {
+    'Content-Type': string;
+  };
+}
+
+// HTTP 메서드 타입
+export type HttpMethod = 'post' | 'put' | 'delete' | 'patch';
+
+// 뮤테이션 API 옵션 타입
+export type MutationApiOptions<TData, TVariables> = Omit<
+  UseMutationOptions<TData, AxiosError, TVariables>,
+  'mutationFn'
+>;

@@ -1,27 +1,36 @@
+import {
+  COOKIE_NAMES,
+  DEFAULT_COOKIE_EXPIRES_DAYS,
+  ROUTES,
+  COOKIE_SETTINGS,
+  TIME_CONSTANTS,
+} from './constants';
+
+const isValidCookieValue = (value: string | null): boolean => {
+  return !!(value && value !== 'null' && value !== 'undefined');
+};
+
 export const isAuthenticated = (): boolean => {
-  const token = getCookie('token');
-  const auth = getCookie('auth');
-  return (
-    !!(token && token !== 'null' && token !== 'undefined') ||
-    !!(auth && auth !== 'null' && auth !== 'undefined')
-  );
+  const token = getCookie(COOKIE_NAMES.TOKEN);
+  const auth = getCookie(COOKIE_NAMES.AUTH);
+  return isValidCookieValue(token) || isValidCookieValue(auth);
 };
 
 export const logout = async (): Promise<void> => {
   try {
-    await fetch('/api/auth/logout', {
+    await fetch(ROUTES.LOGOUT, {
       method: 'POST',
       credentials: 'include',
     });
   } catch (error) {
     console.error('로그아웃 요청 실패:', error);
   } finally {
-    window.location.href = '/login';
+    window.location.href = ROUTES.LOGIN;
   }
 };
 
 export const redirectToLogin = (): void => {
-  window.location.href = '/login';
+  window.location.href = ROUTES.LOGIN;
 };
 
 export const getCookie = (name: string): string | null => {
@@ -33,18 +42,25 @@ export const getCookie = (name: string): string | null => {
   return null;
 };
 
-export const setCookie = (name: string, value: string, days: number = 7): void => {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+const getSecureFlag = (): string => {
   const isSecure = window.location.protocol === 'https:';
-  const secureFlag = isSecure ? ';Secure' : '';
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict${secureFlag}`;
+  return isSecure ? ';Secure' : '';
+};
+
+export const setCookie = (
+  name: string,
+  value: string,
+  days: number = DEFAULT_COOKIE_EXPIRES_DAYS,
+): void => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * TIME_CONSTANTS.DAY_IN_MS);
+  const secureFlag = getSecureFlag();
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=${COOKIE_SETTINGS.PATH};SameSite=${COOKIE_SETTINGS.SAME_SITE}${secureFlag}`;
 };
 
 export const deleteCookie = (name: string): void => {
-  const isSecure = window.location.protocol === 'https:';
-  const secureFlag = isSecure ? ';Secure' : '';
+  const secureFlag = getSecureFlag();
 
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;SameSite=Strict${secureFlag}`;
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=${window.location.hostname};SameSite=Strict${secureFlag}`;
+  document.cookie = `${name}=;expires=${COOKIE_SETTINGS.EXPIRED_DATE};path=${COOKIE_SETTINGS.PATH};SameSite=${COOKIE_SETTINGS.SAME_SITE}${secureFlag}`;
+  document.cookie = `${name}=;expires=${COOKIE_SETTINGS.EXPIRED_DATE};path=${COOKIE_SETTINGS.PATH};domain=${window.location.hostname};SameSite=${COOKIE_SETTINGS.SAME_SITE}${secureFlag}`;
 };
