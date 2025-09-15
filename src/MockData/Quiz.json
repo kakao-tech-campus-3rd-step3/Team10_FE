@@ -1,0 +1,22 @@
+{
+  "questionId": 123,
+  "questionText": "인플레이션이 경제에 미치는 영향으로 옳지 않은 것은?",
+  "questionType": "MULTIPLE_CHOICE",
+  "difficultyLevel": "MEDIUM",
+  "questionOrder": 15,
+  "totalQuestions": 30,
+  "questionData": {
+    "choices": [
+      { "choiceId": "A", "text": "화폐 가치 하락" },
+      { "choiceId": "B", "text": "물가 상승" },
+      { "choiceId": "C", "text": "구매력 증가" },
+      { "choiceId": "D", "text": "실질소득 감소" }
+    ]
+  },
+  "solved": false,
+  "bookmarked": false,
+  "selectedAnswer": "C",
+  "correctAnswer": "B",
+  "isCorrect": false,
+  "explanation": "인플레이션은 물가 상승을 의미하며, 화폐 가치 하락과 실질소득 감소는 인플레이션의 결과로 나타납니다. 구매력 증가는 인플레이션의 결과가 아니라 인플레이션이 없을 때의 결과입니다."
+}
