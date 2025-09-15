@@ -23,8 +23,8 @@ export const useMutationApi = <TData, TVariables = void>(
   });
 };
 
-const createMethodHook = <TData, TVariables = void>(method: HttpMethod) => {
-  return (url: string, options?: MutationApiOptions<TData, TVariables>) =>
+const createMethodHook = (method: HttpMethod) => {
+  return <TData, TVariables = void>(url: string, options?: MutationApiOptions<TData, TVariables>) =>
     useMutationApi<TData, TVariables>(method, url, options);
 };
 
