@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   getKakaoAuthorizationCode,
   getKakaoErrorMessage,
   getKakaoLoginStatus,
   useKakaoAuth,
 } from '@/Apis/kakao';
+import { useNavigate } from 'react-router-dom';
 
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
   const { loginWithCode, isPending } = useKakaoAuth();
+  const navigate = useNavigate();
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const loginStatus = getKakaoLoginStatus();
@@ -20,12 +23,45 @@ export const KakaoCallbackPage: React.FC = () => {
 
       console.log('🎉 카카오 로그인 성공!');
       console.log('📝 Authorization Code:', authorizationCode);
-      console.log('🔗 전체 URL:', window.location.href);
+      console.log('�� 전체 URL:', window.location.href);
 
       // 백엔드로 POST 요청 보내기
       if (authorizationCode) {
         console.log('📤 백엔드로 POST 요청 전송 중...');
-        loginWithCode(authorizationCode);
+
+        const handleLogin = async () => {
+          try {
+            setStatus('loading');
+            setMessage('로그인 처리 중...');
+
+            const result = await loginWithCode(authorizationCode);
+            window.history.replaceState({}, '', '/kakao/callback');
+            console.log('✅ 백엔드 로그인 성공:', result);
+            setStatus('success');
+            setMessage('로그인이 완료되었습니다!');
+
+            // 토큰 저장
+            if (result.access_token) {
+              localStorage.setItem('access_token', result.access_token);
+            }
+
+            // 3초 후 메인 페이지로 이동
+            timeout.current = setTimeout(() => {
+              navigate('/home');
+            }, 3000);
+          } catch (error) {
+            console.error('❌ 백엔드 로그인 실패:', error);
+            setStatus('error');
+            setMessage('로그인에 실패했습니다. 다시 시도해주세요.');
+
+            // 3초 후 로그인 페이지로 이동
+            timeout.current = setTimeout(() => {
+              navigate('/login');
+            }, 3000);
+          }
+        };
+
+        handleLogin();
       }
     } else if (loginStatus === 'error') {
       // 에러 시 에러 메시지 추출
@@ -33,21 +69,27 @@ export const KakaoCallbackPage: React.FC = () => {
 
       console.log('❌ 카카오 로그인 실패!');
       console.log('🚨 Error Message:', errorMessage);
-      console.log('🔗 전체 URL:', window.location.href);
+      console.log('�� 전체 URL:', window.location.href);
 
       setStatus('error');
       setMessage(`로그인 실패: ${errorMessage || '알 수 없는 오류'}`);
 
       // 3초 후 로그인 페이지로 이동
-      setTimeout(() => {
-        window.location.href = '/login';
+      timeout.current = setTimeout(() => {
+        navigate('/login');
       }, 3000);
     } else {
-      // 대기 중
       console.log('⏳ 카카오 로그인 대기 중...');
       setMessage('카카오 로그인을 처리하고 있습니다...');
     }
+    return () => {
+      if (timeout.current) clearTimeout(timeout.current);
+    };
   }, []);
+
+  // isPending 상태도 UI에 반영
+  const currentStatus = isPending ? 'loading' : status;
+  const currentMessage = isPending ? '서버와 통신 중...' : message;
 
   return (
     <div
@@ -72,7 +114,7 @@ export const KakaoCallbackPage: React.FC = () => {
           textAlign: 'center',
         }}
       >
-        {status === 'loading' && (
+        {currentStatus === 'loading' && (
           <>
             <div
               style={{
@@ -86,24 +128,24 @@ export const KakaoCallbackPage: React.FC = () => {
               }}
             />
             <h2 style={{ color: '#333', marginBottom: '10px' }}>로그인 처리 중...</h2>
-            <p style={{ color: '#666' }}>{message}</p>
+            <p style={{ color: '#666' }}>{currentMessage}</p>
           </>
         )}
 
-        {status === 'success' && (
+        {currentStatus === 'success' && (
           <>
             <div style={{ fontSize: '60px', marginBottom: '20px' }}>🎉</div>
             <h2 style={{ color: '#00a86b', marginBottom: '10px' }}>로그인 성공!</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>{message}</p>
+            <p style={{ color: '#666', marginBottom: '20px' }}>{currentMessage}</p>
             <p style={{ color: '#999', fontSize: '14px' }}>3초 후 메인 페이지로 이동합니다...</p>
           </>
         )}
 
-        {status === 'error' && (
+        {currentStatus === 'error' && (
           <>
             <div style={{ fontSize: '60px', marginBottom: '20px' }}>❌</div>
             <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>로그인 실패</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>{message}</p>
+            <p style={{ color: '#666', marginBottom: '20px' }}>{currentMessage}</p>
             <p style={{ color: '#999', fontSize: '14px' }}>3초 후 로그인 페이지로 이동합니다...</p>
           </>
         )}
