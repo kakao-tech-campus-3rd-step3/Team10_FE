@@ -12,7 +12,10 @@ export const useMutationApi = <TData, TVariables = void>(
   return useMutation<TData, AxiosError, TVariables>({
     mutationFn: async (variables: TVariables) => {
       try {
-        const res = await api[method]<TData>(url, variables);
+        const res =
+          method === 'delete'
+            ? await api[method]<TData>(url, { data: variables })
+            : await api[method]<TData>(url, variables);
         return res.data;
       } catch (e) {
         throw processApiError(e);
