@@ -18,17 +18,9 @@ export const KakaoCallbackPage: React.FC = () => {
     const loginStatus = getKakaoLoginStatus();
 
     if (loginStatus === 'success') {
-      // 성공 시 authorization code 추출
       const authorizationCode = getKakaoAuthorizationCode();
 
-      console.log('🎉 카카오 로그인 성공!');
-      console.log('📝 Authorization Code:', authorizationCode);
-      console.log('�� 전체 URL:', window.location.href);
-
-      // 백엔드로 POST 요청 보내기
       if (authorizationCode) {
-        console.log('📤 백엔드로 POST 요청 전송 중...');
-
         const handleLogin = async () => {
           try {
             setStatus('loading');
@@ -36,16 +28,13 @@ export const KakaoCallbackPage: React.FC = () => {
 
             const result = await loginWithCode(authorizationCode);
             window.history.replaceState({}, '', '/kakao/callback');
-            console.log('✅ 백엔드 로그인 성공:', result);
             setStatus('success');
             setMessage('로그인이 완료되었습니다!');
 
-            // 토큰 저장
             if (result.access_token) {
               localStorage.setItem('access_token', result.access_token);
             }
 
-            // 3초 후 메인 페이지로 이동
             timeout.current = setTimeout(() => {
               navigate('/home');
             }, 3000);
@@ -54,7 +43,6 @@ export const KakaoCallbackPage: React.FC = () => {
             setStatus('error');
             setMessage('로그인에 실패했습니다. 다시 시도해주세요.');
 
-            // 3초 후 로그인 페이지로 이동
             timeout.current = setTimeout(() => {
               navigate('/login');
             }, 3000);
@@ -64,22 +52,14 @@ export const KakaoCallbackPage: React.FC = () => {
         handleLogin();
       }
     } else if (loginStatus === 'error') {
-      // 에러 시 에러 메시지 추출
       const errorMessage = getKakaoErrorMessage();
-
-      console.log('❌ 카카오 로그인 실패!');
-      console.log('🚨 Error Message:', errorMessage);
-      console.log('�� 전체 URL:', window.location.href);
-
       setStatus('error');
       setMessage(`로그인 실패: ${errorMessage || '알 수 없는 오류'}`);
 
-      // 3초 후 로그인 페이지로 이동
       timeout.current = setTimeout(() => {
         navigate('/login');
       }, 3000);
     } else {
-      console.log('⏳ 카카오 로그인 대기 중...');
       setMessage('카카오 로그인을 처리하고 있습니다...');
     }
     return () => {
@@ -87,7 +67,6 @@ export const KakaoCallbackPage: React.FC = () => {
     };
   }, []);
 
-  // isPending 상태도 UI에 반영
   const currentStatus = isPending ? 'loading' : status;
   const currentMessage = isPending ? '서버와 통신 중...' : message;
 
