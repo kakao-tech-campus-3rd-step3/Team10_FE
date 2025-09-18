@@ -6,6 +6,7 @@ import {
   useKakaoAuth,
 } from '@/Apis/kakao';
 import { useNavigate } from 'react-router-dom';
+import { useTokenCookies } from '@/utils/cookie';
 
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -13,6 +14,7 @@ export const KakaoCallbackPage: React.FC = () => {
   const { loginWithCode, isPending } = useKakaoAuth();
   const navigate = useNavigate();
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { setAccessToken, setRefreshToken } = useTokenCookies();
 
   useEffect(() => {
     const loginStatus = getKakaoLoginStatus();
@@ -31,8 +33,11 @@ export const KakaoCallbackPage: React.FC = () => {
             setStatus('success');
             setMessage('로그인이 완료되었습니다!');
 
-            if (result.access_token) {
-              localStorage.setItem('access_token', result.access_token);
+            if (result.accessToken) {
+              setAccessToken(result.accessToken, 7);
+              setRefreshToken(result.refreshToken, 30);
+              // userId도 필요하면 저장
+              localStorage.setItem('userId', result.userId);
             }
 
             timeout.current = setTimeout(() => {
