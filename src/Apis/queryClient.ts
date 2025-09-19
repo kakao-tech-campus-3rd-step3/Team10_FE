@@ -32,13 +32,8 @@ export const handleApiError = (error: unknown) => {
   return { shouldRedirect: false };
 };
 
-export const processApiError = (error: unknown, onError?: (error: AxiosError) => void): never => {
+export const processApiError = (error: unknown): AxiosError => {
   const axiosError = error as AxiosError;
-  const globalErrorResult = handleApiError(axiosError);
-
-  if (!globalErrorResult.shouldRedirect && onError) {
-    onError(axiosError);
-  }
-
-  throw axiosError;
+  handleApiError(axiosError);
+  return axiosError;
 };
