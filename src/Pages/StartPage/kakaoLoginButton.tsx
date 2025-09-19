@@ -1,9 +1,12 @@
 import styled from '@emotion/styled';
 import KakaoLoginImg from '@/assets/StartPage/kakao_login_large_narrow.png';
+import { useKakaoAuth } from '@/Apis/kakao';
 
-export const KakaoLoginButton = ({ onClick }: { onClick: () => void }) => {
+export const KakaoLoginButton = () => {
+  const { startKakaoLogin } = useKakaoAuth();
+
   return (
-    <Container type="button" onClick={onClick}>
+    <Container type="button" onClick={startKakaoLogin}>
       <img src={KakaoLoginImg} alt="카카오 로그인" />
     </Container>
   );

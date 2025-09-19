@@ -12,19 +12,21 @@ export const useMutationApi = <TData, TVariables = void>(
   return useMutation<TData, AxiosError, TVariables>({
     mutationFn: async (variables: TVariables) => {
       try {
-        const response = await api[method]<TData>(url, variables);
-        return response.data;
-      } catch (error) {
-        processApiError(error);
-        throw error;
+        const res =
+          method === 'delete'
+            ? await api[method]<TData>(url, { data: variables })
+            : await api[method]<TData>(url, variables);
+        return res.data;
+      } catch (e) {
+        throw processApiError(e);
       }
     },
     ...options,
   });
 };
 
-const createMethodHook = <TData, TVariables = void>(method: HttpMethod) => {
-  return (url: string, options?: MutationApiOptions<TData, TVariables>) =>
+const createMethodHook = (method: HttpMethod) => {
+  return <TData, TVariables = void>(url: string, options?: MutationApiOptions<TData, TVariables>) =>
     useMutationApi<TData, TVariables>(method, url, options);
 };
 
