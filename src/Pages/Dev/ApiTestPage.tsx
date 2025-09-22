@@ -54,14 +54,12 @@ export const ApiTestPage = () => {
     <div style={{ padding: 16 }}>
       <h2>API 테스트</h2>
 
-      {/* API 테스트 버튼 */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button onClick={getTest} disabled={isLoadingTest}>
           GET /test
         </button>
       </div>
 
-      {/* 결과 로그 */}
       <div style={{ marginTop: 16 }}>
         {logs.map((l, idx) => (
           <div key={idx} style={{ padding: 8, border: '1px solid #eee', marginBottom: 8 }}>
