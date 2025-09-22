@@ -16,6 +16,43 @@ export const KakaoCallbackPage: React.FC = () => {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setAccessToken, setRefreshToken } = useTokenCookies();
 
+  const handleError = (errorMessage: string, shouldLog = false, error?: unknown) => {
+    if (shouldLog && error) {
+      console.error('❌ 로그인 실패:', error);
+    }
+
+    setStatus('error');
+    setMessage(errorMessage);
+
+    timeout.current = setTimeout(() => {
+      navigate('/login');
+    }, 3000);
+  };
+
+  const handleLogin = async (authorizationCode: string) => {
+    try {
+      setStatus('loading');
+      setMessage('로그인 처리 중...');
+
+      const result = await loginWithCode(authorizationCode);
+      window.history.replaceState({}, '', '/kakao/callback');
+      setStatus('success');
+      setMessage('로그인이 완료되었습니다!');
+
+      if (result.accessToken) {
+        setAccessToken(result.accessToken, 7);
+        setRefreshToken(result.refreshToken, 30);
+        localStorage.setItem('userId', result.userId);
+      }
+
+      timeout.current = setTimeout(() => {
+        navigate('/home');
+      }, 3000);
+    } catch (error) {
+      handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+    }
+  };
+
   useEffect(() => {
     const loginStatus = getKakaoLoginStatus();
 
@@ -23,47 +60,11 @@ export const KakaoCallbackPage: React.FC = () => {
       const authorizationCode = getKakaoAuthorizationCode();
 
       if (authorizationCode) {
-        const handleLogin = async () => {
-          try {
-            setStatus('loading');
-            setMessage('로그인 처리 중...');
-
-            const result = await loginWithCode(authorizationCode);
-            window.history.replaceState({}, '', '/kakao/callback');
-            setStatus('success');
-            setMessage('로그인이 완료되었습니다!');
-
-            if (result.accessToken) {
-              setAccessToken(result.accessToken, 7);
-              setRefreshToken(result.refreshToken, 30);
-              // userId도 필요하면 저장
-              localStorage.setItem('userId', result.userId);
-            }
-
-            timeout.current = setTimeout(() => {
-              navigate('/home');
-            }, 3000);
-          } catch (error) {
-            console.error('❌ 백엔드 로그인 실패:', error);
-            setStatus('error');
-            setMessage('로그인에 실패했습니다. 다시 시도해주세요.');
-
-            timeout.current = setTimeout(() => {
-              navigate('/login');
-            }, 3000);
-          }
-        };
-
-        handleLogin();
+        handleLogin(authorizationCode);
       }
     } else if (loginStatus === 'error') {
       const errorMessage = getKakaoErrorMessage();
-      setStatus('error');
-      setMessage(`로그인 실패: ${errorMessage || '알 수 없는 오류'}`);
-
-      timeout.current = setTimeout(() => {
-        navigate('/login');
-      }, 3000);
+      handleError(`로그인 실패: ${errorMessage || '알 수 없는 오류'}`);
     } else {
       setMessage('카카오 로그인을 처리하고 있습니다...');
     }
