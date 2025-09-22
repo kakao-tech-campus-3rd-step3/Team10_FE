@@ -21,7 +21,6 @@ export default defineConfig({
         target: 'https://sadajobe.shop',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },

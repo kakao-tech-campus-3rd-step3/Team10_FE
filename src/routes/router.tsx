@@ -5,6 +5,7 @@ import SharingPage from '@/Pages/MyPage/SharingPage';
 import SplashPage from '@/Pages/StartPage/SplashPage';
 import LoginPage from '@/Pages/StartPage/LoginPage';
 import CharacterCreatePage from '@/Pages/StartPage/CharacterCreatePage';
+import { KakaoCallbackPage } from '@/Pages/StartPage/KakaoCallbackPage';
 import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/character-create', element: <CharacterCreatePage /> },
+  { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
   { path: '/home', element: <HomePage /> },
   { path: '/quizList', element: <TopicSelectPage /> },
   { path: '/quizSolve', element: <QuizSolvePage data={data} /> },

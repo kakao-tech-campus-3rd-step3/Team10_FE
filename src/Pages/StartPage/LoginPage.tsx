@@ -1,20 +1,15 @@
 import styled from '@emotion/styled';
 import LogoFace from '@/assets/StartPage/kongsik_face.png';
-import KakaoLoginButton from './kakaoLoginButton';
+import KakaoLoginButton from './KakaoLoginButton';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
-  const handleKakaoLogin = () => {
-    navigate('/character-create');
-  };
   return (
     <CenteredContainer>
       <Logo src={LogoFace} alt="앱 로고" />
       <Slogan>쉽고 정확하게, 나만의 경제 교과서</Slogan>
       <AppName>이게 머니</AppName>
-      <KakaoLoginButton onClick={handleKakaoLogin} />
+      <KakaoLoginButton />
     </CenteredContainer>
   );
 };
