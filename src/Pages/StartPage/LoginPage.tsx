@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import LogoFace from '@/assets/StartPage/kongsik_face.png';
-import KakaoLoginButton from './kakaoLoginButton';
+import KakaoLoginButton from './KakaoLoginButton';
 import { Container } from '@/Shared/components/Container';
 
 export const LoginPage = () => {
