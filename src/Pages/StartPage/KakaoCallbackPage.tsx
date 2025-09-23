@@ -71,7 +71,7 @@ export const KakaoCallbackPage: React.FC = () => {
     return () => {
       if (timeout.current) clearTimeout(timeout.current);
     };
-  }, []);
+  }, []); //의존성 배열 lint 경고 무시
 
   const currentStatus = isPending ? 'loading' : status;
   const currentMessage = isPending ? '서버와 통신 중...' : message;
