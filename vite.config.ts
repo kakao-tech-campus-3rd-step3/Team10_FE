@@ -24,4 +24,7 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'process.env.VITE_USE_MSW': JSON.stringify(process.env.VITE_USE_MSW),
+  },
 });
