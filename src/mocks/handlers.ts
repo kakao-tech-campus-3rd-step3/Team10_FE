@@ -36,7 +36,7 @@ export const handlers = [
    */
   http.post('/api/login', async ({ request }) => {
     const body = (await request.json()) as { code: string };
-    console.log('🎭 MSW: 카카오 로그인 요청 받음', body);
+    console.log('MSW: 카카오 로그인 요청 받음', body);
 
     const response = {
       accessToken: 'mock-access-token-12345',
@@ -50,7 +50,7 @@ export const handlers = [
       },
     };
 
-    console.log('🎭 MSW: 카카오 로그인 응답 반환', response);
+    console.log('MSW: 카카오 로그인 응답 반환', response);
     return HttpResponse.json(response);
   }),
 
