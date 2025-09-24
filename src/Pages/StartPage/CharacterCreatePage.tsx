@@ -8,10 +8,18 @@ import { useNavigate } from 'react-router-dom';
 
 export const CharacterCreatePage = () => {
   const [name, setName] = useState('');
+  const [isNameValid, setIsNameValid] = useState(false);
   const navigate = useNavigate();
+
   const handleConfirm = () => {
     navigate('/home');
   };
+
+  const handleValidationChange = (isValid: boolean) => {
+    setIsNameValid(isValid);
+  };
+
+  const isButtonDisabled = !isNameValid;
 
   return (
     <CenteredContainer>
@@ -21,9 +29,10 @@ export const CharacterCreatePage = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="이름을 지어주세요."
+        onValidationChange={handleValidationChange}
       />
       <ConfirmButtonContainer>
-        <ConfirmButton text="다음" onClick={handleConfirm} />
+        <ConfirmButton text="다음" onClick={handleConfirm} disabled={isButtonDisabled} />
       </ConfirmButtonContainer>
     </CenteredContainer>
   );

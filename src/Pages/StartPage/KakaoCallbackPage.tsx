@@ -46,7 +46,7 @@ export const KakaoCallbackPage: React.FC = () => {
       }
 
       timeout.current = setTimeout(() => {
-        navigate('/home');
+        navigate('/character-create');
       }, 3000);
     } catch (error) {
       handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);

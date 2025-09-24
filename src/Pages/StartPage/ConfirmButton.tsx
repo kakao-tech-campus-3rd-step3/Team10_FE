@@ -1,7 +1,23 @@
 import styled from '@emotion/styled';
 
-export const ConfirmButton = ({ text, onClick }: { text: string; onClick: () => void }) => {
-  return <Container onClick={onClick}>{text}</Container>;
+interface ConfirmButtonProps {
+  text: string;
+  onClick: () => void;
+  disabled?: boolean;
+}
+
+export const ConfirmButton = ({ text, onClick, disabled = false }: ConfirmButtonProps) => {
+  const handleClick = () => {
+    if (!disabled) {
+      onClick();
+    }
+  };
+
+  return (
+    <Container onClick={handleClick} disabled={disabled}>
+      {text}
+    </Container>
+  );
 };
 
 export default ConfirmButton;
@@ -10,7 +26,7 @@ const Container = styled.button`
   width: 160px;
   height: 54px;
   flex-shrink: 0;
-  background-color: ${({ theme }) => theme.colors.secondary};
+  background-color: ${({ theme, disabled }) => (disabled ? '#cccccc' : theme.colors.secondary)};
   border-radius: 52px;
   border: none;
   display: flex;
@@ -18,7 +34,13 @@ const Container = styled.button`
   justify-content: center;
   font: ${({ theme }) => theme.font.bold};
   font-size: 20px;
-  color: ${({ theme }) => theme.colors.background};
-  cursor: pointer;
+  color: ${({ theme, disabled }) => (disabled ? '#666666' : theme.colors.background)};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: ${({ disabled }) => (disabled ? 0.6 : 0.9)};
+  }
 `;
