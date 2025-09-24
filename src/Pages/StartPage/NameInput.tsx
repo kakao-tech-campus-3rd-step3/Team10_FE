@@ -11,24 +11,19 @@ interface NameInputProps {
 
 export const NameInput = ({ value, onChange, placeholder, onValidationChange }: NameInputProps) => {
   const [isValid, setIsValid] = useState(false);
-
   useEffect(() => {
     const filter = new Filter();
 
-    const checkValidation = () => {
-      if (value.trim() === '') {
-        setIsValid(false);
-        onValidationChange?.(false);
-        return;
-      }
+    if (value.trim() === '') {
+      setIsValid(false);
+      onValidationChange?.(false);
+      return;
+    }
 
-      const hasBadWords = filter.isProfane(value);
-      const isValidName = !hasBadWords;
-      setIsValid(isValidName);
-      onValidationChange?.(isValidName);
-    };
-
-    checkValidation();
+    const hasBadWords = filter.isProfane(value);
+    const isValidName = !hasBadWords;
+    setIsValid(isValidName);
+    onValidationChange?.(isValidName);
   }, [value, onValidationChange]);
 
   return (
