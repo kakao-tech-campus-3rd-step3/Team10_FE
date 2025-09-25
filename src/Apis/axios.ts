@@ -36,7 +36,6 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // 카카오 로그인 요청은 401 에러 처리를 건너뜀 (정상적인 응답)
     if (originalRequest?.url?.includes('/user/login')) {
       return Promise.reject(error);
     }
