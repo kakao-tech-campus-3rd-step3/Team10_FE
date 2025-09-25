@@ -15,7 +15,7 @@ export const KakaoCallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setAccessToken, setRefreshToken } = useTokenCookies();
-
+  const isProcessing = useRef(false); // 중복 처리 방지
   const handleError = (errorMessage: string, shouldLog = false, error?: unknown) => {
     if (shouldLog && error) {
       console.error('❌ 로그인 실패:', error);
@@ -30,12 +30,16 @@ export const KakaoCallbackPage: React.FC = () => {
   };
 
   const handleLogin = async (authorizationCode: string) => {
+    // 중복 처리 방지
+    if (isProcessing.current) {
+      return;
+    }
     try {
+      isProcessing.current = true;
       setStatus('loading');
       setMessage('로그인 처리 중...');
 
       const result = await loginWithCode(authorizationCode);
-      window.history.replaceState({}, '', '/kakao/callback');
       setStatus('success');
       setMessage('로그인이 완료되었습니다!');
 
@@ -45,10 +49,13 @@ export const KakaoCallbackPage: React.FC = () => {
         localStorage.setItem('userId', result.userId);
       }
 
+      isProcessing.current = false; // 성공 시 리셋
+
       timeout.current = setTimeout(() => {
         navigate('/home');
       }, 3000);
     } catch (error) {
+      isProcessing.current = false; // 에러 발생 시 리셋
       handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
     }
   };
@@ -60,6 +67,7 @@ export const KakaoCallbackPage: React.FC = () => {
       const authorizationCode = getKakaoAuthorizationCode();
 
       if (authorizationCode) {
+        window.history.replaceState({}, '', '/auth/kakao/callback');
         handleLogin(authorizationCode);
       }
     } else if (loginStatus === 'error') {
