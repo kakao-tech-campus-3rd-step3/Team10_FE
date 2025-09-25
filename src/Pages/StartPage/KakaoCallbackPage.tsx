@@ -7,6 +7,7 @@ import {
 } from '@/Apis/kakao';
 import { useNavigate } from 'react-router-dom';
 import { useTokenCookies } from '@/utils/cookie';
+import { AxiosError } from 'axios';
 
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -15,7 +16,7 @@ export const KakaoCallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setAccessToken, setRefreshToken } = useTokenCookies();
-
+  const isProcessing = useRef(false);
   const handleError = (errorMessage: string, shouldLog = false, error?: unknown) => {
     if (shouldLog && error) {
       console.error('❌ 로그인 실패:', error);
@@ -30,12 +31,15 @@ export const KakaoCallbackPage: React.FC = () => {
   };
 
   const handleLogin = async (authorizationCode: string) => {
+    if (isProcessing.current) {
+      return;
+    }
     try {
+      isProcessing.current = true;
       setStatus('loading');
       setMessage('로그인 처리 중...');
 
       const result = await loginWithCode(authorizationCode);
-      window.history.replaceState({}, '', '/kakao/callback');
       setStatus('success');
       setMessage('로그인이 완료되었습니다!');
 
@@ -45,11 +49,25 @@ export const KakaoCallbackPage: React.FC = () => {
         localStorage.setItem('userId', result.userId);
       }
 
+      isProcessing.current = false;
+
       timeout.current = setTimeout(() => {
         navigate('/character-create');
       }, 3000);
     } catch (error) {
-      handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+      isProcessing.current = false;
+
+      const axiosError = error as AxiosError;
+      if (axiosError?.response?.status === 401) {
+        setStatus('success');
+        setMessage('새로운 계정이 생성되었습니다!');
+
+        timeout.current = setTimeout(() => {
+          navigate('/character-create');
+        }, 2000);
+      } else {
+        handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+      }
     }
   };
 
@@ -60,6 +78,7 @@ export const KakaoCallbackPage: React.FC = () => {
       const authorizationCode = getKakaoAuthorizationCode();
 
       if (authorizationCode) {
+        window.history.replaceState({}, '', '/auth/kakao/callback');
         handleLogin(authorizationCode);
       }
     } else if (loginStatus === 'error') {
