@@ -15,7 +15,7 @@ export const KakaoCallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setAccessToken, setRefreshToken } = useTokenCookies();
-  const isProcessing = useRef(false); // 중복 처리 방지
+  const isProcessing = useRef(false);
   const handleError = (errorMessage: string, shouldLog = false, error?: unknown) => {
     if (shouldLog && error) {
       console.error('❌ 로그인 실패:', error);
@@ -30,7 +30,6 @@ export const KakaoCallbackPage: React.FC = () => {
   };
 
   const handleLogin = async (authorizationCode: string) => {
-    // 중복 처리 방지
     if (isProcessing.current) {
       return;
     }
@@ -49,13 +48,13 @@ export const KakaoCallbackPage: React.FC = () => {
         localStorage.setItem('userId', result.userId);
       }
 
-      isProcessing.current = false; // 성공 시 리셋
+      isProcessing.current = false;
 
       timeout.current = setTimeout(() => {
         navigate('/home');
       }, 3000);
     } catch (error) {
-      isProcessing.current = false; // 에러 발생 시 리셋
+      isProcessing.current = false;
       handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
     }
   };
