@@ -7,6 +7,7 @@ import {
 } from '@/Apis/kakao';
 import { useNavigate } from 'react-router-dom';
 import { useTokenCookies } from '@/utils/cookie';
+import { AxiosError } from 'axios';
 
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -55,7 +56,18 @@ export const KakaoCallbackPage: React.FC = () => {
       }, 3000);
     } catch (error) {
       isProcessing.current = false;
-      handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+
+      const axiosError = error as AxiosError;
+      if (axiosError?.response?.status === 401) {
+        setStatus('success');
+        setMessage('새로운 계정이 생성되었습니다!');
+
+        timeout.current = setTimeout(() => {
+          navigate('/character-create');
+        }, 2000);
+      } else {
+        handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+      }
     }
   };
 
