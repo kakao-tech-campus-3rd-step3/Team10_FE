@@ -2,6 +2,7 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
 import CalenderIcon from '@/assets/HomeImg/calendar.png';
+import TierIcon from '@/assets/HomeImg/tier.png';
 import { useNavigate } from 'react-router-dom';
 
 export type StatusActionBarProps = {
@@ -26,10 +27,8 @@ export const StatusActionBar = ({
   return (
     <Wrapper>
       <Label onClick={handleLabelClick}>
-        <span role="img" aria-label="growth chart">
-          📈
-        </span>{' '}
-        성장주 투자자
+        <LeftIcon src={TierIcon} alt="티어 아이콘" />
+        티어 이름
       </Label>
       <RightButton type="button" aria-label={rightIconAlt}>
         <RightIcon src={rightIconSrc} alt={rightIconAlt} $size={rightIconSizePx} />
@@ -57,6 +56,10 @@ const Label = styled.div`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;
+`;
+
+const LeftIcon = styled.img`
+  width: 48px;
 `;
 
 const RightButton = styled.button`

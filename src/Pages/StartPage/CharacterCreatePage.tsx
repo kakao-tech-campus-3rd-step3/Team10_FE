@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import NameInput from './NameInput';
 import ConfirmButton from './ConfirmButton';
-import CharacterImage from '@/assets/StartPage/kongsik_hi.png';
+import CharacterImage from '@/assets/HomeImg/character.png';
 import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,7 @@ export const CharacterCreatePage = () => {
         onValidationChange={handleValidationChange}
       />
       <ConfirmButtonContainer>
-        <ConfirmButton text="다음" onClick={handleConfirm} disabled={isButtonDisabled} />
+        <ConfirmButton text="완료" onClick={handleConfirm} disabled={isButtonDisabled} />
       </ConfirmButtonContainer>
     </CenteredContainer>
   );
