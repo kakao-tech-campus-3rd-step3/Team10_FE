@@ -1,11 +1,12 @@
 export const theme = {
   colors: {
     primary: '#92AD47', // green
-    secondary: '#B47101', // brown
+    secondary: '#769F43', // new green
     tertiary: '#F8CC39', // yellow
     text: '#000000', // black
-    background: '#FAF2E2', // beige
+    background: '#FFFFFF', // white
     inactive: '#EFEFF0', // inactive
+    line: '#878181', // line gray
   },
   spacing: (factor: number) => `${4 * factor}px`,
   font: {

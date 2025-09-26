@@ -13,12 +13,12 @@ export interface RefreshTokenResponse {
  * 토큰 갱신 API 훅
  */
 export const useRefreshToken = () => {
-  return usePostApi<RefreshTokenResponse, RefreshTokenRequest>('/api/auth/refresh');
+  return usePostApi<RefreshTokenResponse, RefreshTokenRequest>('/auth/refresh');
 };
 
 /**
  * 로그아웃 API 훅
  */
 export const useLogout = () => {
-  return usePostApi<void, void>('/api/auth/logout');
+  return usePostApi<void, void>('/auth/logout');
 };
