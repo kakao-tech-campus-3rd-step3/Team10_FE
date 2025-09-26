@@ -23,17 +23,17 @@ export const ConfirmButton = ({ text, onClick, disabled = false }: ConfirmButton
 export default ConfirmButton;
 
 const Container = styled.button`
-  width: 160px;
-  height: 54px;
+  width: 155px;
+  height: 50px;
   flex-shrink: 0;
   background-color: ${({ theme, disabled }) => (disabled ? '#cccccc' : theme.colors.secondary)};
   border-radius: 52px;
-  border: none;
+  border: 2px solid #d3e0b4;
   display: flex;
   align-items: center;
   justify-content: center;
   font: ${({ theme }) => theme.font.bold};
-  font-size: 20px;
+  font-size: 18px;
   color: ${({ theme, disabled }) => (disabled ? '#666666' : theme.colors.background)};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);

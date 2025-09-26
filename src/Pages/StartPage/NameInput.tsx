@@ -52,7 +52,7 @@ const InputContainer = styled.div`
 
 const Container = styled.input<{ $isValid: boolean }>`
   width: 272px;
-  height: 54px;
+  height: 50px;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.background};
   border: 2px solid ${({ $isValid, theme }) => ($isValid ? theme.colors.secondary : '#ff4444')};
