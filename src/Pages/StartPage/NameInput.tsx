@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Filter from 'badwords-ko';
 
 interface NameInputProps {
@@ -11,9 +11,9 @@ interface NameInputProps {
 
 export const NameInput = ({ value, onChange, placeholder, onValidationChange }: NameInputProps) => {
   const [isValid, setIsValid] = useState(false);
-  useEffect(() => {
-    const filter = new Filter();
+  const filter = useMemo(() => new Filter(), []);
 
+  useEffect(() => {
     if (value.trim() === '') {
       setIsValid(false);
       onValidationChange?.(false);
@@ -24,7 +24,7 @@ export const NameInput = ({ value, onChange, placeholder, onValidationChange }: 
     const isValidName = !hasBadWords;
     setIsValid(isValidName);
     onValidationChange?.(isValidName);
-  }, [value, onValidationChange]);
+  }, [value, onValidationChange, filter]);
 
   return (
     <InputContainer>
