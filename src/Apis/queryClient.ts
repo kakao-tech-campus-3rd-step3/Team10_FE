@@ -9,17 +9,22 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000,
     },
     mutations: {
-      retry: 1,
+      retry: (failureCount, error) => {
+        if (
+          error instanceof AxiosError &&
+          error.response?.status &&
+          error.response.status >= 400 &&
+          error.response.status < 500
+        ) {
+          return false;
+        }
+        return failureCount < 1;
+      },
     },
   },
 });
 
 export const handleApiError = (error: unknown) => {
-  if (error instanceof AxiosError && error.response?.status === 401) {
-    window.location.href = '/login';
-    return { shouldRedirect: true, path: '/login' };
-  }
-
   const errorMessage =
     error instanceof AxiosError
       ? error.response?.data?.message || error.message

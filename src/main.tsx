@@ -15,6 +15,8 @@ import { CookiesProvider } from 'react-cookie';
  * @description 프로덕션 환경에서는 절대 MSW를 활성화하지 않음
  * @security MSW는 개발용 모킹 도구로, 프로덕션에서 사용 시 보안 위험
  */
+
+/** MSW 잠시 비활성화(api연결 확인 용)
 if (process.env.NODE_ENV === 'development') {
   import('./mocks/browser').then(({ worker }) => {
     worker.start().then(() => {
@@ -22,6 +24,7 @@ if (process.env.NODE_ENV === 'development') {
     });
   });
 }
+*/
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
