@@ -1,6 +1,21 @@
 import { QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
+const isClientError = (error: unknown): boolean => {
+  return (
+    error instanceof AxiosError &&
+    error.response?.status != null &&
+    error.response.status >= 400 &&
+    error.response.status < 500
+  );
+};
+const shouldRetry = (failureCount: number, error: unknown): boolean => {
+  if (isClientError(error)) {
+    return false;
+  }
+  return failureCount < 1;
+};
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -9,17 +24,12 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000,
     },
     mutations: {
-      retry: 1,
+      retry: shouldRetry,
     },
   },
 });
 
 export const handleApiError = (error: unknown) => {
-  if (error instanceof AxiosError && error.response?.status === 401) {
-    window.location.href = '/login';
-    return { shouldRedirect: true, path: '/login' };
-  }
-
   const errorMessage =
     error instanceof AxiosError
       ? error.response?.data?.message || error.message
