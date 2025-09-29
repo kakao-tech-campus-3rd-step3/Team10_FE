@@ -6,7 +6,7 @@ import type { KakaoLoginRequest, KakaoLoginResponse } from './types';
  * 카카오 로그인 API 호출 훅
  */
 export const useKakaoLogin = () => {
-  return usePostApi<KakaoLoginResponse, KakaoLoginRequest>('/api/login');
+  return usePostApi<KakaoLoginResponse, KakaoLoginRequest>('/user/login');
 };
 
 /**

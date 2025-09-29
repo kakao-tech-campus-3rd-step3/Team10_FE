@@ -36,16 +36,27 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
+    if (
+      originalRequest?.url?.includes('/user/login') ||
+      originalRequest?.url?.includes('/auth/refresh')
+    ) {
+      console.log('로그인 관련 요청 - 토큰 갱신 시도하지 않음:', originalRequest?.url);
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      console.log('401 에러 감지 - 토큰 갱신 시도:', originalRequest?.url);
       originalRequest._retry = true;
 
       try {
         return await handle401Error(originalRequest);
       } catch (refreshError) {
+        console.log('토큰 갱신 실패:', refreshError);
         return Promise.reject(refreshError);
       }
     }
 
+    console.log('에러 반환:', error.response?.status, originalRequest?.url);
     return Promise.reject(error);
   },
 );

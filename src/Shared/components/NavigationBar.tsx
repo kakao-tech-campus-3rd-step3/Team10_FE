@@ -6,72 +6,52 @@ const NavWrapper = styled.nav`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: ${theme.spacing(4)} 0;
-  background-color: #dbc399ff;
+  border-bottom: 1px solid ${theme.colors.line};
+  background-color: ${theme.colors.background};
 `;
 
-const NavItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${theme.spacing(1)};
+const NavItem = styled.div<{ active?: boolean }>`
+  flex: 1;
+  text-align: center;
+  padding: ${theme.spacing(3)} 0;
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  color: ${(props) => (props.active ? theme.colors.secondary : theme.colors.text)};
   cursor: pointer;
-`;
+  position: relative;
 
-const IconPlaceholder = styled.div`
-  width: ${theme.spacing(15)};
-  height: ${theme.spacing(15)};
-  background-color: #e0e0e0;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid ${theme.colors.primary};
-  font-size: 24px;
-  color: ${theme.colors.primary};
-`;
-
-const NavText = styled.span`
-  font-family: ${theme.font.regular.fontFamily};
-  font-weight: ${theme.font.regular.fontWeight};
-  font-size: 14px;
-  color: ${theme.colors.text};
+  &::after {
+    content: '';
+    display: ${(props) => (props.active ? 'block' : 'none')};
+    position: absolute;
+    bottom: -2px;
+    left: 15%;
+    width: 70%;
+    height: 2px;
+    background-color: ${theme.colors.secondary};
+  }
 `;
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
   const navItems = [
-    { name: '꾸미기', icon: '🌱' },
-    { name: '랭크', icon: '🏆' },
-    { name: '학습 기록', icon: '✅' },
-    { name: '마이 페이지', icon: '📋' },
+    { name: '꾸미기', path: '/character' },
+    { name: '랭크', path: '/rank' },
+    { name: '홈', path: '/home' },
+    { name: '학습 기록', path: '/record' },
+    { name: '마이 페이지', path: '/mypage' },
   ];
-
-  const handleNavigate = (name: string) => {
-    switch (name) {
-      case '마이 페이지':
-        navigate('/mypage');
-        break;
-      case '꾸미기':
-        navigate('/character');
-        break;
-      case '랭크':
-        navigate('/rank');
-        break;
-      case '학습 기록':
-        navigate('/record');
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <NavWrapper>
       {navItems.map((item) => (
-        <NavItem key={item.name} onClick={() => handleNavigate(item.name)}>
-          <IconPlaceholder>{item.icon}</IconPlaceholder>
-          <NavText>{item.name}</NavText>
+        <NavItem
+          key={item.name}
+          active={location.pathname === item.path}
+          onClick={() => navigate(item.path)}
+        >
+          {item.name}
         </NavItem>
       ))}
     </NavWrapper>
