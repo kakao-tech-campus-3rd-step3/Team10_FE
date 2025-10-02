@@ -43,9 +43,9 @@ export const KakaoCallbackPage: React.FC = () => {
       setMessage('로그인 처리 중...');
 
       const savedNickname = localStorage.getItem('temp_nickname');
-      const needRegister = localStorage.getItem('needRegister');
 
-      if (needRegister === 'true' && savedNickname) {
+      if (savedNickname) {
+        // 닉네임이 있으면 바로 회원가입 진행
         const result = await registerWithCode({
           code: authorizationCode,
           nickname: savedNickname,
@@ -55,7 +55,6 @@ export const KakaoCallbackPage: React.FC = () => {
           setAccessToken(result.accessToken, 7);
           localStorage.setItem('userId', 'temp-user-id');
           localStorage.removeItem('temp_nickname');
-          localStorage.removeItem('needRegister');
 
           setStatus('success');
           setMessage('회원가입이 완료되었습니다!');
@@ -65,6 +64,7 @@ export const KakaoCallbackPage: React.FC = () => {
           }, 2000);
         }
       } else {
+        // 닉네임이 없으면 일반 로그인 진행
         const result = await loginWithCode(authorizationCode);
         setStatus('success');
         setMessage('로그인이 완료되었습니다!');
@@ -87,14 +87,15 @@ export const KakaoCallbackPage: React.FC = () => {
 
       const axiosError = error as AxiosError;
       if (axiosError?.response?.status === 401) {
+        // 기존 사용자가 아닌 경우 캐릭터 생성 페이지로 이동
         setStatus('success');
         setMessage('새로운 계정이 생성되었습니다!');
 
         timeout.current = setTimeout(() => {
           navigate('/character-create');
-        }, 3000);
+        }, 2000);
       } else {
-        handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+        handleError('로그인에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };
