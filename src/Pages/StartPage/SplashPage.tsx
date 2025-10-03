@@ -3,17 +3,34 @@ import LogoFace from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/Shared/components/LoadingSpinner';
 
 export const SplashPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
+
   useEffect(() => {
-    setTimeout(() => {
-      navigate('/login');
-    }, 1000);
-  }, [navigate]);
+    // 토큰 체크가 완료되면 자동 로그인 처리
+    if (!isLoading) {
+      setTimeout(() => {
+        if (isAuthenticated) {
+          navigate('/home');
+        } else {
+          navigate('/login');
+        }
+      }, 1000); // 1초 후에 이동
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
   return (
     <CenteredContainer>
       <Logo src={LogoFace} alt="앱 로고" />
+      {isLoading && (
+        <LoadingContainer>
+          <LoadingSpinner size="medium" message="앱을 시작하는 중..." />
+        </LoadingContainer>
+      )}
     </CenteredContainer>
   );
 };
@@ -29,4 +46,8 @@ const Logo = styled.img`
   width: 228px;
   height: 228px;
   object-fit: contain;
+`;
+
+const LoadingContainer = styled.div`
+  margin-top: 40px;
 `;

@@ -17,23 +17,101 @@ import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
 import { TierPage } from '@/Pages/TierPage';
 import { TopicSelectPage } from '@/Pages/TopicSelectPage';
+import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/character-create', element: <CharacterCreatePage /> },
   { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
-  { path: '/home', element: <HomePage /> },
-  { path: '/quizList', element: <TopicSelectPage /> },
-  { path: '/quizSolve', element: <QuizSolvePage data={data} /> },
-  { path: '/quizResult', element: <QuizResultPage data={data} /> },
-  { path: '/mypage', element: <MyPage /> },
-  { path: '/sharing', element: <SharingPage /> },
-  { path: '*', element: <NotFoundPage /> },
-  { path: '/rank', element: <RankPage /> },
+  {
+    path: '/home',
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quizList',
+    element: (
+      <ProtectedRoute>
+        <TopicSelectPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quizSolve',
+    element: (
+      <ProtectedRoute>
+        <QuizSolvePage data={data} />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quizResult',
+    element: (
+      <ProtectedRoute>
+        <QuizResultPage data={data} />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/mypage',
+    element: (
+      <ProtectedRoute>
+        <MyPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/sharing',
+    element: (
+      <ProtectedRoute>
+        <SharingPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/rank',
+    element: (
+      <ProtectedRoute>
+        <RankPage />
+      </ProtectedRoute>
+    ),
+  },
   { path: '/dev/api-test', element: <ApiTestPage /> },
-  { path: '/test', element: <TestPage /> },
-  { path: '/test/result', element: <TestResultPage /> },
-  { path: '/record', element: <LearningRecordPage /> },
-  { path: '/tier', element: <TierPage /> },
+  {
+    path: '/test',
+    element: (
+      <ProtectedRoute>
+        <TestPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/test/result',
+    element: (
+      <ProtectedRoute>
+        <TestResultPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/record',
+    element: (
+      <ProtectedRoute>
+        <LearningRecordPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/tier',
+    element: (
+      <ProtectedRoute>
+        <TierPage />
+      </ProtectedRoute>
+    ),
+  },
+  { path: '*', element: <NotFoundPage /> },
 ]);
