@@ -76,7 +76,7 @@ export const TierPage = ({ nickname = '카테캠 귀요미', score = 3020 }: Tie
   }, [score]);
 
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="티어 페이지" hasPrevPage={true} />
       <ContentWrapper>
         <TierCard>
@@ -126,7 +126,6 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 24px 24px;
-  overflow-y: auto;
 `;
 
 const TierCard = styled.section`
