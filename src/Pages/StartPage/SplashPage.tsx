@@ -11,7 +11,6 @@ export const SplashPage = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    // 토큰 체크가 완료되면 자동 로그인 처리
     if (!isLoading) {
       setTimeout(() => {
         if (isAuthenticated) {
@@ -19,7 +18,7 @@ export const SplashPage = () => {
         } else {
           navigate('/login');
         }
-      }, 1000); // 1초 후에 이동
+      }, 1000);
     }
   }, [isAuthenticated, isLoading, navigate]);
 
