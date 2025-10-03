@@ -31,16 +31,15 @@ export const SelectableButtonTabs = ({
 export default SelectableButtonTabs;
 
 const Wrapper = styled.div`
-  width: 100%;
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  position: absolute;
+  justify-content: center;
+  position: relative;
   top: -20px;
   align-items: center;
 
   button + button {
-    margin-left: min(0px, calc(100% - 420px));
+    margin-left: -40px;
   }
 `;
