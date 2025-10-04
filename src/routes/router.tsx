@@ -50,15 +50,15 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizSolve',
+    path: '/quizSolve/:quizId',
     element: (
       <ProtectedRoute>
-        <QuizSolvePage data={data} />
+        <QuizSolvePage />
       </ProtectedRoute>
     ),
   },
   {
-    path: '/quizResult',
+    path: '/quizResult/:quizId',
     element: (
       <ProtectedRoute>
         <QuizResultPage data={data} />
