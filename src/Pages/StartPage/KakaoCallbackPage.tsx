@@ -4,22 +4,24 @@ import {
   getKakaoErrorMessage,
   getKakaoLoginStatus,
   useKakaoAuth,
+  useKakaoRegister,
 } from '@/Apis/kakao';
 import { useNavigate } from 'react-router-dom';
 import { useTokenCookies } from '@/utils/cookie';
 import { AxiosError } from 'axios';
-
 export const KakaoCallbackPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
   const { loginWithCode, isPending } = useKakaoAuth();
+  const { mutateAsync: registerWithCode, isPending: isRegisterPending } = useKakaoRegister();
   const navigate = useNavigate();
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { setAccessToken, setRefreshToken } = useTokenCookies();
+  const { setAccessToken } = useTokenCookies();
   const isProcessing = useRef(false);
+  const processedCode = useRef<string | null>(null);
   const handleError = (errorMessage: string, shouldLog = false, error?: unknown) => {
     if (shouldLog && error) {
-      console.error('❌ 로그인 실패:', error);
+      console.error('로그인 실패:', error);
     }
 
     setStatus('error');
@@ -34,31 +36,56 @@ export const KakaoCallbackPage: React.FC = () => {
     if (isProcessing.current) {
       return;
     }
+
     try {
       isProcessing.current = true;
       setStatus('loading');
       setMessage('로그인 처리 중...');
 
-      const result = await loginWithCode(authorizationCode);
-      setStatus('success');
-      setMessage('로그인이 완료되었습니다!');
+      const savedNickname = sessionStorage.getItem('temp_nickname');
 
-      if (result.accessToken) {
-        setAccessToken(result.accessToken, 7);
-        setRefreshToken(result.refreshToken, 30);
-        localStorage.setItem('userId', result.userId);
+      if (savedNickname) {
+        // 닉네임이 있으면 바로 회원가입 진행
+        const result = await registerWithCode({
+          code: authorizationCode,
+          nickname: savedNickname,
+        });
+
+        if (result.accessToken) {
+          setAccessToken(result.accessToken, 7);
+          sessionStorage.removeItem('temp_nickname');
+
+          setStatus('success');
+          setMessage('회원가입이 완료되었습니다!');
+
+          timeout.current = setTimeout(() => {
+            navigate('/home');
+          }, 2000);
+        }
+      } else {
+        // 닉네임이 없으면 일반 로그인 진행
+        const result = await loginWithCode(authorizationCode);
+        setStatus('success');
+        setMessage('로그인이 완료되었습니다!');
+
+        if (result.accessToken) {
+          setAccessToken(result.accessToken, 7);
+        }
+
+        timeout.current = setTimeout(() => {
+          navigate('/home');
+        }, 3000);
       }
 
       isProcessing.current = false;
-
-      timeout.current = setTimeout(() => {
-        navigate('/character-create');
-      }, 3000);
+      processedCode.current = null;
     } catch (error) {
       isProcessing.current = false;
+      processedCode.current = null;
 
       const axiosError = error as AxiosError;
       if (axiosError?.response?.status === 401) {
+        // 기존 사용자가 아닌 경우 캐릭터 생성 페이지로 이동
         setStatus('success');
         setMessage('새로운 계정이 생성되었습니다!');
 
@@ -66,7 +93,7 @@ export const KakaoCallbackPage: React.FC = () => {
           navigate('/character-create');
         }, 2000);
       } else {
-        handleError('로그인에 실패했습니다. 다시 시도해주세요.', true, error);
+        handleError('로그인에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };
@@ -77,7 +104,12 @@ export const KakaoCallbackPage: React.FC = () => {
     if (loginStatus === 'success') {
       const authorizationCode = getKakaoAuthorizationCode();
 
-      if (authorizationCode) {
+      if (
+        authorizationCode &&
+        !isProcessing.current &&
+        processedCode.current !== authorizationCode
+      ) {
+        processedCode.current = authorizationCode;
         window.history.replaceState({}, '', '/auth/kakao/callback');
         handleLogin(authorizationCode);
       }
@@ -92,8 +124,8 @@ export const KakaoCallbackPage: React.FC = () => {
     };
   }, []); //의존성 배열 lint 경고 무시
 
-  const currentStatus = isPending ? 'loading' : status;
-  const currentMessage = isPending ? '서버와 통신 중...' : message;
+  const currentStatus = isPending || isRegisterPending ? 'loading' : status;
+  const currentMessage = isPending || isRegisterPending ? '서버와 통신 중...' : message;
 
   return (
     <div

@@ -1,12 +1,24 @@
 import { usePostApi } from '../useMutationApi';
 import { getKakaoLoginUrl } from './utils';
-import type { KakaoLoginRequest, KakaoLoginResponse } from './types';
+import type {
+  KakaoLoginRequest,
+  KakaoLoginResponse,
+  KakaoRegisterRequest,
+  KakaoRegisterResponse,
+} from './types';
 
 /**
  * 카카오 로그인 API 호출 훅
  */
 export const useKakaoLogin = () => {
   return usePostApi<KakaoLoginResponse, KakaoLoginRequest>('/user/login');
+};
+
+/**
+ * 카카오 회원가입 API 호출 훅
+ */
+export const useKakaoRegister = () => {
+  return usePostApi<KakaoRegisterResponse, KakaoRegisterRequest>('/user/register');
 };
 
 /**

@@ -4,14 +4,39 @@ import styled from '@emotion/styled';
 import QuizListImg from '@/assets/QuizImg/QuizListImg.webp';
 import { theme } from '@/styles/theme';
 import { TopicButton } from './TopicButton';
-import QuizListData from '@/MockData/QuizList.json';
 import { useNavigate } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+
+interface Topic {
+  topicId: number;
+  topicName: string;
+  totalQuizCount: number;
+  solvedQuizCount: number;
+}
+
+interface TopicResponse {
+  topics: Topic[];
+}
+
 export const TopicSelectPage = () => {
-  const { data } = QuizListData;
   const navigate = useNavigate();
-  const handleTopicButtonClick = (topicId: number) => {
-    navigate(`/quizList/${topicId}`);
+  const handleTopicButtonClick = (topicId: number, topicName: string) => {
+    navigate(`/quizList/${topicId}`, { state: { topicName } });
   };
+
+  const { data: quizListData, error } = useQueryApi<TopicResponse>(['topic'], '/topic');
+
+  if (error) {
+    return (
+      <Container>
+        <Header hasPrevPage={true} title="" />
+        <QuizListContainer>
+          <QuizListTitle>에러가 발생했습니다</QuizListTitle>
+        </QuizListContainer>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Header hasPrevPage={true} title="" />
@@ -19,17 +44,17 @@ export const TopicSelectPage = () => {
         <QuizListImage src={QuizListImg} />
         <QuizListTitle>분야를 선택 해주세요</QuizListTitle>
         <QuizListDescription>
-          “경제 기초"를 제외한 분야는 새싹 단계 이상에서 잠금 해제 됩니다!
+          "경제 기초"를 제외한 분야는 새싹 단계 이상에서 잠금 해제 됩니다!
         </QuizListDescription>
         <QuizListButtonSection>
-          {data.topics.map((topic) => (
+          {quizListData?.topics?.map((topic) => (
             <TopicButton
               key={topic.topicId}
               title={topic.topicName}
               solvedQuizCount={topic.solvedQuizCount}
               totalQuizCount={topic.totalQuizCount}
-              isAble={topic.isAble}
-              onClick={() => handleTopicButtonClick(topic.topicId)}
+              isAble={true}
+              onClick={() => handleTopicButtonClick(topic.topicId, topic.topicName)}
             />
           ))}
         </QuizListButtonSection>

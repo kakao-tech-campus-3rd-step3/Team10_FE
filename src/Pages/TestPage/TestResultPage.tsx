@@ -22,13 +22,16 @@ export const TestResultPage = ({
   return (
     <CenteredContainer>
       <ResultCard>
-        <Title>테스트 결과</Title>
+        <CardHead>
+          <Title>투자성향 진단 테스트</Title>
+        </CardHead>
+        <Divider />
         <Image src={TestResultImage} alt="테스트 결과 이미지" />
         <Type>{typeText}</Type>
         <Desc>{description}</Desc>
       </ResultCard>
       <ButtonContainer onClick={handleGoHome}>
-        <ConfirmButton text="홈으로" />
+        <ConfirmButton text="저장하기" />
       </ButtonContainer>
     </CenteredContainer>
   );
@@ -38,36 +41,60 @@ export default TestResultPage;
 const CenteredContainer = styled(Container)`
   align-items: center;
   justify-content: center;
-  background-color: #dbc399ff;
-`;
-
-const Title = styled.h1`
-  margin: 0 0 5px 0;
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 40px;
-  color: ${({ theme }) => theme.colors.text};
+  background-color: ${theme.colors.background};
 `;
 
 const ResultCard = styled.section`
-  background-color: #fff;
-  border-radius: 32px;
-  padding: 47px 20px;
-  margin: 35px;
+  width: 90%; /* 가로 폭을 90%로 줄임 */
+  margin: 0 auto; /* 가운데 정렬 */
+  background-color: ${theme.colors.inactive};
+  border-radius: ${theme.spacing(2)};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(4)};
+  margin-top: ${theme.spacing(5)};
+  align-items: center;
+`;
+
+const CardHead = styled.div`
+  width: 100%;
+  padding: ${theme.spacing(2)};
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const Image = styled.img`
-  width: 260px;
-  height: 300px;
-  object-fit: contain;
+const Title = styled.div`
+  background-color: ${({ theme }) => theme.colors.inactive};
+  padding: ${theme.spacing(2)} 0;
+  margin-top: 15px;
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 24px;
+  color: ${({ theme }) => theme.colors.text};
+  text-align: center;
+`;
+
+const Divider = styled.hr`
+  width: 100%;
+  height: 1px;
+  border-top: 1px solid ${theme.colors.line};
   margin: 0;
 `;
 
+const Image = styled.img`
+  width: 400px;
+  height: 400px;
+  object-fit: contain;
+  margin: 0;
+  border-radius: ${theme.spacing(2)};
+`;
+
 const Type = styled.h2`
-  margin: 0 0 35px 0;
+  margin: 15px 0;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 31px;
@@ -75,7 +102,7 @@ const Type = styled.h2`
 `;
 
 const Desc = styled.p`
-  margin: 0;
+  margin: 0 40px 50px;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 15px;
@@ -89,5 +116,5 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
+  margin-top: 45px;
 `;

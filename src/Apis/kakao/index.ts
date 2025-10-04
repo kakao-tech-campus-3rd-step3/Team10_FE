@@ -8,6 +8,12 @@ export {
   getKakaoLoginStatus,
 } from './utils.ts';
 
-export { useKakaoAuth, useKakaoLogin } from './useKakaoAuth.ts';
+export { useKakaoAuth, useKakaoLogin, useKakaoRegister } from './useKakaoAuth.ts';
 
-export type { KakaoLoginRequest, KakaoLoginResponse, KakaoUser } from './types.ts';
+export type {
+  KakaoLoginRequest,
+  KakaoLoginResponse,
+  KakaoUser,
+  KakaoRegisterRequest,
+  KakaoRegisterResponse,
+} from './types.ts';

@@ -6,9 +6,6 @@ export interface KakaoLoginRequest {
 
 export interface KakaoLoginResponse {
   accessToken: string;
-  refreshToken: string;
-  userId: string;
-  user: KakaoUser;
 }
 
 export interface KakaoUser {
@@ -29,4 +26,14 @@ export interface KakaoLoginUrlParams {
   response_type: 'code';
   scope?: string;
   state?: string;
+}
+
+// 회원가입 관련 타입
+export interface KakaoRegisterRequest {
+  code: string;
+  nickname: string;
+}
+
+export interface KakaoRegisterResponse {
+  accessToken: string;
 }

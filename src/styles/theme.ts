@@ -5,7 +5,7 @@ export const theme = {
     tertiary: '#F8CC39', // yellow
     text: '#000000', // black
     background: '#FFFFFF', // white
-    inactive: '#EFEFF0', // inactive
+    inactive: '#fafafa', // inactive
     line: '#878181', // line gray
   },
   spacing: (factor: number) => `${4 * factor}px`,

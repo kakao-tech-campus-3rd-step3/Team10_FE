@@ -13,8 +13,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@tanstack/react-query": "^5.87.1",
-    "axios": "^1.11.0",
+    "@tanstack/react-query": "^5.90.2",
+    "axios": "^1.12.2",
     "badwords-ko": "^1.0.4",
     "react": "^19.1.1",
     "react-cookie": "^8.0.1",
