@@ -16,7 +16,8 @@ import TestPage from '@/Pages/TestPage/TestPage';
 import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
 import { TierPage } from '@/Pages/TierPage';
-import { TopicSelectPage } from '@/Pages/TopicSelectPage';
+import { TopicSelectPage } from '@/Pages/TopicSelectPage/TopicSelectPage';
+import { QuizListPage } from '@/Pages/TopicSelectPage/QuizListPage';
 import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -37,6 +38,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <TopicSelectPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quizList/:topicId',
+    element: (
+      <ProtectedRoute>
+        <QuizListPage />
       </ProtectedRoute>
     ),
   },
