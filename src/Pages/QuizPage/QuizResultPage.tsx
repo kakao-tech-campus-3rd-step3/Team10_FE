@@ -27,7 +27,6 @@ interface QuizResultPageProps {
 export const QuizResultPage = ({ data }: QuizResultPageProps) => {
   const {
     questionOrder,
-    totalQuestions,
     questionText,
     difficultyLevel,
     correctAnswer,
@@ -44,7 +43,6 @@ export const QuizResultPage = ({ data }: QuizResultPageProps) => {
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
-        totalQuestions={totalQuestions}
         questionText={questionText}
         difficultyLevel={difficultyLevel}
       />
