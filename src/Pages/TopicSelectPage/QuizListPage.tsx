@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
+import { useState, useMemo } from 'react';
 
 interface Quiz {
   quizId: number;
@@ -17,18 +18,36 @@ interface QuizListResponse {
   quizzes: Quiz[];
 }
 
+type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
+
 export const QuizListPage = () => {
   const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
   const location = useLocation();
 
   const topicName = location.state?.topicName;
+  const [filterType, setFilterType] = useState<FilterType>('ALL');
 
   const {
     data: quizListData,
     error,
     isLoading,
   } = useQueryApi<QuizListResponse>(['topic', topicId || ''], `/topic/${topicId || ''}`);
+
+  const filteredQuizzes = useMemo(() => {
+    const allQuizzes = quizListData?.quizzes || [];
+    switch (filterType) {
+      case 'SOLVED':
+        return allQuizzes.filter((quiz) => quiz.isSolved);
+      case 'UNSOLVED':
+        return allQuizzes.filter((quiz) => !quiz.isSolved);
+      case 'ALL':
+      default:
+        return allQuizzes;
+    }
+  }, [quizListData?.quizzes, filterType]);
+
+  const allQuizzes = quizListData?.quizzes || [];
 
   const handleQuizClick = (quizId: number) => {
     navigate(`/quizSolve/${quizId}`);
@@ -56,16 +75,30 @@ export const QuizListPage = () => {
     );
   }
 
-  const quizzes = quizListData?.quizzes || [];
-
   return (
     <Container>
       <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} />
       <QuizListContainer>
         <QuizListTitle>{topicName} 퀴즈</QuizListTitle>
-        <QuizListDescription>총 {quizzes.length}개의 퀴즈가 있습니다.</QuizListDescription>
+        <QuizListDescription>총 {allQuizzes.length}개의 퀴즈가 있습니다.</QuizListDescription>
+
+        <FilterButtonContainer>
+          <FilterButton isActive={filterType === 'ALL'} onClick={() => setFilterType('ALL')}>
+            전체
+          </FilterButton>
+          <FilterButton
+            isActive={filterType === 'UNSOLVED'}
+            onClick={() => setFilterType('UNSOLVED')}
+          >
+            안 푼 문제
+          </FilterButton>
+          <FilterButton isActive={filterType === 'SOLVED'} onClick={() => setFilterType('SOLVED')}>
+            푼 문제
+          </FilterButton>
+        </FilterButtonContainer>
+
         <QuizList>
-          {quizzes.map((quiz) => (
+          {filteredQuizzes.map((quiz) => (
             <QuizItem
               key={quiz.quizId}
               onClick={() => handleQuizClick(quiz.quizId)}
@@ -86,7 +119,16 @@ export const QuizListPage = () => {
             </QuizItem>
           ))}
         </QuizList>
-        {quizzes.length === 0 && <EmptyMessage>아직 퀴즈가 없습니다.</EmptyMessage>}
+        {filteredQuizzes.length === 0 && allQuizzes.length > 0 && (
+          <EmptyMessage>
+            {filterType === 'SOLVED'
+              ? '푼 문제가 없습니다.'
+              : filterType === 'UNSOLVED'
+                ? '안 푼 문제가 없습니다.'
+                : '아직 퀴즈가 없습니다.'}
+          </EmptyMessage>
+        )}
+        {allQuizzes.length === 0 && <EmptyMessage>아직 퀴즈가 없습니다.</EmptyMessage>}
       </QuizListContainer>
     </Container>
   );
@@ -113,6 +155,35 @@ const QuizListDescription = styled.p`
   font-weight: ${theme.font.regular.fontWeight};
   color: #666666;
   margin: 0 0 20px 0;
+`;
+
+const FilterButtonContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  justify-content: center;
+`;
+
+const FilterButton = styled.button<{ isActive: boolean }>`
+  padding: 8px 16px;
+  border: 1px solid ${(props) => (props.isActive ? theme.colors.primary : '#e0e0e0')};
+  border-radius: 20px;
+  background: ${(props) => (props.isActive ? theme.colors.primary : '#ffffff')};
+  color: ${(props) => (props.isActive ? '#ffffff' : '#666666')};
+  font-size: 12px;
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${theme.colors.primary};
+    background: ${(props) => (props.isActive ? theme.colors.primary : '#f8f9fa')};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 const QuizList = styled.div`
@@ -154,7 +225,7 @@ const QuizOrder = styled.span`
   font-size: 16px;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  color: #007bff;
+  color: ${theme.colors.primary};
 `;
 
 const DifficultyBadge = styled.span<{ difficulty: string }>`
