@@ -3,46 +3,103 @@ import QuestionButton from './QuestionButton';
 import ConfirmButton from './ConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate } from 'react-router-dom';
-interface QuizSolvePageProps {
-  data: {
-    questionId: number;
-    questionText: string;
-    questionType: string;
-    difficultyLevel: string;
-    questionOrder: number;
-    totalQuestions: number;
-    questionData: {
-      choices: {
-        choiceId: string;
-        text: string;
-      }[];
-    };
-    solved: boolean;
-    bookmarked: boolean;
-  };
-}
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import { useState } from 'react';
+import type { QuizData } from './types';
+import Header from '@/Shared/components/Header';
 
-export const QuizSolvePage = ({ data }: QuizSolvePageProps) => {
-  const { questionText, difficultyLevel, questionOrder, totalQuestions, questionData } = data;
+export const QuizSolvePage = () => {
   const navigate = useNavigate();
+  const { quizId } = useParams<{ quizId: string }>();
+
+  const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | null>(null);
+
+  const {
+    data: quizData,
+    error,
+    isLoading,
+  } = useQueryApi<QuizData>(['quiz', quizId || ''], `/quiz/${quizId || ''}`);
+
   const handleConfirm = () => {
-    navigate('/quizResult');
+    if (selectedAnswer === null) {
+      alert('답을 선택해주세요!');
+      return;
+    }
+    navigate(`/quizResult/${quizId}`, { state: { selectedAnswer } });
   };
+
+  const handleAnswerSelect = (answer: string | boolean) => {
+    setSelectedAnswer(answer);
+  };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingMessage>퀴즈를 불러오는 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (error || !quizData) {
+    return (
+      <Container>
+        <ErrorMessage>퀴즈를 불러오는데 실패했습니다.</ErrorMessage>
+      </Container>
+    );
+  }
+
+  const { questionTitle, difficultyLevel, questionOrder, questionType, questionData } = quizData;
+
+  const renderQuestionContent = () => {
+    switch (questionType) {
+      case 'OX':
+        return (
+          <OXButtonContainer>
+            <QuestionButton
+              text="O"
+              isSelected={selectedAnswer === true}
+              onClick={() => handleAnswerSelect(true)}
+            />
+            <QuestionButton
+              text="X"
+              isSelected={selectedAnswer === false}
+              onClick={() => handleAnswerSelect(false)}
+            />
+          </OXButtonContainer>
+        );
+      case 'MULTIPLE_CHOICE':
+        return (
+          <QuestionButtonContainer>
+            {questionData.choices?.map((choice) => (
+              <QuestionButton
+                key={choice.choiceId}
+                text={choice.text}
+                isSelected={selectedAnswer === choice.choiceId}
+                onClick={() => handleAnswerSelect(choice.choiceId)}
+              />
+            ))}
+          </QuestionButtonContainer>
+        );
+      default:
+        return (
+          <QuestionButtonContainer>
+            <ErrorMessage>지원하지 않는 문제 유형입니다.</ErrorMessage>
+          </QuestionButtonContainer>
+        );
+    }
+  };
+
   return (
     <Container>
+      <Header title={quizData.topicName} hasPrevPage={true} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
-        totalQuestions={totalQuestions}
-        questionText={questionText}
+        questionText={questionTitle}
         difficultyLevel={difficultyLevel}
       />
-      <QuestionButtonContainer>
-        {questionData.choices.map((choice) => (
-          <QuestionButton key={choice.choiceId} text={choice.text} />
-        ))}
-      </QuestionButtonContainer>
+      {renderQuestionContent()}
       <ConfirmButtonContainer onClick={handleConfirm}>
         <ConfirmButton text="제출하기" />
       </ConfirmButtonContainer>
@@ -53,7 +110,7 @@ export const QuizSolvePage = ({ data }: QuizSolvePageProps) => {
 export default QuizSolvePage;
 
 const Space = styled.div`
-  height: 60px;
+  height: 40px;
 `;
 const QuestionButtonContainer = styled.div`
   display: flex;
@@ -62,8 +119,35 @@ const QuestionButtonContainer = styled.div`
   gap: 50px;
   margin-top: 50px;
 `;
+
+const OXButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 50px;
+`;
 const ConfirmButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 100px;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;
