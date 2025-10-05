@@ -20,6 +20,22 @@ interface QuizListResponse {
 
 type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
+const getEmptyMessage = (filterType: FilterType, hasQuizzes: boolean): string => {
+  if (!hasQuizzes) {
+    return '아직 퀴즈가 없습니다.';
+  }
+
+  switch (filterType) {
+    case 'SOLVED':
+      return '푼 문제가 없습니다.';
+    case 'UNSOLVED':
+      return '안 푼 문제가 없습니다.';
+    case 'ALL':
+    default:
+      return '아직 퀴즈가 없습니다.';
+  }
+};
+
 export const QuizListPage = () => {
   const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
@@ -119,16 +135,9 @@ export const QuizListPage = () => {
             </QuizItem>
           ))}
         </QuizList>
-        {filteredQuizzes.length === 0 && allQuizzes.length > 0 && (
-          <EmptyMessage>
-            {filterType === 'SOLVED'
-              ? '푼 문제가 없습니다.'
-              : filterType === 'UNSOLVED'
-                ? '안 푼 문제가 없습니다.'
-                : '아직 퀴즈가 없습니다.'}
-          </EmptyMessage>
+        {(filteredQuizzes.length === 0 || allQuizzes.length === 0) && (
+          <EmptyMessage>{getEmptyMessage(filterType, allQuizzes.length > 0)}</EmptyMessage>
         )}
-        {allQuizzes.length === 0 && <EmptyMessage>아직 퀴즈가 없습니다.</EmptyMessage>}
       </QuizListContainer>
     </Container>
   );
