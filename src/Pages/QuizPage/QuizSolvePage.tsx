@@ -5,8 +5,9 @@ import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
+import { usePostApi } from '@/Apis/useMutationApi';
 import { useState } from 'react';
-import type { QuizData } from './types';
+import type { QuizData, QuizSubmitRequest } from './types';
 import Header from '@/Shared/components/Header';
 
 export const QuizSolvePage = () => {
@@ -21,12 +22,43 @@ export const QuizSolvePage = () => {
     isLoading,
   } = useQueryApi<QuizData>(['quiz', quizId || ''], `/quiz/${quizId || ''}`);
 
-  const handleConfirm = () => {
+  const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(`/quiz/${quizId}/submit`);
+
+  const handleConfirm = async () => {
     if (selectedAnswer === null) {
       alert('답을 선택해주세요!');
       return;
     }
-    navigate(`/quizResult/${quizId}`, { state: { selectedAnswer } });
+
+    if (!quizData) {
+      alert('퀴즈 데이터를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
+    try {
+      const isCorrect = checkAnswer(selectedAnswer, quizData);
+
+      await submitQuizMutation.mutateAsync({ isCorrect });
+
+      navigate(`/quizResult/${quizId}`, {
+        state: {
+          selectedAnswer,
+          isCorrect,
+          quizData,
+        },
+      });
+    } catch {
+      alert('답안 제출에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const checkAnswer = (selectedAnswer: string | boolean, quizData: QuizData): boolean => {
+    if (quizData.questionType === 'OX') {
+      return selectedAnswer === quizData.questionData.correctAnswer;
+    } else if (quizData.questionType === 'MULTIPLE_CHOICE') {
+      return selectedAnswer === quizData.questionData.correctAnswer;
+    }
+    return false;
   };
 
   const handleAnswerSelect = (answer: string | boolean) => {
@@ -101,7 +133,10 @@ export const QuizSolvePage = () => {
       />
       {renderQuestionContent()}
       <ConfirmButtonContainer onClick={handleConfirm}>
-        <ConfirmButton text="제출하기" />
+        <ConfirmButton
+          text={submitQuizMutation.isPending ? '제출 중...' : '제출하기'}
+          disabled={submitQuizMutation.isPending}
+        />
       </ConfirmButtonContainer>
     </Container>
   );

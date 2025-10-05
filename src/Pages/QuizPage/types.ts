@@ -18,3 +18,8 @@ export interface QuizData {
   createdAt: string;
   updatedAt: string;
 }
+
+// 답안 제출 요청 타입
+export interface QuizSubmitRequest {
+  isCorrect: boolean;
+}
