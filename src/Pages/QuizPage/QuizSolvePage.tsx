@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import QuestionButton from './QuestionButton';
-import { ConfirmButton } from './ConfirmButton';
+import QuizConfirmButton from './QuizConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -133,7 +133,7 @@ export const QuizSolvePage = () => {
       />
       {renderQuestionContent()}
       <ConfirmButtonContainer onClick={handleConfirm}>
-        <ConfirmButton
+        <QuizConfirmButton
           text={submitQuizMutation.isPending ? '제출 중...' : '제출하기'}
           disabled={submitQuizMutation.isPending}
         />
