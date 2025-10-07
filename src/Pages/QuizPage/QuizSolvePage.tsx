@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import QuestionButton from './QuestionButton';
-import ConfirmButton from './ConfirmButton';
+import { ConfirmButton } from './ConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate, useParams } from 'react-router-dom';
