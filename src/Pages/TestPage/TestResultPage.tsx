@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
-import ConfirmButton from './confirmButton';
+import ConfirmButton from './ConfirmButton';
 import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';

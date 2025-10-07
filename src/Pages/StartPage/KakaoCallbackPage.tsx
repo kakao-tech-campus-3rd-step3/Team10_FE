@@ -42,7 +42,7 @@ export const KakaoCallbackPage: React.FC = () => {
       setStatus('loading');
       setMessage('로그인 처리 중...');
 
-      const savedNickname = localStorage.getItem('temp_nickname');
+      const savedNickname = sessionStorage.getItem('temp_nickname');
 
       if (savedNickname) {
         // 닉네임이 있으면 바로 회원가입 진행
@@ -53,8 +53,7 @@ export const KakaoCallbackPage: React.FC = () => {
 
         if (result.accessToken) {
           setAccessToken(result.accessToken, 7);
-          localStorage.setItem('userId', 'temp-user-id');
-          localStorage.removeItem('temp_nickname');
+          sessionStorage.removeItem('temp_nickname');
 
           setStatus('success');
           setMessage('회원가입이 완료되었습니다!');
@@ -71,7 +70,6 @@ export const KakaoCallbackPage: React.FC = () => {
 
         if (result.accessToken) {
           setAccessToken(result.accessToken, 7);
-          localStorage.setItem('userId', 'temp-user-id');
         }
 
         timeout.current = setTimeout(() => {

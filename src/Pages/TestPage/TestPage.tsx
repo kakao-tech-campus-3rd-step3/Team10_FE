@@ -81,7 +81,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   };
 
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="" hasPrevPage={true} />
       <FormCard onSubmit={handleSubmit}>
         <CardHead>

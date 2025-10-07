@@ -23,7 +23,7 @@ export const CharacterCreatePage = () => {
 
   const handleConfirm = async () => {
     try {
-      localStorage.setItem('temp_nickname', name);
+      sessionStorage.setItem('temp_nickname', name);
       console.log('닉네임 저장:', name);
 
       const loginUrl = getKakaoLoginUrl();
