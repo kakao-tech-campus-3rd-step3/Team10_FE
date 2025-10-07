@@ -41,6 +41,7 @@ const Button = styled.button<{ $isAble: boolean }>`
   transition: all 0.2s ease;
 
   &:hover {
+    background-color: ${({ $isAble }) => ($isAble ? '#f8f9fa' : '#f5f5f5')};
     transform: ${({ $isAble }) => ($isAble ? 'translateY(-2px)' : 'none')};
     box-shadow: ${({ $isAble }) => ($isAble ? '0 4px 8px rgba(0, 0, 0, 0.1)' : 'none')};
   }
