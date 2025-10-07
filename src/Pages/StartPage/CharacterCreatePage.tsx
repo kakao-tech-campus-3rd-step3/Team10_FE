@@ -4,22 +4,40 @@ import ConfirmButton from './ConfirmButton';
 import CharacterImage from '@/assets/HomeImg/character.png';
 import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate } from 'react-router-dom';
+import { getKakaoLoginUrl } from '@/Apis/kakao/utils';
+import { usePostApi } from '@/Apis/useMutationApi';
+
+interface RegisterRequest {
+  code: string;
+  nickname: string;
+}
+
+interface RegisterResponse {
+  accessToken: string;
+}
 
 export const CharacterCreatePage = () => {
   const [name, setName] = useState('');
   const [isNameValid, setIsNameValid] = useState(false);
-  const navigate = useNavigate();
+  const { isPending } = usePostApi<RegisterResponse, RegisterRequest>('/user/register');
 
-  const handleConfirm = () => {
-    navigate('/home');
+  const handleConfirm = async () => {
+    try {
+      sessionStorage.setItem('temp_nickname', name);
+      console.log('닉네임 저장:', name);
+
+      const loginUrl = getKakaoLoginUrl();
+      window.location.href = loginUrl;
+    } catch (error) {
+      console.error('에러:', error);
+    }
   };
 
   const handleValidationChange = (isValid: boolean) => {
     setIsNameValid(isValid);
   };
 
-  const isButtonDisabled = !isNameValid;
+  const isButtonDisabled = !isNameValid || isPending;
 
   return (
     <CenteredContainer>
@@ -32,7 +50,11 @@ export const CharacterCreatePage = () => {
         onValidationChange={handleValidationChange}
       />
       <ConfirmButtonContainer>
-        <ConfirmButton text="완료" onClick={handleConfirm} disabled={isButtonDisabled} />
+        <ConfirmButton
+          text={isPending ? '처리 중...' : '완료'}
+          onClick={handleConfirm}
+          disabled={isButtonDisabled}
+        />
       </ConfirmButtonContainer>
     </CenteredContainer>
   );

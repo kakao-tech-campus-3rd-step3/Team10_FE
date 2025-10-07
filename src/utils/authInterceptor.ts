@@ -37,7 +37,6 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 export const handleLogout = () => {
   document.cookie = 'access_token=; path=/; max-age=0';
   document.cookie = 'refresh_token=; path=/; max-age=0';
-  localStorage.removeItem('userId');
   window.location.href = '/login';
 };
 

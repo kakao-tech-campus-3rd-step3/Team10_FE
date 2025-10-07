@@ -20,18 +20,20 @@ export default SelectableButton;
 const Button = styled.button<{ $isActive: boolean }>`
   background-color: ${({ $isActive }) =>
     $isActive ? theme.colors.secondary : theme.colors.inactive};
-  width: ${({ $isActive }) => ($isActive ? '240px' : '180px')};
-  height: ${({ $isActive }) => ($isActive ? '70px' : '58px')};
+  width: 295px;
+  height: 48px;
   flex-shrink: 0;
-  border-radius: 50px;
+  border-radius: ${theme.spacing(2)};
   border: none;
   cursor: pointer;
   padding: 0;
   z-index: ${({ $isActive }) => ($isActive ? '1' : '0')};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
 `;
+
 const ButtonText = styled.span<{ $isActive: boolean }>`
-  color: ${({ $isActive }) => ($isActive ? '#FFFFFF' : '#B1B1B1')};
+  color: ${({ $isActive }) => ($isActive ? '#FFFFFF' : theme.colors.secondary)};
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: ${({ $isActive }) => ($isActive ? '32px' : '18px')};
+  font-size: 17px;
 `;

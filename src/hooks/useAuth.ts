@@ -14,7 +14,6 @@ export const useAuth = () => {
 
   const logout = () => {
     clearTokens();
-    localStorage.removeItem('userId');
     setIsAuthenticated(false);
     navigate('/login');
   };
