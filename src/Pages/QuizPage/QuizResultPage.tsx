@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
-import ConfirmButton from './ConfirmButton';
+import QuizConfirmButton from './QuizConfirmButton';
 import { Container } from '@/Shared/components/Container';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { QuizData } from './types';
@@ -83,7 +83,7 @@ export const QuizResultPage = () => {
         </ExplanationContainer>
       </ResultContainer>
       <ButtonContainer onClick={handleNextQuestion}>
-        <ConfirmButton text="다음 문제" />
+        <QuizConfirmButton text="다음 문제" />
       </ButtonContainer>
     </Container>
   );
