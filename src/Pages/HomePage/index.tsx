@@ -18,7 +18,7 @@ export const HomePage = () => {
     navigate('/test');
   };
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="홈 화면" hasPrevPage={false} />
       <NavigationBar />
       <StatusActionBar />
@@ -99,7 +99,7 @@ const Nickname = styled.p`
   color: ${theme.colors.text};
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 28px;
+  font-size: 24px;
   margin: 0;
 `;
 
@@ -116,7 +116,7 @@ const InvestmentTypeBox = styled.div`
 const InvestmentText = styled.p`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 19px;
+  font-size: 18px;
   color: ${theme.colors.text};
   margin: 0;
   flex-grow: 1;
@@ -137,7 +137,7 @@ const RetestButton = styled.button`
 const TestButton = styled.button`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 17px;
+  font-size: 16px;
   color: ${theme.colors.text};
   margin: 0;
   flex-grow: 1;
@@ -149,26 +149,39 @@ const TestButton = styled.button`
 `;
 
 const TwoButtonsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
   gap: ${theme.spacing(4)};
+  flex-wrap: nowrap;
+  overflow: visible;
 `;
 
 const QuizButton = styled.button`
+  --icon-size: clamp(75px, 25vw, 100px);
+  --pad: clamp(16px, 4vw, ${theme.spacing(6)});
   background-color: ${theme.colors.background};
   border: none;
   border-radius: ${theme.spacing(2)};
-  padding: ${theme.spacing(6)};
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: ${theme.spacing(1)};
+  width: min(360px, calc((100% - ${theme.spacing(4)}) / 2));
+  min-width: calc(var(--icon-size) + (var(--pad) * 2));
+  padding: var(--pad);
+  box-sizing: border-box;
+  flex: 0 1 auto;
 `;
 
 const IconImg = styled.img`
-  width: 100px;
+  width: var(--icon-size);
+  height: auto;
+  object-fit: contain;
 `;
 
 const FinanceButton = styled(QuizButton)``;

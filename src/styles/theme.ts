@@ -6,7 +6,7 @@ export const theme = {
     text: '#000000', // black
     background: '#FFFFFF', // white
     inactive: '#fafafa', // inactive
-    line: '#878181', // line gray
+    line: '#D3CECE', // line gray
   },
   spacing: (factor: number) => `${4 * factor}px`,
   font: {

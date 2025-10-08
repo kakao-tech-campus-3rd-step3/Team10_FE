@@ -51,12 +51,12 @@ const QuestionContainer = styled.div`
   }
 `;
 const QuestionSubject = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: ${theme.font.bold.fontWeight};
   color: #000000;
 `;
 const QuestionText = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: ${theme.font.regular.fontWeight};
   color: #000000;
 `;
