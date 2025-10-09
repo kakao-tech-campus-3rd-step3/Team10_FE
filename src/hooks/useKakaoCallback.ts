@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
 import {
   getKakaoAuthorizationCode,
   getKakaoErrorMessage,
@@ -9,6 +8,16 @@ import {
   useKakaoRegister,
 } from '@/Apis/kakao';
 import { useTokenCookies } from '@/utils/cookie';
+import {
+  getSavedNickname,
+  clearSavedNickname,
+  getErrorNavigationTarget,
+  getLoginSuccessDelay,
+  getSuccessMessage,
+  getErrorMessage,
+  getStatusFromError,
+  getRedirectDelay,
+} from '@/utils/kakaoLoginLogic';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
 
@@ -42,9 +51,10 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
     setStatus('error');
     setMessage(errorMessage);
 
+    const delay = getRedirectDelay('/login');
     timeout.current = setTimeout(() => {
       navigate('/login');
-    }, 3000);
+    }, delay);
   };
 
   /**
@@ -55,14 +65,16 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
 
     if (result.accessToken) {
       setAccessToken(result.accessToken, 7);
-      sessionStorage.removeItem('temp_nickname');
+      clearSavedNickname();
 
+      const isRegistration = true;
       setStatus('success');
-      setMessage('회원가입이 완료되었습니다!');
+      setMessage(getSuccessMessage(isRegistration));
 
+      const delay = getLoginSuccessDelay(isRegistration);
       timeout.current = setTimeout(() => {
         navigate('/home');
-      }, 2000);
+      }, delay);
     }
   };
 
@@ -72,16 +84,18 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
   const handleLoginFlow = async (code: string) => {
     const result = await loginWithCode(code);
 
+    const isRegistration = false;
     setStatus('success');
-    setMessage('로그인이 완료되었습니다!');
+    setMessage(getSuccessMessage(isRegistration));
 
     if (result.accessToken) {
       setAccessToken(result.accessToken, 7);
     }
 
+    const delay = getLoginSuccessDelay(isRegistration);
     timeout.current = setTimeout(() => {
       navigate('/home');
-    }, 3000);
+    }, delay);
   };
 
   /**
@@ -97,7 +111,7 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
       setStatus('loading');
       setMessage('로그인 처리 중...');
 
-      const savedNickname = sessionStorage.getItem('temp_nickname');
+      const savedNickname = getSavedNickname(); // 순수 함수 사용
 
       if (savedNickname) {
         await handleRegistration(authorizationCode, savedNickname);
@@ -111,19 +125,17 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
       isProcessing.current = false;
       processedCode.current = null;
 
-      const axiosError = error as AxiosError;
+      const statusType = getStatusFromError(error);
+      const errorMessage = getErrorMessage(error);
+      const navigationTarget = getErrorNavigationTarget(error);
+      const delay = getRedirectDelay(navigationTarget);
 
-      // 401: 신규 사용자 -> 캐릭터 생성 페이지로 이동
-      if (axiosError?.response?.status === 401) {
-        setStatus('success');
-        setMessage('새로운 계정이 생성되었습니다!');
+      setStatus(statusType);
+      setMessage(errorMessage);
 
-        timeout.current = setTimeout(() => {
-          navigate('/character-create');
-        }, 2000);
-      } else {
-        handleError('로그인에 실패했습니다. 다시 시도해주세요.');
-      }
+      timeout.current = setTimeout(() => {
+        navigate(navigationTarget);
+      }, delay);
     }
   };
 
