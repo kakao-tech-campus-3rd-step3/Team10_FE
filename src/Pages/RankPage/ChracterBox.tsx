@@ -37,7 +37,7 @@ const Container = styled.div<{ $rank: number }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: ${({ $rank }) => ($rank === 1 ? '0px' : '60px')};
+  margin-top: ${({ $rank }) => ($rank === 1 ? '0px' : '80px')};
   position: relative;
   flex: 1;
   min-width: 0;

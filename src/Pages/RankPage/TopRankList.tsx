@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   padding: 0 ${theme.spacing(2)};
   gap: clamp(8px, 2vw, ${theme.spacing(3)});

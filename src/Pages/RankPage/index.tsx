@@ -12,7 +12,7 @@ export const RankPage = () => {
   const [isScoreRank, setIsScoreRank] = useState<boolean>(true);
 
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="랭킹" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
@@ -24,6 +24,7 @@ export const RankPage = () => {
           secondButtonText="성실 랭킹"
         />
         <TopRankList isScoreRank={isScoreRank} />
+        <Spacing />
         <MyRankSection isScoreRank={isScoreRank} />
       </RankPageContainer>
     </Container>
@@ -43,4 +44,8 @@ const RankPageContainer = styled.div`
   background-color: #ffffff;
   border-radius: ${theme.spacing(5)};
   padding-bottom: ${theme.spacing(6)};
+`;
+
+const Spacing = styled.div`
+  height: ${theme.spacing(10)};
 `;
