@@ -47,5 +47,5 @@ const RankPageContainer = styled.div`
 `;
 
 const Spacing = styled.div`
-  height: ${theme.spacing(10)};
+  height: 8px;
 `;
