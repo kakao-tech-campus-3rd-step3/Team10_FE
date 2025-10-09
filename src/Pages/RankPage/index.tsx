@@ -37,8 +37,8 @@ const RankPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: ${theme.spacing(8)} ${theme.spacing(3)};
-  padding-top: ${theme.spacing(12)};
+  margin: 0 ${theme.spacing(3)};
+  padding-top: ${theme.spacing(8)};
   position: relative;
   background-color: #ffffff;
   border-radius: ${theme.spacing(5)};
