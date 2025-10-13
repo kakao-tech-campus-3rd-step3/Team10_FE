@@ -48,7 +48,7 @@ export const QuizListPage = () => {
     data: quizListData,
     error,
     isLoading,
-  } = useQueryApi<QuizListResponse>(['topic', topicId || ''], `/topic/${topicId || ''}`);
+  } = useQueryApi<QuizListResponse>(['topics', topicId || ''], `/topics/${topicId || ''}`);
 
   const filteredQuizzes = useMemo(() => {
     const allQuizzes = quizListData?.quizzes || [];

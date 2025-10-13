@@ -24,7 +24,7 @@ export const TopicSelectPage = () => {
     navigate(`/quizList/${topicId}`, { state: { topicName } });
   };
 
-  const { data: quizListData, error } = useQueryApi<TopicResponse>(['topic'], '/topic');
+  const { data: quizListData, error } = useQueryApi<TopicResponse>(['topics'], '/topics');
 
   if (error) {
     return (
