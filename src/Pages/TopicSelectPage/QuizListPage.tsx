@@ -5,18 +5,7 @@ import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { useState, useMemo } from 'react';
-
-interface Quiz {
-  quizId: number;
-  questionOrder: number;
-  questionTitle: string;
-  difficultyLevel: 'EASY' | 'MEDIUM' | 'HARD';
-  isSolved: boolean;
-}
-
-interface QuizListResponse {
-  quizzes: Quiz[];
-}
+import type { QuizListResponse } from '@/Pages/QuizPage/types';
 
 type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
