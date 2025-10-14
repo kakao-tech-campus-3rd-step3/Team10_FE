@@ -78,27 +78,6 @@ export const getQuizProgress = (
 };
 
 /**
- * 다음 문제 버튼 텍스트 결정
- * @param hasNextQuiz - 다음 문제 존재 여부
- * @param hasNextUnsolvedQuiz - 다음 안 푼 문제 존재 여부
- * @returns 버튼 텍스트
- */
-export const getNextQuizButtonText = (
-  hasNextQuiz: boolean,
-  hasNextUnsolvedQuiz: boolean,
-): string => {
-  if (!hasNextQuiz) {
-    return '완료';
-  }
-
-  if (hasNextUnsolvedQuiz) {
-    return '다음 문제';
-  }
-
-  return '다음 문제 (풀이 완료)';
-};
-
-/**
  * 다음 문제로 이동할 경로 결정
  * @param topicId - 토픽 ID
  * @param nextQuizId - 다음 퀴즈 ID (없으면 null)

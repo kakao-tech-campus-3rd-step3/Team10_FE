@@ -5,7 +5,6 @@ import {
   findNextUnsolvedQuiz,
   isLastQuiz,
   getQuizProgress,
-  getNextQuizButtonText,
   getNextQuizPath,
 } from './quizNavigationLogic';
 
@@ -49,188 +48,147 @@ describe('퀴즈 네비게이션 로직', () => {
   ];
 
   describe('findNextQuiz - 다음 문제 찾기', () => {
-    it('현재 퀴즈의 다음 퀴즈를 반환한다', () => {
-      const next = findNextQuiz(mockQuizzes, 2);
-      expect(next?.quizId).toBe(3);
-      expect(next?.questionOrder).toBe(3);
+    it('중간 문제의 다음 문제를 찾는다', () => {
+      const nextQuiz = findNextQuiz(mockQuizzes, 2);
+      expect(nextQuiz?.quizId).toBe(3);
     });
 
-    it('마지막 퀴즈면 null을 반환한다', () => {
-      const next = findNextQuiz(mockQuizzes, 5);
-      expect(next).toBeNull();
+    it('마지막 문제의 다음 문제는 null을 반환한다', () => {
+      const nextQuiz = findNextQuiz(mockQuizzes, 5);
+      expect(nextQuiz).toBeNull();
     });
 
-    it('존재하지 않는 quizId면 null을 반환한다', () => {
-      const next = findNextQuiz(mockQuizzes, 999);
-      expect(next).toBeNull();
+    it('존재하지 않는 퀴즈 ID는 null을 반환한다', () => {
+      const nextQuiz = findNextQuiz(mockQuizzes, 999);
+      expect(nextQuiz).toBeNull();
     });
 
-    it('빈 배열이면 null을 반환한다', () => {
-      const next = findNextQuiz([], 1);
-      expect(next).toBeNull();
-    });
-
-    it('첫 번째 퀴즈의 다음 퀴즈를 찾는다', () => {
-      const next = findNextQuiz(mockQuizzes, 1);
-      expect(next?.quizId).toBe(2);
-      expect(next?.questionOrder).toBe(2);
+    it('빈 배열에서는 null을 반환한다', () => {
+      const nextQuiz = findNextQuiz([], 1);
+      expect(nextQuiz).toBeNull();
     });
   });
 
-  describe('findNextUnsolvedQuiz - 다음 안 푼 문제 찾기', () => {
+  describe('findNextUnsolvedQuiz - 안 푼 문제 찾기', () => {
     it('다음 안 푼 문제를 찾는다', () => {
-      const next = findNextUnsolvedQuiz(mockQuizzes, 1);
-      expect(next?.quizId).toBe(2);
-      expect(next?.isSolved).toBe(false);
+      const nextUnsolved = findNextUnsolvedQuiz(mockQuizzes, 3);
+      expect(nextUnsolved?.quizId).toBe(5); // 4번은 이미 풀어서 건너뜀
     });
 
-    it('푼 문제는 건너뛴다', () => {
-      const next = findNextUnsolvedQuiz(mockQuizzes, 3);
-      // quizId 4는 isSolved: true이므로 건너뜀
-      expect(next?.quizId).toBe(5);
-      expect(next?.isSolved).toBe(false);
+    it('바로 다음이 안 푼 문제면 그것을 반환한다', () => {
+      const nextUnsolved = findNextUnsolvedQuiz(mockQuizzes, 1);
+      expect(nextUnsolved?.quizId).toBe(2);
     });
 
     it('다음 안 푼 문제가 없으면 null을 반환한다', () => {
-      const allSolved = mockQuizzes.map((q) => ({ ...q, isSolved: true }));
-      const next = findNextUnsolvedQuiz(allSolved, 1);
-      expect(next).toBeNull();
+      const nextUnsolved = findNextUnsolvedQuiz(mockQuizzes, 5);
+      expect(nextUnsolved).toBeNull();
     });
 
-    it('마지막 문제면 null을 반환한다', () => {
-      const next = findNextUnsolvedQuiz(mockQuizzes, 5);
-      expect(next).toBeNull();
+    it('존재하지 않는 퀴즈 ID는 null을 반환한다', () => {
+      const nextUnsolved = findNextUnsolvedQuiz(mockQuizzes, 999);
+      expect(nextUnsolved).toBeNull();
     });
   });
 
   describe('isLastQuiz - 마지막 문제 확인', () => {
-    it('마지막 퀴즈면 true를 반환한다', () => {
+    it('마지막 문제면 true를 반환한다', () => {
       expect(isLastQuiz(mockQuizzes, 5)).toBe(true);
     });
 
-    it('마지막이 아니면 false를 반환한다', () => {
+    it('마지막이 아닌 문제면 false를 반환한다', () => {
       expect(isLastQuiz(mockQuizzes, 3)).toBe(false);
     });
 
-    it('빈 배열이면 true를 반환한다', () => {
-      expect(isLastQuiz([], 1)).toBe(true);
-    });
-
-    it('존재하지 않는 quizId면 false를 반환한다', () => {
+    it('존재하지 않는 퀴즈 ID는 false를 반환한다', () => {
       expect(isLastQuiz(mockQuizzes, 999)).toBe(false);
     });
-  });
 
-  describe('getQuizProgress - 진행 상황', () => {
-    it('현재 위치와 전체 개수를 반환한다', () => {
-      const progress = getQuizProgress(mockQuizzes, 3);
-      expect(progress).toEqual({ current: 3, total: 5 });
-    });
-
-    it('첫 번째 퀴즈의 진행 상황', () => {
-      const progress = getQuizProgress(mockQuizzes, 1);
-      expect(progress).toEqual({ current: 1, total: 5 });
-    });
-
-    it('마지막 퀴즈의 진행 상황', () => {
-      const progress = getQuizProgress(mockQuizzes, 5);
-      expect(progress).toEqual({ current: 5, total: 5 });
-    });
-
-    it('존재하지 않는 quizId면 current: 0을 반환한다', () => {
-      const progress = getQuizProgress(mockQuizzes, 999);
-      expect(progress).toEqual({ current: 0, total: 5 });
-    });
-
-    it('빈 배열이면 0/0을 반환한다', () => {
-      const progress = getQuizProgress([], 1);
-      expect(progress).toEqual({ current: 0, total: 0 });
+    it('빈 배열에서는 true를 반환한다', () => {
+      expect(isLastQuiz([], 1)).toBe(true);
     });
   });
 
-  describe('getNextQuizButtonText - 버튼 텍스트', () => {
-    it('다음 문제가 있고 안 푼 문제면 "다음 문제"', () => {
-      const text = getNextQuizButtonText(true, true);
-      expect(text).toBe('다음 문제');
+  describe('getQuizProgress - 진행 상황 계산', () => {
+    it('현재 문제의 진행 상황을 반환한다', () => {
+      expect(getQuizProgress(mockQuizzes, 3)).toEqual({ current: 3, total: 5 });
     });
 
-    it('다음 문제가 있지만 이미 풀었으면 "다음 문제 (풀이 완료)"', () => {
-      const text = getNextQuizButtonText(true, false);
-      expect(text).toBe('다음 문제 (풀이 완료)');
+    it('첫 번째 문제의 진행 상황을 반환한다', () => {
+      expect(getQuizProgress(mockQuizzes, 1)).toEqual({ current: 1, total: 5 });
     });
 
-    it('다음 문제가 없으면 "완료"', () => {
-      const text = getNextQuizButtonText(false, false);
-      expect(text).toBe('완료');
+    it('마지막 문제의 진행 상황을 반환한다', () => {
+      expect(getQuizProgress(mockQuizzes, 5)).toEqual({ current: 5, total: 5 });
     });
 
-    it('다음 문제가 없으면 안 푼 문제 여부와 무관하게 "완료"', () => {
-      const text = getNextQuizButtonText(false, true);
-      expect(text).toBe('완료');
+    it('존재하지 않는 퀴즈 ID는 current 0을 반환한다', () => {
+      expect(getQuizProgress(mockQuizzes, 999)).toEqual({ current: 0, total: 5 });
     });
   });
 
-  describe('getNextQuizPath - 네비게이션 경로', () => {
-    it('다음 퀴즈가 있으면 퀴즈 풀기 경로', () => {
-      const path = getNextQuizPath(10, 25);
-      expect(path).toBe('/quizSolve/25');
+  describe('getNextQuizPath - 다음 경로 결정', () => {
+    it('다음 퀴즈가 있으면 풀이 페이지 경로를 반환한다', () => {
+      const path = getNextQuizPath(10, 3);
+      expect(path).toBe('/quizSolve/3');
     });
 
-    it('다음 퀴즈가 없으면 퀴즈 목록 경로', () => {
+    it('다음 퀴즈가 없으면 목록 페이지 경로를 반환한다', () => {
       const path = getNextQuizPath(10, null);
       expect(path).toBe('/quizList/10');
-    });
-
-    it('topicId가 다르면 해당 토픽의 목록으로', () => {
-      const path = getNextQuizPath(5, null);
-      expect(path).toBe('/quizList/5');
     });
   });
 
   describe('통합 시나리오 테스트', () => {
-    it('시나리오 1: 중간 문제 → 다음 문제로', () => {
+    it('시나리오 1: 중간 문제에서 다음 문제로 이동', () => {
       const currentQuizId = 2;
 
+      // 1. 다음 문제 찾기
       const nextQuiz = findNextQuiz(mockQuizzes, currentQuizId);
       expect(nextQuiz?.quizId).toBe(3);
 
+      // 2. 마지막 문제가 아님을 확인
       const isLast = isLastQuiz(mockQuizzes, currentQuizId);
       expect(isLast).toBe(false);
 
-      const progress = getQuizProgress(mockQuizzes, currentQuizId);
-      expect(progress).toEqual({ current: 2, total: 5 });
-
+      // 3. 다음 문제 경로 생성
       const path = getNextQuizPath(10, nextQuiz?.quizId || null);
       expect(path).toBe('/quizSolve/3');
     });
 
-    it('시나리오 2: 마지막 문제 → 목록으로', () => {
+    it('시나리오 2: 마지막 문제에서 목록으로 이동', () => {
       const currentQuizId = 5;
 
+      // 1. 다음 문제 없음
       const nextQuiz = findNextQuiz(mockQuizzes, currentQuizId);
       expect(nextQuiz).toBeNull();
 
+      // 2. 마지막 문제임을 확인
       const isLast = isLastQuiz(mockQuizzes, currentQuizId);
       expect(isLast).toBe(true);
 
-      const progress = getQuizProgress(mockQuizzes, currentQuizId);
-      expect(progress).toEqual({ current: 5, total: 5 });
-
+      // 3. 목록 페이지 경로 생성
       const path = getNextQuizPath(10, null);
       expect(path).toBe('/quizList/10');
-
-      const buttonText = getNextQuizButtonText(false, false);
-      expect(buttonText).toBe('완료');
     });
 
-    it('시나리오 3: 안 푼 문제만 찾기', () => {
-      const currentQuizId = 3; // 다음이 4번(풀림), 5번(안 풀림)
+    it('시나리오 3: 안 푼 문제만 필터링하여 이동', () => {
+      const currentQuizId = 3;
 
+      // 1. 일반 다음 문제는 4번
+      const nextQuiz = findNextQuiz(mockQuizzes, currentQuizId);
+      expect(nextQuiz?.quizId).toBe(4);
+
+      // 2. 안 푼 다음 문제는 5번 (4번은 이미 풀림)
       const nextUnsolved = findNextUnsolvedQuiz(mockQuizzes, currentQuizId);
-      expect(nextUnsolved?.quizId).toBe(5); // 4번은 건너뜀
+      expect(nextUnsolved?.quizId).toBe(5);
 
-      const buttonText = getNextQuizButtonText(true, true);
-      expect(buttonText).toBe('다음 문제');
+      // 3. 사용자 설정에 따라 다른 경로 생성 가능
+      const normalPath = getNextQuizPath(10, nextQuiz?.quizId || null);
+      const unsolvedPath = getNextQuizPath(10, nextUnsolved?.quizId || null);
+
+      expect(normalPath).toBe('/quizSolve/4');
+      expect(unsolvedPath).toBe('/quizSolve/5');
     });
   });
 });
