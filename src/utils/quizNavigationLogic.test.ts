@@ -130,12 +130,12 @@ describe('퀴즈 네비게이션 로직', () => {
   describe('getNextQuizPath - 다음 경로 결정', () => {
     it('다음 퀴즈가 있으면 풀이 페이지 경로를 반환한다', () => {
       const path = getNextQuizPath(10, 3);
-      expect(path).toBe('/quizSolve/3');
+      expect(path).toBe('/topics/10/quizzes/3');
     });
 
     it('다음 퀴즈가 없으면 목록 페이지 경로를 반환한다', () => {
       const path = getNextQuizPath(10, null);
-      expect(path).toBe('/quizList/10');
+      expect(path).toBe('/topics/10/quizzes');
     });
   });
 
@@ -153,7 +153,7 @@ describe('퀴즈 네비게이션 로직', () => {
 
       // 3. 다음 문제 경로 생성
       const path = getNextQuizPath(10, nextQuiz?.quizId || null);
-      expect(path).toBe('/quizSolve/3');
+      expect(path).toBe('/topics/10/quizzes/3');
     });
 
     it('시나리오 2: 마지막 문제에서 목록으로 이동', () => {
@@ -169,7 +169,7 @@ describe('퀴즈 네비게이션 로직', () => {
 
       // 3. 목록 페이지 경로 생성
       const path = getNextQuizPath(10, null);
-      expect(path).toBe('/quizList/10');
+      expect(path).toBe('/topics/10/quizzes');
     });
 
     it('시나리오 3: 안 푼 문제만 필터링하여 이동', () => {
@@ -187,8 +187,8 @@ describe('퀴즈 네비게이션 로직', () => {
       const normalPath = getNextQuizPath(10, nextQuiz?.quizId || null);
       const unsolvedPath = getNextQuizPath(10, nextUnsolved?.quizId || null);
 
-      expect(normalPath).toBe('/quizSolve/4');
-      expect(unsolvedPath).toBe('/quizSolve/5');
+      expect(normalPath).toBe('/topics/10/quizzes/4');
+      expect(unsolvedPath).toBe('/topics/10/quizzes/5');
     });
   });
 });

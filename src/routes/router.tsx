@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizList',
+    path: '/topics',
     element: (
       <ProtectedRoute>
         <TopicSelectPage />
@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizList/:topicId',
+    path: '/topics/:topicId/quizzes',
     element: (
       <ProtectedRoute>
         <QuizListPage />
@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizSolve/:quizId',
+    path: '/topics/:topicId/quizzes/:quizId',
     element: (
       <ProtectedRoute>
         <QuizSolvePage />
@@ -57,7 +57,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizResult/:quizId',
+    path: '/topics/:topicId/quizzes/:quizId/result',
     element: (
       <ProtectedRoute>
         <QuizResultPage />

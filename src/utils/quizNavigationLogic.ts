@@ -85,8 +85,8 @@ export const getQuizProgress = (
  */
 export const getNextQuizPath = (topicId: number, nextQuizId: number | null): string => {
   if (nextQuizId === null) {
-    return `/quizList/${topicId}`; // 마지막 문제면 목록으로
+    return `/topics/${topicId}/quizzes`; // 마지막 문제면 목록으로
   }
 
-  return `/quizSolve/${nextQuizId}`;
+  return `/topics/${topicId}/quizzes/${nextQuizId}`;
 };

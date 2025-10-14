@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
 import QuizConfirmButton from './QuizConfirmButton';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { QuizResultState, QuizListResponse } from './types';
 import { findNextQuiz, getNextQuizPath } from '@/utils/quizNavigationLogic';
@@ -10,12 +10,13 @@ import { findNextQuiz, getNextQuizPath } from '@/utils/quizNavigationLogic';
 export const QuizResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { topicId } = useParams<{ topicId: string }>();
 
   const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
 
   const { data: quizListData } = useQueryApi<QuizListResponse>(
-    ['topics', quizData?.topicId?.toString() || ''],
-    `/topics/${quizData?.topicId || ''}`,
+    ['topics', topicId || ''],
+    `/topics/${topicId || ''}`,
   );
 
   if (!quizData) {
@@ -26,26 +27,19 @@ export const QuizResultPage = () => {
     );
   }
 
-  const {
-    questionOrder,
-    questionTitle,
-    difficultyLevel,
-    explanation,
-    questionData,
-    topicId,
-    quizId,
-  } = quizData;
+  const { questionOrder, questionTitle, difficultyLevel, explanation, questionData, quizId } =
+    quizData;
 
   const quizzes = quizListData?.quizzes || [];
   const nextQuiz = findNextQuiz(quizzes, quizId);
 
   const handleNextQuestion = () => {
-    const nextPath = getNextQuizPath(topicId, nextQuiz?.quizId || null);
+    const nextPath = getNextQuizPath(Number(topicId), nextQuiz?.quizId || null);
     navigate(nextPath);
   };
 
   const handleBackToList = () => {
-    navigate(`/quizList/${topicId}`);
+    navigate(`/topics/${topicId}/quizzes`);
   };
   return (
     <Container $scrollable>

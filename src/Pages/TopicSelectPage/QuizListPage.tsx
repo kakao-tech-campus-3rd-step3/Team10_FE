@@ -55,7 +55,7 @@ export const QuizListPage = () => {
   const allQuizzes = quizListData?.quizzes || [];
 
   const handleQuizClick = (quizId: number) => {
-    navigate(`/quizSolve/${quizId}`);
+    navigate(`/topics/${topicId}/quizzes/${quizId}`);
   };
 
   if (isLoading) {

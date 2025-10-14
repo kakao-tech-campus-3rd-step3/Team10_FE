@@ -12,7 +12,7 @@ export const HomePage = () => {
   const isTested = true;
   const navigate = useNavigate();
   const handleInvestmentTest = () => {
-    navigate('/quizList');
+    navigate('/topics');
   };
   const goToTestPage = () => {
     navigate('/test');

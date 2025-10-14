@@ -12,7 +12,7 @@ import Header from '@/Shared/components/Header';
 
 export const QuizSolvePage = () => {
   const navigate = useNavigate();
-  const { quizId } = useParams<{ quizId: string }>();
+  const { topicId, quizId } = useParams<{ topicId: string; quizId: string }>();
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | null>(null);
 
@@ -40,7 +40,7 @@ export const QuizSolvePage = () => {
 
       await submitQuizMutation.mutateAsync({ isCorrect });
 
-      navigate(`/quizResult/${quizId}`, {
+      navigate(`/topics/${topicId}/quizzes/${quizId}/result`, {
         state: {
           selectedAnswer,
           isCorrect,
