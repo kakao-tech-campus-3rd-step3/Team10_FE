@@ -2,20 +2,22 @@ import styled from '@emotion/styled';
 import QuizHeader from './QuizHeader';
 import QuizConfirmButton from './QuizConfirmButton';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate, useLocation } from 'react-router-dom';
-import type { QuizData } from './types';
-
-interface QuizResultState {
-  selectedAnswer: string | boolean;
-  isCorrect: boolean;
-  quizData: QuizData;
-}
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import type { QuizResultState, QuizListResponse } from './types';
+import { findNextQuiz, getNextQuizPath } from '@/utils/quizNavigationLogic';
 
 export const QuizResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { topicId } = useParams<{ topicId: string }>();
 
   const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
+
+  const { data: quizListData } = useQueryApi<QuizListResponse>(
+    ['topics', topicId || ''],
+    `/topics/${topicId || ''}`,
+  );
 
   if (!quizData) {
     return (
@@ -25,10 +27,19 @@ export const QuizResultPage = () => {
     );
   }
 
-  const { questionOrder, questionTitle, difficultyLevel, explanation, questionData } = quizData;
+  const { questionOrder, questionTitle, difficultyLevel, explanation, questionData, quizId } =
+    quizData;
+
+  const quizzes = quizListData?.quizzes || [];
+  const nextQuiz = findNextQuiz(quizzes, quizId);
 
   const handleNextQuestion = () => {
-    navigate('/home');
+    const nextPath = getNextQuizPath(Number(topicId), nextQuiz?.quizId || null);
+    navigate(nextPath);
+  };
+
+  const handleBackToList = () => {
+    navigate(`/topics/${topicId}/quizzes`);
   };
   return (
     <Container $scrollable>
@@ -82,9 +93,17 @@ export const QuizResultPage = () => {
           <ExplanationText>{explanation}</ExplanationText>
         </ExplanationContainer>
       </ResultContainer>
-      <ButtonContainer onClick={handleNextQuestion}>
-        <QuizConfirmButton text="다음 문제" />
-      </ButtonContainer>
+      <ButtonsWrapper>
+        {!nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
+        <ButtonRow>
+          <ButtonContainer onClick={handleBackToList}>
+            <QuizConfirmButton text="목록 보기" />
+          </ButtonContainer>
+          <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
+            <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
+          </ButtonContainer>
+        </ButtonRow>
+      </ButtonsWrapper>
     </Container>
   );
 };
@@ -163,8 +182,39 @@ const ErrorMessage = styled.div`
   font-size: 16px;
   color: #dc3545;
 `;
-const ButtonContainer = styled.div`
+
+const ButtonsWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  margin-top: 20px;
+`;
+
+const LastQuizMessage = styled.div`
+  font-size: 14px;
+  font-family: ${({ theme }) => theme.font.regular.fontFamily};
+  font-weight: ${({ theme }) => theme.font.regular.fontWeight};
+  color: #ff6b6b;
+  text-align: center;
+  padding: 8px 16px;
+  background-color: #fff5f5;
+  border-radius: 20px;
+  border: 1px solid #ffcccb;
+`;
+
+const ButtonRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+`;
+
+const ButtonContainer = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
