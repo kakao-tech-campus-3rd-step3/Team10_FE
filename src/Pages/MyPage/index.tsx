@@ -29,7 +29,6 @@ export const MyPage = () => {
   const navigate = useNavigate();
 
   const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
-  console.log(myPageData);
   const handleShareClick = () => {
     navigate('/sharing');
   };

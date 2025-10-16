@@ -28,7 +28,6 @@ export const SharingPage = () => {
   };
 
   const { data: myPageData } = useQueryApi<SharingResponse>(['usernickname'], '/page/mypage');
-  console.log(myPageData);
 
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
 

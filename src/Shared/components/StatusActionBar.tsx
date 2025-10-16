@@ -30,7 +30,6 @@ export const StatusActionBar = ({
     navigate('/tier');
   };
   const { data: TierInfoData } = useQueryApi<TierInfoResponse>(['userTier'], '/users/me/tier');
-  console.log(TierInfoData);
   return (
     <Wrapper>
       <Label onClick={handleLabelClick}>
