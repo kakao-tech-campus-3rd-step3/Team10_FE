@@ -17,6 +17,14 @@ interface MyPageResponse {
   testResultDescription: string;
 }
 
+//상대경로를 절대경로로 변환해주는 함수
+const toAbsoluteUrl = (u?: string) => {
+  if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  const base = import.meta.env.VITE_API_BASE_URL ?? '';
+  return `${base}${u.startsWith('/') ? u : `/${u}`}`;
+};
+
 export const MyPage = () => {
   const navigate = useNavigate();
 
@@ -26,13 +34,22 @@ export const MyPage = () => {
     navigate('/sharing');
   };
 
+  const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+
   return (
     <Container>
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
       <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
         <NicknameBox>
           <Nickname>{myPageData?.nickname}</Nickname>
         </NicknameBox>
