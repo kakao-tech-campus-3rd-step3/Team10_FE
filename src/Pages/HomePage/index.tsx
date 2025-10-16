@@ -49,7 +49,7 @@ export const HomePage = () => {
     );
   }
 
-  const { characterUri, nickname, tierName, testResult } = homeData;
+  const { characterUri, nickname, testResult } = homeData;
   const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
 
   return (
