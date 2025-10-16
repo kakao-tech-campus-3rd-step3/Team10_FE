@@ -6,21 +6,51 @@ import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+
+interface MyPageResponse {
+  characterUri: string;
+  nickname: string;
+  tierName: string;
+  ratingPoint: number;
+  testResult: string;
+  testResultDescription: string;
+}
+
+//상대경로를 절대경로로 변환해주는 함수
+const toAbsoluteUrl = (u?: string) => {
+  if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  const base = import.meta.env.VITE_API_BASE_URL ?? '';
+  return `${base}${u.startsWith('/') ? u : `/${u}`}`;
+};
 
 export const MyPage = () => {
   const navigate = useNavigate();
+
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
   const handleShareClick = () => {
     navigate('/sharing');
   };
+
+  const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+
   return (
     <Container>
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
       <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
         <NicknameBox>
-          <Nickname>카테캠 기요미</Nickname>
+          <Nickname>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>
