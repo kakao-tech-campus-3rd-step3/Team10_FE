@@ -8,31 +8,73 @@ import NewsIcon from '@/assets/HomeImg/news.png';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import type { HomeResponse } from './types';
+
+const toAbsoluteUrl = (u?: string) => {
+  if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  const base = import.meta.env.VITE_API_BASE_URL ?? '';
+  return `${base}${u.startsWith('/') ? u : `/${u}`}`;
+};
+
 export const HomePage = () => {
   const isTested = true;
   const navigate = useNavigate();
+  const {
+    data: homeData,
+    error,
+    isLoading,
+  } = useQueryApi<HomeResponse>(['page', 'home'], '/page/home');
   const handleInvestmentTest = () => {
     navigate('/topics');
   };
   const goToTestPage = () => {
     navigate('/test');
   };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (error || !homeData) {
+    return (
+      <Container>
+        <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      </Container>
+    );
+  }
+
+  const { characterUri, nickname, tierName, testResult } = homeData;
+  const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
+
   return (
     <Container $scrollable={true}>
       <Header title="홈 화면" hasPrevPage={false} />
       <NavigationBar />
       <StatusActionBar />
       <CharacterSectionWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
       </CharacterSectionWrapper>
       <BottomSectionWrapper>
         <NicknameBox>
-          <Nickname>닉네임</Nickname>
+          <Nickname>{nickname}</Nickname>
         </NicknameBox>
         <InvestmentTypeBox>
           {isTested ? (
             <>
-              <InvestmentText>테스트 유형</InvestmentText>
+              <InvestmentText>{testResult}</InvestmentText>
               <RetestButton type="button" onClick={goToTestPage}>
                 다시 테스트 하기
               </RetestButton>
@@ -191,4 +233,22 @@ const ButtonText = styled.span`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;
   color: ${theme.colors.text};
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;
