@@ -6,12 +6,26 @@ import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+
+interface MyPageResponse {
+  characterUri: string;
+  nickname: string;
+  tierName: string;
+  ratingPoint: number;
+  testResult: string;
+  testResultDescription: string;
+}
 
 export const MyPage = () => {
   const navigate = useNavigate();
+
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
+  console.log(myPageData);
   const handleShareClick = () => {
     navigate('/sharing');
   };
+
   return (
     <Container>
       <Header title="마이 페이지" hasPrevPage={true} />
@@ -20,7 +34,7 @@ export const MyPage = () => {
       <CharacterAndNicknameWrapper>
         <Character src={CharacterMain} alt="캐릭터" />
         <NicknameBox>
-          <Nickname>카테캠 기요미</Nickname>
+          <Nickname>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>
