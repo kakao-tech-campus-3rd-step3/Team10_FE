@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
-import { Header } from '@/Shared/components/Header';
 
 type Answer = {
   q1?: string;
@@ -69,20 +68,45 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       return { ...prev, q3: has ? prev.q3.filter((v) => v !== value) : [...prev.q3, value] };
     });
 
-  const incMap: Record<Step, Step> = { 0: 1, 1: 2, 2: 3, 3: 3 } as const;
-  const nextStep = () => setStep((s) => incMap[s]);
+  const isStepValid = () => {
+    switch (step) {
+      case 0:
+        return !!answers.q1 && !!answers.q2;
+      case 1:
+        return answers.q3.length > 0 && !!answers.q4;
+      case 2:
+        return !!answers.q5 && !!answers.q6;
+      case 3:
+        return !!answers.q7;
+      default:
+        return false;
+    }
+  };
 
   const isLast = step === 3;
+  const isButtonDisabled = !isStepValid();
+
+  const prevStep = () => setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
+  const nextStep = () => {
+    if (!isButtonDisabled) setStep((s) => (s < 3 ? ((s + 1) as Step) : s));
+  };
+
+  const handleBack = () => {
+    if (step > 0) prevStep();
+    else navigate(-1);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit?.(answers);
-    navigate('/test/result', { state: { answers } });
+    if (!isButtonDisabled) {
+      onSubmit?.(answers);
+      navigate('/test/result', { state: { answers } });
+    }
   };
 
   return (
     <Container $scrollable={true}>
-      <Header title="" hasPrevPage={true} />
+      <TestHeader title="" hasPrevPage={true} onBack={handleBack} />
       <FormCard onSubmit={handleSubmit}>
         <CardHead>
           <Title>투자성향 진단 테스트</Title>
@@ -317,11 +341,16 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       </FormCard>
       <ConfirmButtonContainer>
         {!isLast ? (
-          <ConfirmButton key="next" type="button" onClick={nextStep}>
+          <ConfirmButton key="next" type="button" onClick={nextStep} disabled={isButtonDisabled}>
             다음
           </ConfirmButton>
         ) : (
-          <ConfirmButton key="submit" type="submit" onClick={handleSubmit}>
+          <ConfirmButton
+            key="submit"
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isButtonDisabled}
+          >
             제출하기
           </ConfirmButton>
         )}
@@ -331,12 +360,91 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 };
 export default TestPage;
 
+const TestHeader = ({
+  title,
+  hasPrevPage,
+  onBack,
+}: {
+  title: string;
+  hasPrevPage: boolean;
+  onBack?: () => void;
+}) => {
+  const navigate = useNavigate();
+  const onTitleClick = () => {
+    navigate('/home');
+  };
+  return (
+    <HeaderContainer>
+      {hasPrevPage && (
+        <LocalBackButton type="button" onClick={onBack}>
+          <ArrowLeftIcon size={24} />
+        </LocalBackButton>
+      )}
+      <HeaderTitle onClick={onTitleClick}>{title}</HeaderTitle>
+    </HeaderContainer>
+  );
+};
+
+const HeaderContainer = styled.header`
+  height: ${theme.spacing(15)};
+  padding: ${theme.spacing(5)};
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-color: ${theme.colors.background};
+  border-bottom-left-radius: ${theme.spacing(5)};
+  border-bottom-right-radius: ${theme.spacing(5)};
+`;
+
+const HeaderTitle = styled.h1`
+  color: ${theme.colors.text};
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 24px;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+`;
+
+const LocalBackButton = styled.button`
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: ${theme.colors.text};
+`;
+
+const ArrowLeftIcon = ({ size = 24 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <polyline
+      points="15 18 9 12 15 6"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 const FormCard = styled.form`
   background-color: ${theme.colors.inactive};
   padding: 0;
   margin: 0 auto;
-  width: 96%;
-  flex: 1 1 auto;
+  width: 90%;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -435,7 +543,7 @@ const Option = styled.label`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   color: ${({ theme }) => theme.colors.text};
-
+  font-size: 16px;
   input {
     margin-top: 4px;
     accent-color: ${({ theme }) => theme.colors.secondary};
@@ -457,7 +565,7 @@ const ConfirmButton = styled.button`
   width: 155px;
   height: 50px;
   flex-shrink: 0;
-  background-color: ${({ theme }) => theme.colors.secondary};
+  background-color: ${({ theme, disabled }) => (disabled ? '#cccccc' : theme.colors.secondary)};
   border-radius: 52px;
   border: 2px solid #d3e0b4;
   display: flex;
@@ -465,9 +573,15 @@ const ConfirmButton = styled.button`
   justify-content: center;
   font: ${({ theme }) => theme.font.bold};
   font-size: 18px;
-  color: ${({ theme }) => theme.colors.background};
-  cursor: pointer;
+  color: ${({ theme, disabled }) => (disabled ? '#666666' : theme.colors.background)};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: ${({ disabled }) => (disabled ? 0.6 : 0.9)};
+  }
 `;
 
 const DoneNotice = styled.div`

@@ -4,6 +4,12 @@ import type { ReactNode } from 'react';
 import CalenderIcon from '@/assets/HomeImg/calendar.png';
 import TierIcon from '@/assets/HomeImg/tier.png';
 import { useNavigate } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+
+interface TierInfoResponse {
+  userRatingPoint: number;
+  userTier: string;
+}
 
 export type StatusActionBarProps = {
   leftIcon?: ReactNode;
@@ -23,12 +29,12 @@ export const StatusActionBar = ({
   const handleLabelClick = () => {
     navigate('/tier');
   };
-
+  const { data: TierInfoData } = useQueryApi<TierInfoResponse>(['userTier'], '/users/me/tier');
   return (
     <Wrapper>
       <Label onClick={handleLabelClick}>
         <LeftIcon src={TierIcon} alt="티어 아이콘" />
-        티어 이름
+        {TierInfoData?.userTier}
       </Label>
       <RightButton type="button" aria-label={rightIconAlt}>
         <RightIcon src={rightIconSrc} alt={rightIconAlt} $size={rightIconSizePx} />

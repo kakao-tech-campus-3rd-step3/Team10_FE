@@ -21,10 +21,10 @@ interface TopicResponse {
 export const TopicSelectPage = () => {
   const navigate = useNavigate();
   const handleTopicButtonClick = (topicId: number, topicName: string) => {
-    navigate(`/quizList/${topicId}`, { state: { topicName } });
+    navigate(`/topics/${topicId}/quizzes`, { state: { topicName } });
   };
 
-  const { data: quizListData, error } = useQueryApi<TopicResponse>(['topic'], '/topic');
+  const { data: quizListData, error } = useQueryApi<TopicResponse>(['topics'], '/topics');
 
   if (error) {
     return (

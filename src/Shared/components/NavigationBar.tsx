@@ -2,6 +2,33 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 
+export const NavigationBar = () => {
+  const navigate = useNavigate();
+  const navItems = [
+    { name: '꾸미기', path: '/character' },
+    { name: '랭크', path: '/rank' },
+    { name: '홈', path: '/home' },
+    { name: '학습 기록', path: '/record' },
+    { name: '마이 페이지', path: '/mypage' },
+  ];
+
+  return (
+    <NavWrapper>
+      {navItems.map((item) => (
+        <NavItem
+          key={typeof item.name === 'string' ? item.name : '마이 페이지'}
+          active={location.pathname === item.path}
+          onClick={() => navigate(item.path)}
+        >
+          {item.name}
+        </NavItem>
+      ))}
+    </NavWrapper>
+  );
+};
+
+export default NavigationBar;
+
 const NavWrapper = styled.nav`
   display: flex;
   justify-content: space-around;
@@ -20,6 +47,8 @@ const NavItem = styled.div<{ active?: boolean }>`
   color: ${(props) => (props.active ? theme.colors.secondary : theme.colors.text)};
   cursor: pointer;
   position: relative;
+  word-break: keep-all;
+  white-space: normal;
 
   &::after {
     content: '';
@@ -32,30 +61,3 @@ const NavItem = styled.div<{ active?: boolean }>`
     background-color: ${theme.colors.secondary};
   }
 `;
-
-export const NavigationBar = () => {
-  const navigate = useNavigate();
-  const navItems = [
-    { name: '꾸미기', path: '/character' },
-    { name: '랭크', path: '/rank' },
-    { name: '홈', path: '/home' },
-    { name: '학습 기록', path: '/record' },
-    { name: '마이 페이지', path: '/mypage' },
-  ];
-
-  return (
-    <NavWrapper>
-      {navItems.map((item) => (
-        <NavItem
-          key={item.name}
-          active={location.pathname === item.path}
-          onClick={() => navigate(item.path)}
-        >
-          {item.name}
-        </NavItem>
-      ))}
-    </NavWrapper>
-  );
-};
-
-export default NavigationBar;

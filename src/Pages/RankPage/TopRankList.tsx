@@ -35,9 +35,12 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   padding: 0 ${theme.spacing(2)};
-  gap: ${theme.spacing(3)};
-  margin-top: ${theme.spacing(12)};
+  gap: clamp(8px, 2vw, ${theme.spacing(3)});
+  margin-top: ${theme.spacing(4)};
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 `;

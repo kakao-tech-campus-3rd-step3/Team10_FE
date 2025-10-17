@@ -11,7 +11,7 @@ import CharacterMain from '@/assets/HomeImg/character.png';
 export const LearningRecordPage = () => {
   const [isIncorrect, setIsIncorrect] = useState<boolean>(true);
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="학습 기록" hasPrevPage={true} />
       <NavigationBar />
       <LearningRecordPageContainer>
