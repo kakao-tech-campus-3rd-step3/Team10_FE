@@ -4,6 +4,7 @@ import { Header } from '@/Shared/components/Header';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
 import { useQueryApi } from '@/Apis/useQueryApi';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
 
 interface SharingResponse {
   characterUri: string;
@@ -17,14 +18,6 @@ interface SharingResponse {
 export const SharingPage = () => {
   const handleSaveClick = () => {
     alert('결과 이미지 저장하기 버튼 클릭!');
-  };
-
-  //상대경로를 절대경로로 변환해주는 함수
-  const toAbsoluteUrl = (u?: string) => {
-    if (!u) return '';
-    if (/^https?:\/\//i.test(u)) return u;
-    const base = import.meta.env.VITE_API_BASE_URL ?? '';
-    return `${base}${u.startsWith('/') ? u : `/${u}`}`;
   };
 
   const { data: myPageData } = useQueryApi<SharingResponse>(['usernickname'], '/page/mypage');
