@@ -1,20 +1,15 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { NAV_ITEMS } from '@/constants/navigation';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
-  const navItems = [
-    { name: '꾸미기', path: '/character' },
-    { name: '랭크', path: '/rank' },
-    { name: '홈', path: '/home' },
-    { name: '학습 기록', path: '/record' },
-    { name: '마이 페이지', path: '/mypage' },
-  ];
+  const location = useLocation();
 
   return (
     <NavWrapper>
-      {navItems.map((item) => (
+      {NAV_ITEMS.map((item) => (
         <NavItem
           key={typeof item.name === 'string' ? item.name : '마이 페이지'}
           active={location.pathname === item.path}
