@@ -11,7 +11,7 @@ export const NavigationBar = () => {
     <NavWrapper>
       {NAV_ITEMS.map((item) => (
         <NavItem
-          key={typeof item.name === 'string' ? item.name : '마이 페이지'}
+          key={item.path}
           active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
         >
