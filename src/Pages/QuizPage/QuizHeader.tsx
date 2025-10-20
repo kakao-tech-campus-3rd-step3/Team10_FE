@@ -1,3 +1,4 @@
+import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 
 type Difficulty = 'low' | 'medium' | 'high';
@@ -16,7 +17,6 @@ function toKoreanDifficulty(level?: string) {
 
 export type QuizHeaderProps = {
   questionOrder: number;
-  totalQuestions: number;
   questionText: string;
   difficultyLevel?: string;
   className?: string;
@@ -24,7 +24,6 @@ export type QuizHeaderProps = {
 
 export const QuizHeader = ({
   questionOrder,
-  totalQuestions,
   questionText,
   difficultyLevel,
   className,
@@ -32,9 +31,7 @@ export const QuizHeader = ({
   const difficultyLabel = toKoreanDifficulty(difficultyLevel);
   return (
     <HeaderContainer className={className}>
-      <QuestionNumber>
-        문제 {questionOrder}/{totalQuestions}
-      </QuestionNumber>
+      <QuestionNumber>문제 {questionOrder}</QuestionNumber>
       <QuestionText>{questionText}</QuestionText>
       {difficultyLabel && <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>}
     </HeaderContainer>
@@ -57,7 +54,7 @@ const QuestionNumber = styled.h1`
 `;
 
 const QuestionText = styled.div`
-  width: 280px;
+  padding: 0 ${theme.spacing(5)};
   font-weight: ${({ theme }) => theme.font.bold.fontWeight};
   font-family: ${({ theme }) => theme.font.bold.fontFamily};
   font-size: 24px;

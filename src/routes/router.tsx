@@ -9,7 +9,6 @@ import { KakaoCallbackPage } from '@/Pages/StartPage/KakaoCallbackPage';
 import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
-import data from '@/MockData/Quiz.json';
 import { RankPage } from '@/Pages/RankPage';
 import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 import TestPage from '@/Pages/TestPage/TestPage';
@@ -34,7 +33,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizList',
+    path: '/topics',
     element: (
       <ProtectedRoute>
         <TopicSelectPage />
@@ -42,7 +41,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizList/:topicId',
+    path: '/topics/:topicId/quizzes',
     element: (
       <ProtectedRoute>
         <QuizListPage />
@@ -50,18 +49,18 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/quizSolve',
+    path: '/topics/:topicId/quizzes/:quizId',
     element: (
       <ProtectedRoute>
-        <QuizSolvePage data={data} />
+        <QuizSolvePage />
       </ProtectedRoute>
     ),
   },
   {
-    path: '/quizResult',
+    path: '/topics/:topicId/quizzes/:quizId/result',
     element: (
       <ProtectedRoute>
-        <QuizResultPage data={data} />
+        <QuizResultPage />
       </ProtectedRoute>
     ),
   },

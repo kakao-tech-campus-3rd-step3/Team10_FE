@@ -6,21 +6,44 @@ import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
+
+interface MyPageResponse {
+  characterUri: string;
+  nickname: string;
+  tierName: string;
+  ratingPoint: number;
+  testResult: string;
+  testResultDescription: string;
+}
 
 export const MyPage = () => {
   const navigate = useNavigate();
+
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
   const handleShareClick = () => {
     navigate('/sharing');
   };
+
+  const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+
   return (
     <Container>
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
       <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
         <NicknameBox>
-          <Nickname>카테캠 기요미</Nickname>
+          <Nickname>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>

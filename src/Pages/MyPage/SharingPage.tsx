@@ -3,20 +3,42 @@ import { theme } from '@/styles/theme';
 import { Header } from '@/Shared/components/Header';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
+
+interface SharingResponse {
+  characterUri: string;
+  nickname: string;
+  tierName: string;
+  ratingPoint: number;
+  testResult: string;
+  testResultDescription: string;
+}
 
 export const SharingPage = () => {
   const handleSaveClick = () => {
     alert('결과 이미지 저장하기 버튼 클릭!');
   };
 
+  const { data: myPageData } = useQueryApi<SharingResponse>(['usernickname'], '/page/mypage');
+
+  const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+
   return (
     <Container>
       <Header title="공유하기" hasPrevPage={true} />
       <Spacing />
       <CharacterAndNicknameWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
         <NicknameBox>
-          <Nickname>카테캠 귀요미</Nickname>
+          <Nickname>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>

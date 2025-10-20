@@ -5,18 +5,7 @@ import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { useState, useMemo } from 'react';
-
-interface Quiz {
-  quizId: number;
-  questionOrder: number;
-  questionTitle: string;
-  difficultyLevel: 'EASY' | 'MEDIUM' | 'HARD';
-  isSolved: boolean;
-}
-
-interface QuizListResponse {
-  quizzes: Quiz[];
-}
+import type { QuizListResponse } from '@/Pages/QuizPage/types';
 
 type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
@@ -48,7 +37,7 @@ export const QuizListPage = () => {
     data: quizListData,
     error,
     isLoading,
-  } = useQueryApi<QuizListResponse>(['topic', topicId || ''], `/topic/${topicId || ''}`);
+  } = useQueryApi<QuizListResponse>(['topics', topicId || ''], `/topics/${topicId || ''}`);
 
   const filteredQuizzes = useMemo(() => {
     const allQuizzes = quizListData?.quizzes || [];
@@ -66,7 +55,7 @@ export const QuizListPage = () => {
   const allQuizzes = quizListData?.quizzes || [];
 
   const handleQuizClick = (quizId: number) => {
-    navigate(`/quizSolve/${quizId}`);
+    navigate(`/topics/${topicId}/quizzes/${quizId}`);
   };
 
   if (isLoading) {

@@ -8,31 +8,67 @@ import NewsIcon from '@/assets/HomeImg/news.png';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import type { HomeResponse } from './types';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
+
 export const HomePage = () => {
   const isTested = true;
   const navigate = useNavigate();
+  const {
+    data: homeData,
+    error,
+    isLoading,
+  } = useQueryApi<HomeResponse>(['page', 'home'], '/page/home');
   const handleInvestmentTest = () => {
-    navigate('/quizList');
+    navigate('/topics');
   };
   const goToTestPage = () => {
     navigate('/test');
   };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (error || !homeData) {
+    return (
+      <Container>
+        <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      </Container>
+    );
+  }
+
+  const { characterUri, nickname, testResult } = homeData;
+  const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
+
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="홈 화면" hasPrevPage={false} />
       <NavigationBar />
       <StatusActionBar />
       <CharacterSectionWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+        <Character
+          key={characterSrc}
+          src={characterSrc}
+          alt="캐릭터"
+          onError={(e) => {
+            e.currentTarget.src = CharacterMain;
+          }}
+        />
       </CharacterSectionWrapper>
       <BottomSectionWrapper>
         <NicknameBox>
-          <Nickname>닉네임</Nickname>
+          <Nickname>{nickname}</Nickname>
         </NicknameBox>
         <InvestmentTypeBox>
           {isTested ? (
             <>
-              <InvestmentText>테스트 유형</InvestmentText>
+              <InvestmentText>{testResult}</InvestmentText>
               <RetestButton type="button" onClick={goToTestPage}>
                 다시 테스트 하기
               </RetestButton>
@@ -99,7 +135,7 @@ const Nickname = styled.p`
   color: ${theme.colors.text};
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 28px;
+  font-size: 24px;
   margin: 0;
 `;
 
@@ -116,7 +152,7 @@ const InvestmentTypeBox = styled.div`
 const InvestmentText = styled.p`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 19px;
+  font-size: 18px;
   color: ${theme.colors.text};
   margin: 0;
   flex-grow: 1;
@@ -137,7 +173,7 @@ const RetestButton = styled.button`
 const TestButton = styled.button`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 17px;
+  font-size: 16px;
   color: ${theme.colors.text};
   margin: 0;
   flex-grow: 1;
@@ -149,26 +185,39 @@ const TestButton = styled.button`
 `;
 
 const TwoButtonsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
   gap: ${theme.spacing(4)};
+  flex-wrap: nowrap;
+  overflow: visible;
 `;
 
 const QuizButton = styled.button`
+  --icon-size: clamp(75px, 25vw, 100px);
+  --pad: clamp(16px, 4vw, ${theme.spacing(6)});
   background-color: ${theme.colors.background};
   border: none;
   border-radius: ${theme.spacing(2)};
-  padding: ${theme.spacing(6)};
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: ${theme.spacing(1)};
+  width: min(360px, calc((100% - ${theme.spacing(4)}) / 2));
+  min-width: calc(var(--icon-size) + (var(--pad) * 2));
+  padding: var(--pad);
+  box-sizing: border-box;
+  flex: 0 1 auto;
 `;
 
 const IconImg = styled.img`
-  width: 100px;
+  width: var(--icon-size);
+  height: auto;
+  object-fit: contain;
 `;
 
 const FinanceButton = styled(QuizButton)``;
@@ -178,4 +227,22 @@ const ButtonText = styled.span`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;
   color: ${theme.colors.text};
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;

@@ -4,6 +4,7 @@ import ConfirmButton from './ConfirmButton';
 import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
+import { Header } from '@/Shared/components/Header';
 
 interface TestResultPageProps {
   typeText?: string;
@@ -20,7 +21,8 @@ export const TestResultPage = ({
     navigate('/home');
   };
   return (
-    <CenteredContainer>
+    <Container $scrollable={true}>
+      <Header title="" hasPrevPage={true} />
       <ResultCard>
         <CardHead>
           <Title>투자성향 진단 테스트</Title>
@@ -33,16 +35,10 @@ export const TestResultPage = ({
       <ButtonContainer onClick={handleGoHome}>
         <ConfirmButton text="저장하기" />
       </ButtonContainer>
-    </CenteredContainer>
+    </Container>
   );
 };
 export default TestResultPage;
-
-const CenteredContainer = styled(Container)`
-  align-items: center;
-  justify-content: center;
-  background-color: ${theme.colors.background};
-`;
 
 const ResultCard = styled.section`
   width: 90%; /* 가로 폭을 90%로 줄임 */
@@ -54,7 +50,6 @@ const ResultCard = styled.section`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(4)};
-  margin-top: ${theme.spacing(5)};
   align-items: center;
 `;
 
@@ -86,8 +81,8 @@ const Divider = styled.hr`
 `;
 
 const Image = styled.img`
-  width: 400px;
-  height: 400px;
+  width: clamp(230px, 60vw, 400px);
+  height: auto;
   object-fit: contain;
   margin: 0;
   border-radius: ${theme.spacing(2)};
