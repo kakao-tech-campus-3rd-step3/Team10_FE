@@ -24,6 +24,15 @@ export const QuizSolvePage = () => {
 
   const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(`/quiz/${quizId}/submit`);
 
+  const checkAnswer = (selectedAnswer: string | boolean, quizData: QuizData): boolean => {
+    if (quizData.questionType === 'OX') {
+      return selectedAnswer === quizData.questionData.correctAnswer;
+    } else if (quizData.questionType === 'MULTIPLE_CHOICE') {
+      return selectedAnswer === quizData.questionData.correctAnswer;
+    }
+    return false;
+  };
+
   const handleConfirm = async () => {
     if (selectedAnswer === null) {
       alert('답을 선택해주세요!');
@@ -50,15 +59,6 @@ export const QuizSolvePage = () => {
     } catch {
       alert('답안 제출에 실패했습니다. 다시 시도해주세요.');
     }
-  };
-
-  const checkAnswer = (selectedAnswer: string | boolean, quizData: QuizData): boolean => {
-    if (quizData.questionType === 'OX') {
-      return selectedAnswer === quizData.questionData.correctAnswer;
-    } else if (quizData.questionType === 'MULTIPLE_CHOICE') {
-      return selectedAnswer === quizData.questionData.correctAnswer;
-    }
-    return false;
   };
 
   const handleAnswerSelect = (answer: string | boolean) => {
