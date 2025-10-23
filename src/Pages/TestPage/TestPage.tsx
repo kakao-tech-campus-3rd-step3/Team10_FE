@@ -3,61 +3,17 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
-
-type Answer = {
-  q1?: string;
-  q2?: string;
-  q3: string[];
-  q4?: string;
-  q5?: string;
-  q6?: string;
-  q7?: string;
-};
-
-type Step = 0 | 1 | 2 | 3;
-
-interface TestPageProps {
-  onSubmit?: (answers: Answer) => void;
-}
+import { usePostApi } from '@/Apis/useMutationApi';
+import { Q1, Q2, Q3, Q4, Q5, Q6, Q7 } from './constants';
+import type { Answer, Step, TestPageProps, DiagnoseReq, DiagnoseRes } from './types';
+import { computeTotalScore, isStepValid } from './utils';
 
 export const TestPage = ({ onSubmit }: TestPageProps) => {
   const [answers, setAnswers] = useState<Answer>({ q3: [] });
   const [step, setStep] = useState<Step>(0);
   const navigate = useNavigate();
 
-  const Q1 = ['19세 이하', '20세~40세', '41세~50세', '51세~60세', '61세 이상'];
-  const Q2 = [
-    '6개월 이내',
-    '6개월 이상~1년 이내',
-    '1년 이상~2년 이내',
-    '2년 이상~3년 이내',
-    '3년 이상',
-  ];
-  const Q3 = [
-    '은행의 예·적금, 국채, 지방채, 보증채, MMF, CMA 등',
-    '금융채, 신용도가 높은 회사채, 채권형펀드, 원금보존추구형ELS 등',
-    '신용도 중간 등급의 회사채, 원금의 일부만 보장되는 ELS, 혼합형펀드 등',
-    '신용도가 낮은 회사채, 주식, 원금이 보장되지 않는 ELS, 시장수익률 수준의 수익을 추구하는 주식형펀드 등',
-    'ELW, 선물옵션, 시장수익률 이상의 수익을 추구하는 주식형펀드, 파생상품에 투자하는 펀드, 주식 신용거래 등',
-  ];
-  const Q4 = [
-    '[매우 낮은 수준] 투자의사 결정을 스스로 내려본 경험이 없는 정도',
-    '[낮은 수준] 주식과 채권의 차이를 구별할 수 있는 정도',
-    '[높은 수준] 투자할 수 있는 대부분의 금융상품의 차이를 구별할 수 있는 정도',
-    '[매우 높은 수준] 금융상품을 비롯하여 모든 투자대상 상품의 차이를 이해할 수 있는 정도',
-  ];
-  const Q5 = ['10% 이내', '10%이상~20% 이내', '20%이상~30% 이내', '30%이상~40% 이내', '40% 이상'];
-  const Q6 = [
-    '현재 일정한 수입이 발생하고 있으며, 향후 현재 수준을 유지하거나 증가할 것으로 예상된다.',
-    '현재 일정한 수입이 발생하고 있으나, 향후 감소하거나 불안정할 것으로 예상된다.',
-    '현재 일정한 수입이 없으며, 연금이 주수입원이다.',
-  ];
-  const Q7 = [
-    '무슨 일이 있어도 투자원금은 보전되어야 한다.',
-    '10% 미만까지는 손실을 감수할 수 있을 것 같다.',
-    '20% 미만까지는 손실을 감수할 수 있을 것 같다.',
-    '기대수익이 높다면 위험이 높아도 상관하지 않겠다.',
-  ];
+  const diagnoseMutation = usePostApi<DiagnoseRes, DiagnoseReq>('/propensity/diagnose');
 
   const pick = (key: keyof Answer, value: string) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -68,23 +24,9 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       return { ...prev, q3: has ? prev.q3.filter((v) => v !== value) : [...prev.q3, value] };
     });
 
-  const isStepValid = () => {
-    switch (step) {
-      case 0:
-        return !!answers.q1 && !!answers.q2;
-      case 1:
-        return answers.q3.length > 0 && !!answers.q4;
-      case 2:
-        return !!answers.q5 && !!answers.q6;
-      case 3:
-        return !!answers.q7;
-      default:
-        return false;
-    }
-  };
-
   const isLast = step === 3;
-  const isButtonDisabled = !isStepValid();
+  const isButtonDisabled = !isStepValid(step, answers);
+  const isSubmitting = diagnoseMutation.isPending;
 
   const prevStep = () => setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
   const nextStep = () => {
@@ -98,10 +40,28 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isButtonDisabled) {
-      onSubmit?.(answers);
-      navigate('/test/result', { state: { answers } });
-    }
+    if (isButtonDisabled) return;
+
+    onSubmit?.(answers);
+
+    const totalScore = computeTotalScore(answers);
+    diagnoseMutation.mutate(
+      { totalScore },
+      {
+        onSuccess: (data) => {
+          navigate('/test/result', {
+            state: {
+              answers,
+              totalScore,
+              propensityKoreanName: data.propensityKoreanName,
+            },
+          });
+        },
+        onError: () => {
+          alert('진단 요청에 실패했습니다.');
+        },
+      },
+    );
   };
 
   return (
@@ -349,9 +309,9 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
             key="submit"
             type="submit"
             onClick={handleSubmit}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled || isSubmitting}
           >
-            제출하기
+            {isSubmitting ? '제출 중...' : '제출하기'}
           </ConfirmButton>
         )}
       </ConfirmButtonContainer>

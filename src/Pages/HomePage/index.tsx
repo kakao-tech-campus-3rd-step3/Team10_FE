@@ -29,16 +29,26 @@ export const HomePage = () => {
 
   if (isLoading) {
     return (
-      <Container>
-        <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+      <Container $scrollable={true}>
+        <Header title="홈 화면" hasPrevPage={false} />
+        <NavigationBar />
+        <StatusActionBar />
+        <HomePageContainer>
+          <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+        </HomePageContainer>
       </Container>
     );
   }
 
   if (error || !homeData) {
     return (
-      <Container>
-        <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      <Container $scrollable={true}>
+        <Header title="홈 화면" hasPrevPage={false} />
+        <NavigationBar />
+        <StatusActionBar />
+        <HomePageContainer>
+          <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+        </HomePageContainer>
       </Container>
     );
   }
@@ -51,50 +61,58 @@ export const HomePage = () => {
       <Header title="홈 화면" hasPrevPage={false} />
       <NavigationBar />
       <StatusActionBar />
-      <CharacterSectionWrapper>
-        <Character
-          key={characterSrc}
-          src={characterSrc}
-          alt="캐릭터"
-          onError={(e) => {
-            e.currentTarget.src = CharacterMain;
-          }}
-        />
-      </CharacterSectionWrapper>
-      <BottomSectionWrapper>
-        <NicknameBox>
-          <Nickname>{nickname}</Nickname>
-        </NicknameBox>
-        <InvestmentTypeBox>
-          {isTested ? (
-            <>
-              <InvestmentText>{testResult}</InvestmentText>
-              <RetestButton type="button" onClick={goToTestPage}>
-                다시 테스트 하기
-              </RetestButton>
-            </>
-          ) : (
-            <TestButton type="button" onClick={goToTestPage}>
-              나의 투자 성향을 테스트 해보세요
-            </TestButton>
-          )}
-        </InvestmentTypeBox>
-        <TwoButtonsWrapper>
-          <QuizButton onClick={handleInvestmentTest}>
-            <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
-            <ButtonText>퀴즈 풀기</ButtonText>
-          </QuizButton>
-          <FinanceButton>
-            <IconImg src={NewsIcon} alt="뉴스 아이콘" />
-            <ButtonText>금융 콘텐츠</ButtonText>
-          </FinanceButton>
-        </TwoButtonsWrapper>
-      </BottomSectionWrapper>
+      <HomePageContainer>
+        <CharacterSectionWrapper>
+          <Character
+            key={characterSrc}
+            src={characterSrc}
+            alt="캐릭터"
+            onError={(e) => {
+              e.currentTarget.src = CharacterMain;
+            }}
+          />
+        </CharacterSectionWrapper>
+        <BottomSectionWrapper>
+          <NicknameBox>
+            <Nickname>{nickname}</Nickname>
+          </NicknameBox>
+          <InvestmentTypeBox>
+            {isTested ? (
+              <>
+                <InvestmentText>{testResult}</InvestmentText>
+                <RetestButton type="button" onClick={goToTestPage}>
+                  다시 테스트 하기
+                </RetestButton>
+              </>
+            ) : (
+              <TestButton type="button" onClick={goToTestPage}>
+                나의 투자 성향을 테스트 해보세요
+              </TestButton>
+            )}
+          </InvestmentTypeBox>
+          <TwoButtonsWrapper>
+            <QuizButton onClick={handleInvestmentTest}>
+              <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
+              <ButtonText>퀴즈 풀기</ButtonText>
+            </QuizButton>
+            <FinanceButton>
+              <IconImg src={NewsIcon} alt="뉴스 아이콘" />
+              <ButtonText>금융 콘텐츠</ButtonText>
+            </FinanceButton>
+          </TwoButtonsWrapper>
+        </BottomSectionWrapper>
+      </HomePageContainer>
     </Container>
   );
 };
 
 export default HomePage;
+
+const HomePageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+`;
 
 const CharacterSectionWrapper = styled.div`
   position: relative;
