@@ -3,6 +3,23 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
+import { usePostApi } from '@/Apis/useMutationApi';
+import {
+  Q1,
+  Q2,
+  Q3,
+  Q4,
+  Q5,
+  Q6,
+  Q7,
+  Q1_SCORES,
+  Q2_SCORES,
+  Q3_SCORES,
+  Q4_SCORES,
+  Q5_SCORES,
+  Q6_SCORES,
+  Q7_SCORES,
+} from './constants';
 
 type Answer = {
   q1?: string;
@@ -25,39 +42,24 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   const [step, setStep] = useState<Step>(0);
   const navigate = useNavigate();
 
-  const Q1 = ['19세 이하', '20세~40세', '41세~50세', '51세~60세', '61세 이상'];
-  const Q2 = [
-    '6개월 이내',
-    '6개월 이상~1년 이내',
-    '1년 이상~2년 이내',
-    '2년 이상~3년 이내',
-    '3년 이상',
-  ];
-  const Q3 = [
-    '은행의 예·적금, 국채, 지방채, 보증채, MMF, CMA 등',
-    '금융채, 신용도가 높은 회사채, 채권형펀드, 원금보존추구형ELS 등',
-    '신용도 중간 등급의 회사채, 원금의 일부만 보장되는 ELS, 혼합형펀드 등',
-    '신용도가 낮은 회사채, 주식, 원금이 보장되지 않는 ELS, 시장수익률 수준의 수익을 추구하는 주식형펀드 등',
-    'ELW, 선물옵션, 시장수익률 이상의 수익을 추구하는 주식형펀드, 파생상품에 투자하는 펀드, 주식 신용거래 등',
-  ];
-  const Q4 = [
-    '[매우 낮은 수준] 투자의사 결정을 스스로 내려본 경험이 없는 정도',
-    '[낮은 수준] 주식과 채권의 차이를 구별할 수 있는 정도',
-    '[높은 수준] 투자할 수 있는 대부분의 금융상품의 차이를 구별할 수 있는 정도',
-    '[매우 높은 수준] 금융상품을 비롯하여 모든 투자대상 상품의 차이를 이해할 수 있는 정도',
-  ];
-  const Q5 = ['10% 이내', '10%이상~20% 이내', '20%이상~30% 이내', '30%이상~40% 이내', '40% 이상'];
-  const Q6 = [
-    '현재 일정한 수입이 발생하고 있으며, 향후 현재 수준을 유지하거나 증가할 것으로 예상된다.',
-    '현재 일정한 수입이 발생하고 있으나, 향후 감소하거나 불안정할 것으로 예상된다.',
-    '현재 일정한 수입이 없으며, 연금이 주수입원이다.',
-  ];
-  const Q7 = [
-    '무슨 일이 있어도 투자원금은 보전되어야 한다.',
-    '10% 미만까지는 손실을 감수할 수 있을 것 같다.',
-    '20% 미만까지는 손실을 감수할 수 있을 것 같다.',
-    '기대수익이 높다면 위험이 높아도 상관하지 않겠다.',
-  ];
+  type DiagnoseReq = { totalScore: number };
+  type DiagnoseRes = { propensityKoreanName: string };
+  const diagnoseMutation = usePostApi<DiagnoseRes, DiagnoseReq>('/propensity/diagnose');
+
+  const scoreOf = (table: Record<string, number>, picked?: string) =>
+    picked ? (table[picked] ?? 0) : 0;
+
+  const computeTotalScore = (a: Answer) => {
+    const s1 = scoreOf(Q1_SCORES, a.q1);
+    const s2 = scoreOf(Q2_SCORES, a.q2);
+    const s3 = a.q3.reduce((sum, v) => sum + (Q3_SCORES[v] ?? 0), 0);
+    const s4 = scoreOf(Q4_SCORES, a.q4);
+    const s5 = scoreOf(Q5_SCORES, a.q5);
+    const s6 = scoreOf(Q6_SCORES, a.q6);
+    const s7 = scoreOf(Q7_SCORES, a.q7);
+    const total = s1 + s2 + s3 + s4 + s5 + s6 + s7;
+    return Number.isFinite(total) ? total : 0;
+  };
 
   const pick = (key: keyof Answer, value: string) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -85,6 +87,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
   const isLast = step === 3;
   const isButtonDisabled = !isStepValid();
+  const isSubmitting = diagnoseMutation.isPending;
 
   const prevStep = () => setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
   const nextStep = () => {
@@ -98,10 +101,28 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isButtonDisabled) {
-      onSubmit?.(answers);
-      navigate('/test/result', { state: { answers } });
-    }
+    if (isButtonDisabled) return;
+
+    onSubmit?.(answers);
+
+    const totalScore = computeTotalScore(answers);
+    diagnoseMutation.mutate(
+      { totalScore },
+      {
+        onSuccess: (data) => {
+          navigate('/test/result', {
+            state: {
+              answers,
+              totalScore,
+              propensityKoreanName: data.propensityKoreanName,
+            },
+          });
+        },
+        onError: () => {
+          alert('진단 요청에 실패했습니다.');
+        },
+      },
+    );
   };
 
   return (
@@ -349,9 +370,9 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
             key="submit"
             type="submit"
             onClick={handleSubmit}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled || isSubmitting}
           >
-            제출하기
+            {isSubmitting ? '제출 중...' : '제출하기'}
           </ConfirmButton>
         )}
       </ConfirmButtonContainer>
