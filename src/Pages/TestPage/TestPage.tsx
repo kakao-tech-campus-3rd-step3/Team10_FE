@@ -4,62 +4,16 @@ import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { usePostApi } from '@/Apis/useMutationApi';
-import {
-  Q1,
-  Q2,
-  Q3,
-  Q4,
-  Q5,
-  Q6,
-  Q7,
-  Q1_SCORES,
-  Q2_SCORES,
-  Q3_SCORES,
-  Q4_SCORES,
-  Q5_SCORES,
-  Q6_SCORES,
-  Q7_SCORES,
-} from './constants';
-
-type Answer = {
-  q1?: string;
-  q2?: string;
-  q3: string[];
-  q4?: string;
-  q5?: string;
-  q6?: string;
-  q7?: string;
-};
-
-type Step = 0 | 1 | 2 | 3;
-
-interface TestPageProps {
-  onSubmit?: (answers: Answer) => void;
-}
+import { Q1, Q2, Q3, Q4, Q5, Q6, Q7 } from './constants';
+import type { Answer, Step, TestPageProps, DiagnoseReq, DiagnoseRes } from './types';
+import { computeTotalScore, isStepValid } from './utils';
 
 export const TestPage = ({ onSubmit }: TestPageProps) => {
   const [answers, setAnswers] = useState<Answer>({ q3: [] });
   const [step, setStep] = useState<Step>(0);
   const navigate = useNavigate();
 
-  type DiagnoseReq = { totalScore: number };
-  type DiagnoseRes = { propensityKoreanName: string };
   const diagnoseMutation = usePostApi<DiagnoseRes, DiagnoseReq>('/propensity/diagnose');
-
-  const scoreOf = (table: Record<string, number>, picked?: string) =>
-    picked ? (table[picked] ?? 0) : 0;
-
-  const computeTotalScore = (a: Answer) => {
-    const s1 = scoreOf(Q1_SCORES, a.q1);
-    const s2 = scoreOf(Q2_SCORES, a.q2);
-    const s3 = a.q3.reduce((sum, v) => sum + (Q3_SCORES[v] ?? 0), 0);
-    const s4 = scoreOf(Q4_SCORES, a.q4);
-    const s5 = scoreOf(Q5_SCORES, a.q5);
-    const s6 = scoreOf(Q6_SCORES, a.q6);
-    const s7 = scoreOf(Q7_SCORES, a.q7);
-    const total = s1 + s2 + s3 + s4 + s5 + s6 + s7;
-    return Number.isFinite(total) ? total : 0;
-  };
 
   const pick = (key: keyof Answer, value: string) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -70,23 +24,8 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       return { ...prev, q3: has ? prev.q3.filter((v) => v !== value) : [...prev.q3, value] };
     });
 
-  const isStepValid = () => {
-    switch (step) {
-      case 0:
-        return !!answers.q1 && !!answers.q2;
-      case 1:
-        return answers.q3.length > 0 && !!answers.q4;
-      case 2:
-        return !!answers.q5 && !!answers.q6;
-      case 3:
-        return !!answers.q7;
-      default:
-        return false;
-    }
-  };
-
   const isLast = step === 3;
-  const isButtonDisabled = !isStepValid();
+  const isButtonDisabled = !isStepValid(step, answers);
   const isSubmitting = diagnoseMutation.isPending;
 
   const prevStep = () => setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
