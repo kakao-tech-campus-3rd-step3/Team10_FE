@@ -8,8 +8,49 @@ import { useState } from 'react';
 import { TopRankList } from './TopRankList';
 import { MyRankSection } from './MyRankSection';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
+import { useQueryApi } from '@/Apis/useQueryApi';
+import type { RankingResponse } from './types';
+
 export const RankPage = () => {
   const [isScoreRank, setIsScoreRank] = useState<boolean>(true);
+
+  const endpoint = isScoreRank
+    ? '/user/ranking/ratingPoint'
+    : '/user/ranking/consecutiveAttendance';
+
+  const queryKey: (string | number)[] = [
+    'user',
+    'ranking',
+    isScoreRank ? 'ratingPoint' : 'consecutiveAttendance',
+  ];
+
+  const { data: rankingData, error, isLoading } = useQueryApi<RankingResponse>(queryKey, endpoint);
+
+  if (isLoading) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="랭킹" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <RankPageContainer>
+          <LoadingMessage>랭킹 데이터를 불러오는 중...</LoadingMessage>
+        </RankPageContainer>
+      </Container>
+    );
+  }
+
+  if (error || !rankingData) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="랭킹" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <RankPageContainer>
+          <ErrorMessage>랭킹 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+        </RankPageContainer>
+      </Container>
+    );
+  }
 
   return (
     <Container $scrollable={true}>
@@ -23,9 +64,13 @@ export const RankPage = () => {
           firstButtonText="점수 랭킹"
           secondButtonText="성실 랭킹"
         />
-        <TopRankList isScoreRank={isScoreRank} />
+        <TopRankList topRankingUsers={rankingData.topRankingUsers} />
         <Spacing />
-        <MyRankSection isScoreRank={isScoreRank} />
+        <MyRankSection
+          isScoreRank={isScoreRank}
+          currentUser={rankingData.currentUser}
+          adjacentUsers={rankingData.adjacentUsers}
+        />
       </RankPageContainer>
     </Container>
   );
@@ -48,4 +93,22 @@ const RankPageContainer = styled.div`
 
 const Spacing = styled.div`
   height: 8px;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;
