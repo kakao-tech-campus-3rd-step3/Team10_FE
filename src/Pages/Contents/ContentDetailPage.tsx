@@ -33,6 +33,11 @@ export const ContentDetailPage = () => {
         <ContentHeader $backgroundColor={content.backgroundColor}>
           <ContentTitle>{content.title}</ContentTitle>
           <ContentSubtitle>{content.subtitle}</ContentSubtitle>
+          <ContentHashtags>
+            {content.hashtag.map((hashtag) => (
+              <ContentHashtag key={hashtag}>#{content.hashtag}</ContentHashtag>
+            ))}
+          </ContentHashtags>
         </ContentHeader>
 
         <ContentBody>
@@ -168,4 +173,17 @@ const ErrorMessage = styled.div`
   font-size: 18px;
   color: #dc3545;
   font-family: ${theme.font.regular.fontFamily};
+`;
+
+const ContentHashtags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.spacing(1)};
+  margin-top: ${theme.spacing(1)};
+`;
+
+const ContentHashtag = styled.span`
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  font-size: 12px;
 `;

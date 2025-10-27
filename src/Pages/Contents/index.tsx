@@ -20,6 +20,7 @@ import {
   CategoryIcon,
   CategoryName,
   CategoryDescription,
+  Line,
 } from './styles';
 
 export const ContentsPage = () => {
@@ -69,6 +70,7 @@ export const ContentsPage = () => {
         )}
 
         <CategorySection>
+          <Line />
           <CategoryTitle>꼭 알아야 할 금융 상품</CategoryTitle>
           <CategoryGrid>
             {categoryContents.map((content) => (

@@ -85,6 +85,7 @@ export const AllContentsGrid = styled.div`
 `;
 
 export const CategorySection = styled.section`
+  margin-top: ${theme.spacing(2)};
   padding: ${theme.spacing(4)};
   background-color: #ffffff;
 `;
@@ -96,6 +97,7 @@ export const CategoryTitle = styled.h2`
   color: ${theme.colors.text};
   margin: 0 0 ${theme.spacing(3)} 0;
   text-align: center;
+  margin-bottom: ${theme.spacing(6)};
 `;
 
 export const CategoryGrid = styled.div`
@@ -148,4 +150,10 @@ export const CategoryDescription = styled.p`
   color: #666666;
   margin: 0;
   line-height: 1.4;
+`;
+export const Line = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #e9ecef;
+  margin: ${theme.spacing(4)} 0;
 `;
