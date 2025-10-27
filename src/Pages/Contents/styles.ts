@@ -32,8 +32,8 @@ export const MoreButton = styled.button`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    border-color: #6c5ce7;
-    color: #6c5ce7;
+    border-color: ${theme.colors.primary};
+    color: ${theme.colors.primary};
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   }
 `;

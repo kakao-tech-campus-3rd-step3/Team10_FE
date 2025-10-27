@@ -4,14 +4,14 @@ import { Header } from '@/Shared/components/Header';
 import { ContentSlider } from './ContentSlider.tsx';
 import { ContentCard } from './ContentCard.tsx';
 import { useState } from 'react';
-import { slideContents, allContents } from './constants';
+import { useNavigate } from 'react-router-dom';
+import { allContents } from './constants';
 import {
   ContentsPageContainer,
   MoreButtonContainer,
   MoreButton,
   ButtonIcon,
   AllContentsSection,
-  AllContentsTitle,
   AllContentsGrid,
   CategorySection,
   CategoryTitle,
@@ -24,9 +24,16 @@ import {
 
 export const ContentsPage = () => {
   const [showAllContents, setShowAllContents] = useState(false);
+  const navigate = useNavigate();
+
+  const slideContents = allContents.filter((content) => content.id <= 4);
 
   const toggleAllContents = () => {
     setShowAllContents(!showAllContents);
+  };
+
+  const handleContentClick = (contentId: number) => {
+    navigate(`/contents/${contentId}`);
   };
 
   return (
@@ -34,7 +41,7 @@ export const ContentsPage = () => {
       <Header title="금융 콘텐츠" hasPrevPage={true} />
       <NavigationBar />
       <ContentsPageContainer>
-        <ContentSlider contents={slideContents} />
+        <ContentSlider contents={slideContents} onContentClick={handleContentClick} />
 
         <MoreButtonContainer>
           <MoreButton onClick={toggleAllContents}>
@@ -45,7 +52,6 @@ export const ContentsPage = () => {
 
         {showAllContents && (
           <AllContentsSection>
-            <AllContentsTitle>전체 금융 상품</AllContentsTitle>
             <AllContentsGrid>
               {allContents.map((content) => (
                 <ContentCard
@@ -54,6 +60,7 @@ export const ContentsPage = () => {
                   subtitle={content.subtitle}
                   buttonText={content.buttonText}
                   backgroundColor={content.backgroundColor}
+                  onClick={() => handleContentClick(content.id)}
                 />
               ))}
             </AllContentsGrid>

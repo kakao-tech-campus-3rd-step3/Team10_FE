@@ -13,9 +13,10 @@ interface SlideContent {
 
 interface ContentSliderProps {
   contents: SlideContent[];
+  onContentClick?: (contentId: number) => void;
 }
 
-export const ContentSlider = ({ contents }: ContentSliderProps) => {
+export const ContentSlider = ({ contents, onContentClick }: ContentSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -63,6 +64,7 @@ export const ContentSlider = ({ contents }: ContentSliderProps) => {
                   subtitle={content.subtitle}
                   buttonText={content.buttonText}
                   backgroundColor={content.backgroundColor}
+                  onClick={() => onContentClick?.(content.id)}
                 />
               </SlideItem>
             ))}
@@ -155,7 +157,7 @@ const NextButton = styled(NavigationButton)`
 const ArrowIcon = styled.span`
   font-size: 30px;
   font-weight: regular;
-  color: #363636;
+  color: #ffffff;
   line-height: 0.8;
   transform: scaleY(1.5);
 `;

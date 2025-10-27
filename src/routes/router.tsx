@@ -18,6 +18,7 @@ import { TierPage } from '@/Pages/TierPage';
 import { TopicSelectPage } from '@/Pages/TopicSelectPage/TopicSelectPage';
 import { QuizListPage } from '@/Pages/TopicSelectPage/QuizListPage';
 import { ContentsPage } from '@/Pages/Contents';
+import { ContentDetailPage } from '@/Pages/Contents/ContentDetailPage';
 import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -127,6 +128,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ContentsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/contents/:id',
+    element: (
+      <ProtectedRoute>
+        <ContentDetailPage />
       </ProtectedRoute>
     ),
   },
