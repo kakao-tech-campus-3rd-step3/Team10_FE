@@ -9,6 +9,7 @@ interface SlideContent {
   subtitle: string;
   buttonText: string;
   backgroundColor: string;
+  hashtag?: string[];
 }
 
 interface ContentSliderProps {
@@ -64,6 +65,7 @@ export const ContentSlider = ({ contents, onContentClick }: ContentSliderProps) 
                   subtitle={content.subtitle}
                   buttonText={content.buttonText}
                   backgroundColor={content.backgroundColor}
+                  hashtag={content.hashtag}
                   onClick={() => onContentClick?.(content.id)}
                 />
               </SlideItem>

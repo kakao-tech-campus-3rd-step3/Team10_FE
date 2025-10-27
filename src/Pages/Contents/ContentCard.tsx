@@ -6,6 +6,7 @@ interface ContentCardProps {
   subtitle: string;
   buttonText: string;
   backgroundColor?: string;
+  hashtag?: string[];
   onClick?: () => void;
 }
 
@@ -14,6 +15,7 @@ export const ContentCard = ({
   subtitle,
   buttonText,
   backgroundColor = '#4ECDC4',
+  hashtag,
   onClick,
 }: ContentCardProps) => {
   return (
@@ -21,6 +23,13 @@ export const ContentCard = ({
       <CardTextContent>
         <CardTitle>{title}</CardTitle>
         <CardSubtitle>{subtitle}</CardSubtitle>
+        {hashtag && hashtag.length > 0 && (
+          <CardHashtags>
+            {hashtag.map((tag, index) => (
+              <HashtagItem key={index}>#{tag}</HashtagItem>
+            ))}
+          </CardHashtags>
+        )}
       </CardTextContent>
       <CardButton>{buttonText}</CardButton>
     </CardContainer>
@@ -73,6 +82,24 @@ const CardSubtitle = styled.p`
   margin: 0;
   line-height: 1.4;
   opacity: 0.9;
+`;
+
+const CardHashtags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.spacing(1)};
+  margin-top: ${theme.spacing(1)};
+`;
+
+const HashtagItem = styled.span`
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
+  border-radius: ${theme.spacing(1)};
+  border: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
 const CardButton = styled.button`

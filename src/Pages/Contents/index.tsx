@@ -5,7 +5,7 @@ import { ContentSlider } from './ContentSlider.tsx';
 import { ContentCard } from './ContentCard.tsx';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { allContents } from './constants';
+import { allContents, categoryContents } from './constants';
 import {
   ContentsPageContainer,
   MoreButtonContainer,
@@ -60,6 +60,7 @@ export const ContentsPage = () => {
                   subtitle={content.subtitle}
                   buttonText={content.buttonText}
                   backgroundColor={content.backgroundColor}
+                  hashtag={content.hashtag}
                   onClick={() => handleContentClick(content.id)}
                 />
               ))}
@@ -68,33 +69,15 @@ export const ContentsPage = () => {
         )}
 
         <CategorySection>
-          <CategoryTitle>금융 상품 둘러보기</CategoryTitle>
+          <CategoryTitle>꼭 알아야 할 금융 상품</CategoryTitle>
           <CategoryGrid>
-            <CategoryCard>
-              <CategoryIcon>🏦</CategoryIcon>
-              <CategoryName>통장</CategoryName>
-              <CategoryDescription>통장, 나눠모으기 통장, 서브 통장</CategoryDescription>
-            </CategoryCard>
-            <CategoryCard>
-              <CategoryIcon>💰</CategoryIcon>
-              <CategoryName>예금・적금</CategoryName>
-              <CategoryDescription>먼저 이자 받는 정기예금, 키워봐요적금</CategoryDescription>
-            </CategoryCard>
-            <CategoryCard>
-              <CategoryIcon>💳</CategoryIcon>
-              <CategoryName>대출</CategoryName>
-              <CategoryDescription>신용대출, 마이너스통장, 비상금 대출</CategoryDescription>
-            </CategoryCard>
-            <CategoryCard>
-              <CategoryIcon>🌍</CategoryIcon>
-              <CategoryName>외환</CategoryName>
-              <CategoryDescription>외화 통장</CategoryDescription>
-            </CategoryCard>
-            <CategoryCard>
-              <CategoryIcon>💎</CategoryIcon>
-              <CategoryName>카드</CategoryName>
-              <CategoryDescription>체크카드, 모임카드, 제휴 신용카드</CategoryDescription>
-            </CategoryCard>
+            {categoryContents.map((content) => (
+              <CategoryCard key={content.id}>
+                <CategoryIcon>{content.icon}</CategoryIcon>
+                <CategoryName>{content.title}</CategoryName>
+                <CategoryDescription>{content.subtitle}</CategoryDescription>
+              </CategoryCard>
+            ))}
           </CategoryGrid>
         </CategorySection>
       </ContentsPageContainer>
