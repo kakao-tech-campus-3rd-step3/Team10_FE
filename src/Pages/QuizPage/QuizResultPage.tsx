@@ -71,18 +71,14 @@ export const QuizResultPage = () => {
           <>
             <AnswerDisplay>
               <AnswerLabel>내가 선택한 답:</AnswerLabel>
-              <AnswerValue isCorrect={selectedAnswer === questionData.correctAnswer}>
-                {questionData.choices?.find((choice) => choice.choiceId === selectedAnswer)?.text}
+              <AnswerValue isCorrect={isCorrect}>
+                {questionData.choices?.[selectedAnswer as number]?.text}
               </AnswerValue>
             </AnswerDisplay>
             <AnswerDisplay>
               <AnswerLabel>정답:</AnswerLabel>
               <AnswerValue isCorrect={true}>
-                {
-                  questionData.choices?.find(
-                    (choice) => choice.choiceId === String(questionData.correctAnswer),
-                  )?.text
-                }
+                {questionData.choices?.find((choice) => choice.correctAnswer === true)?.text}
               </AnswerValue>
             </AnswerDisplay>
           </>

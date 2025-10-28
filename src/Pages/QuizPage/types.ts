@@ -6,8 +6,8 @@ export interface QuizData {
   questionData: {
     correctAnswer?: boolean;
     choices?: {
-      choiceId: string;
       text: string;
+      correctAnswer: boolean;
     }[];
   };
   difficultyLevel: 'EASY' | 'MEDIUM' | 'HARD';
@@ -36,7 +36,7 @@ export interface QuizListResponse {
 
 // 퀴즈 결과 페이지 state
 export interface QuizResultState {
-  selectedAnswer: string | boolean;
+  selectedAnswer: string | boolean | number;
   isCorrect: boolean;
   quizData: QuizData;
 }

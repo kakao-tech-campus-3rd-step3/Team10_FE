@@ -14,7 +14,7 @@ export const QuizSolvePage = () => {
   const navigate = useNavigate();
   const { topicId, quizId } = useParams<{ topicId: string; quizId: string }>();
 
-  const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | number | null>(null);
 
   const {
     data: quizData,
@@ -24,11 +24,12 @@ export const QuizSolvePage = () => {
 
   const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(`/quiz/${quizId}/submit`);
 
-  const checkAnswer = (selectedAnswer: string | boolean, quizData: QuizData): boolean => {
+  const checkAnswer = (selectedAnswer: string | boolean | number, quizData: QuizData): boolean => {
     if (quizData.questionType === 'OX') {
       return selectedAnswer === quizData.questionData.correctAnswer;
     } else if (quizData.questionType === 'MULTIPLE_CHOICE') {
-      return selectedAnswer === quizData.questionData.correctAnswer;
+      const choiceIndex = selectedAnswer as number;
+      return quizData.questionData.choices?.[choiceIndex]?.correctAnswer === true;
     }
     return false;
   };
@@ -61,7 +62,7 @@ export const QuizSolvePage = () => {
     }
   };
 
-  const handleAnswerSelect = (answer: string | boolean) => {
+  const handleAnswerSelect = (answer: string | boolean | number) => {
     setSelectedAnswer(answer);
   };
 
@@ -103,12 +104,12 @@ export const QuizSolvePage = () => {
       case 'MULTIPLE_CHOICE':
         return (
           <QuestionButtonContainer>
-            {questionData.choices?.map((choice) => (
+            {questionData.choices?.map((choice, index) => (
               <QuestionButton
-                key={choice.choiceId}
+                key={index}
                 text={choice.text}
-                isSelected={selectedAnswer === choice.choiceId}
-                onClick={() => handleAnswerSelect(choice.choiceId)}
+                isSelected={selectedAnswer === index}
+                onClick={() => handleAnswerSelect(index)}
               />
             ))}
           </QuestionButtonContainer>
