@@ -35,7 +35,7 @@ export const ContentDetailPage = () => {
           <ContentSubtitle>{content.subtitle}</ContentSubtitle>
           <ContentHashtags>
             {content.hashtag.map((hashtag) => (
-              <ContentHashtag key={hashtag}>#{content.hashtag}</ContentHashtag>
+              <ContentHashtag key={hashtag}>#{hashtag}</ContentHashtag>
             ))}
           </ContentHashtags>
         </ContentHeader>
