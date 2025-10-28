@@ -26,6 +26,9 @@ export const HomePage = () => {
   const goToTestPage = () => {
     navigate('/test');
   };
+  const goToContentsPage = () => {
+    navigate('/contents');
+  };
 
   if (isLoading) {
     return (
@@ -95,7 +98,7 @@ export const HomePage = () => {
               <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
               <ButtonText>퀴즈 풀기</ButtonText>
             </QuizButton>
-            <FinanceButton>
+            <FinanceButton onClick={goToContentsPage}>
               <IconImg src={NewsIcon} alt="뉴스 아이콘" />
               <ButtonText>금융 콘텐츠</ButtonText>
             </FinanceButton>
