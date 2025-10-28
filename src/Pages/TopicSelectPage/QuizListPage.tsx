@@ -135,8 +135,9 @@ export const QuizListPage = () => {
 const QuizListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
   padding: 20px;
+  padding-bottom: 60px;
 `;
 
 const QuizListTitle = styled.h1`
@@ -191,6 +192,7 @@ const QuizList = styled.div`
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
 `;
 
 const QuizItem = styled.div<{ isSolved: boolean }>`
@@ -290,4 +292,5 @@ const EmptyMessage = styled.div`
   color: #666666;
   text-align: center;
   margin-top: 50px;
+  padding-bottom: 20px;
 `;
