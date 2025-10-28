@@ -73,7 +73,7 @@ const ContentHeader = styled.div<{ $backgroundColor: string }>`
     ${(props) => props.$backgroundColor}CC 100%
   );
   padding: ${theme.spacing(6)} ${theme.spacing(4)};
-  color: white;
+  color: #ffffff;
 `;
 
 const ContentTitle = styled.h1`
@@ -120,7 +120,7 @@ const ActionButton = styled.button`
   background-color: ${theme.colors.primary}cc;
   border: none;
   border-radius: ${theme.spacing(2)};
-  color: white;
+  color: #ffffff;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;
@@ -140,7 +140,7 @@ const ExternalLinkButton = styled.a`
   background-color: #11d2ab;
   border: none;
   border-radius: ${theme.spacing(2)};
-  color: white;
+  color: #ffffff;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;

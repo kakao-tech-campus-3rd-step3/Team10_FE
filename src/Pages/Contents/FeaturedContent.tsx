@@ -36,7 +36,7 @@ const FeaturedContainer = styled.div<{ $backgroundColor: string }>`
   margin: ${theme.spacing(4)};
   border-radius: ${theme.spacing(3)};
   padding: ${theme.spacing(5)};
-  color: white;
+  color: #ffffff;
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -84,7 +84,7 @@ const FeaturedButton = styled.button`
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: ${theme.spacing(2)};
-  color: white;
+  color: #ffffff;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;

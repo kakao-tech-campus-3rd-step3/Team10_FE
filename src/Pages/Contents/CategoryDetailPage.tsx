@@ -59,7 +59,7 @@ const DetailPageContainer = styled.div`
 const CategoryHeader = styled.div`
   background: linear-gradient(135deg, #6c5ce7 0%, #6c5ce7cc 100%);
   padding: ${theme.spacing(6)} ${theme.spacing(4)};
-  color: white;
+  color: #ffffff;
 `;
 
 const CategoryTitle = styled.h1`
@@ -138,7 +138,7 @@ const ActionButton = styled.button`
   background-color: ${theme.colors.primary}cc;
   border: none;
   border-radius: ${theme.spacing(2)};
-  color: white;
+  color: #ffffff;
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 16px;

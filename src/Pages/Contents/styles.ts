@@ -12,7 +12,7 @@ export const MoreButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: ${theme.spacing(3)} ${theme.spacing(4)};
-  background-color: rgb(255, 255, 255);
+  background-color: #ffffff;
 `;
 
 export const MoreButton = styled.button`
