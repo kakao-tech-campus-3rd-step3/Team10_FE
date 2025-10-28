@@ -19,6 +19,7 @@ import { TopicSelectPage } from '@/Pages/TopicSelectPage/TopicSelectPage';
 import { QuizListPage } from '@/Pages/TopicSelectPage/QuizListPage';
 import { ContentsPage } from '@/Pages/Contents';
 import { ContentDetailPage } from '@/Pages/Contents/ContentDetailPage';
+import { CategoryDetailPage } from '@/Pages/Contents/CategoryDetailPage';
 import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -136,6 +137,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ContentDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/contents/category/:id',
+    element: (
+      <ProtectedRoute>
+        <CategoryDetailPage />
       </ProtectedRoute>
     ),
   },

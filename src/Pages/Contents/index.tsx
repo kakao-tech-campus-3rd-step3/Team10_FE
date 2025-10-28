@@ -3,9 +3,10 @@ import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { ContentSlider } from './ContentSlider.tsx';
 import { ContentCard } from './ContentCard.tsx';
+import { CategorySection } from './CategorySection';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { allContents, categoryContents } from './constants';
+import { allContents } from './constants';
 import {
   ContentsPageContainer,
   MoreButtonContainer,
@@ -13,14 +14,6 @@ import {
   ButtonIcon,
   AllContentsSection,
   AllContentsGrid,
-  CategorySection,
-  CategoryTitle,
-  CategoryGrid,
-  CategoryCard,
-  CategoryIcon,
-  CategoryName,
-  CategoryDescription,
-  Line,
 } from './styles';
 
 export const ContentsPage = () => {
@@ -69,19 +62,7 @@ export const ContentsPage = () => {
           </AllContentsSection>
         )}
 
-        <CategorySection>
-          <Line />
-          <CategoryTitle>꼭 알아야 할 금융 상품</CategoryTitle>
-          <CategoryGrid>
-            {categoryContents.map((content) => (
-              <CategoryCard key={content.id}>
-                <CategoryIcon>{content.icon}</CategoryIcon>
-                <CategoryName>{content.title}</CategoryName>
-                <CategoryDescription>{content.subtitle}</CategoryDescription>
-              </CategoryCard>
-            ))}
-          </CategoryGrid>
-        </CategorySection>
+        <CategorySection />
       </ContentsPageContainer>
     </Container>
   );
