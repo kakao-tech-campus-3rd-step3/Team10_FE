@@ -6,6 +6,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { QuizResultState, QuizListResponse } from './types';
 import { findNextQuiz, getNextQuizPath } from '@/utils/quizNavigationLogic';
+import { queryClient } from '@/Apis/queryClient';
 
 export const QuizResultPage = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export const QuizResultPage = () => {
 
   const handleBackToList = () => {
     navigate(`/topics/${topicId}/quizzes`);
+    queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
   };
   return (
     <Container $scrollable>
@@ -48,6 +50,8 @@ export const QuizResultPage = () => {
         questionOrder={questionOrder}
         questionText={questionTitle}
         difficultyLevel={difficultyLevel}
+        quizId={quizId}
+        isBookMarked={quizData.isBookmarked}
       />
       <ResultContainer>
         <ResultTitle isCorrect={isCorrect}>
