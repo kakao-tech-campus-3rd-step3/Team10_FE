@@ -27,6 +27,7 @@ export interface Quiz {
   questionTitle: string;
   difficultyLevel: 'EASY' | 'MEDIUM' | 'HARD';
   isSolved: boolean;
+  isBookmarked: boolean;
 }
 
 // 퀴즈 목록 API 응답

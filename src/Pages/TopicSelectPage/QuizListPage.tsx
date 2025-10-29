@@ -6,7 +6,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { useState, useMemo } from 'react';
 import type { QuizListResponse } from '@/Pages/QuizPage/types';
-
+import { BookmarkIcon } from './BookmarkIcon';
 type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
 const getEmptyMessage = (filterType: FilterType, hasQuizzes: boolean): string => {
@@ -109,20 +109,23 @@ export const QuizListPage = () => {
               onClick={() => handleQuizClick(quiz.quizId)}
               isSolved={quiz.isSolved}
             >
-              <QuizItemHeader>
-                <QuizOrder>Q{quiz.questionOrder}</QuizOrder>
-                <BadgeContainer>
-                  <DifficultyBadge difficulty={quiz.difficultyLevel}>
-                    {quiz.difficultyLevel === 'EASY'
-                      ? '쉬움'
-                      : quiz.difficultyLevel === 'MEDIUM'
-                        ? '보통'
-                        : '어려움'}
-                  </DifficultyBadge>
-                  {quiz.isSolved && <SolvedBadge>완료</SolvedBadge>}
-                </BadgeContainer>
-              </QuizItemHeader>
-              <QuizTitle>{quiz.questionTitle}</QuizTitle>
+              <QuizItemContainer isSolved={quiz.isSolved}>
+                <QuizItemHeader>
+                  <QuizOrder>Q{quiz.questionOrder}</QuizOrder>
+                  <BadgeContainer>
+                    <DifficultyBadge difficulty={quiz.difficultyLevel}>
+                      {quiz.difficultyLevel === 'EASY'
+                        ? '쉬움'
+                        : quiz.difficultyLevel === 'MEDIUM'
+                          ? '보통'
+                          : '어려움'}
+                    </DifficultyBadge>
+                    {quiz.isSolved && <SolvedBadge>완료</SolvedBadge>}
+                  </BadgeContainer>
+                </QuizItemHeader>
+                <QuizTitle>{quiz.questionTitle}</QuizTitle>
+              </QuizItemContainer>
+              <BookmarkIcon quizId={quiz.quizId} isBookmarked={quiz.isBookmarked} />
             </QuizItem>
           ))}
         </QuizList>
@@ -204,8 +207,10 @@ const QuizItem = styled.div<{ isSolved: boolean }>`
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  opacity: ${(props) => (props.isSolved ? 0.5 : 1)};
-
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   &:hover {
     background: #f8f9fa;
     border-color: ${theme.colors.primary};
@@ -218,8 +223,8 @@ const QuizItem = styled.div<{ isSolved: boolean }>`
 
 const QuizItemHeader = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
 `;
 
@@ -300,4 +305,10 @@ const EmptyMessage = styled.div`
 const BadgeContainer = styled.div`
   display: flex;
   gap: 8px;
+`;
+
+const QuizItemContainer = styled.div<{ isSolved: boolean }>`
+  display: flex;
+  flex-direction: column;
+  opacity: ${(props) => (props.isSolved ? 0.5 : 1)};
 `;
