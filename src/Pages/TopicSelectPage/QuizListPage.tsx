@@ -111,14 +111,16 @@ export const QuizListPage = () => {
             >
               <QuizItemHeader>
                 <QuizOrder>Q{quiz.questionOrder}</QuizOrder>
-                <DifficultyBadge difficulty={quiz.difficultyLevel}>
-                  {quiz.difficultyLevel === 'EASY'
-                    ? '쉬움'
-                    : quiz.difficultyLevel === 'MEDIUM'
-                      ? '보통'
-                      : '어려움'}
-                </DifficultyBadge>
-                {quiz.isSolved && <SolvedBadge>완료</SolvedBadge>}
+                <BadgeContainer>
+                  <DifficultyBadge difficulty={quiz.difficultyLevel}>
+                    {quiz.difficultyLevel === 'EASY'
+                      ? '쉬움'
+                      : quiz.difficultyLevel === 'MEDIUM'
+                        ? '보통'
+                        : '어려움'}
+                  </DifficultyBadge>
+                  {quiz.isSolved && <SolvedBadge>완료</SolvedBadge>}
+                </BadgeContainer>
               </QuizItemHeader>
               <QuizTitle>{quiz.questionTitle}</QuizTitle>
             </QuizItem>
@@ -254,8 +256,8 @@ const SolvedBadge = styled.span`
   font-weight: ${theme.font.regular.fontWeight};
   padding: 4px 8px;
   border-radius: 12px;
-  background: #e8f5e8;
-  color: #28a745;
+  background: #d9d9d996;
+  color: #000000;
 `;
 
 const QuizTitle = styled.h3`
@@ -293,4 +295,9 @@ const EmptyMessage = styled.div`
   text-align: center;
   margin-top: 50px;
   padding-bottom: 20px;
+`;
+
+const BadgeContainer = styled.div`
+  display: flex;
+  gap: 8px;
 `;
