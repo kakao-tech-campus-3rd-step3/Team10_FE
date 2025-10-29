@@ -9,10 +9,12 @@ import { usePostApi } from '@/Apis/useMutationApi';
 import { useState } from 'react';
 import type { QuizData, QuizSubmitRequest } from './types';
 import Header from '@/Shared/components/Header';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const QuizSolvePage = () => {
   const navigate = useNavigate();
   const { topicId, quizId } = useParams<{ topicId: string; quizId: string }>();
+  const queryClient = useQueryClient();
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | number | null>(null);
 
@@ -64,6 +66,10 @@ export const QuizSolvePage = () => {
 
   const handleAnswerSelect = (answer: string | boolean | number) => {
     setSelectedAnswer(answer);
+  };
+
+  const handleBookmarkChange = (quizId: number) => {
+    queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
   };
 
   if (isLoading) {
@@ -133,6 +139,7 @@ export const QuizSolvePage = () => {
         difficultyLevel={difficultyLevel}
         quizId={quizData.quizId}
         isBookMarked={quizData.isBookmarked}
+        onBookmarkChange={handleBookmarkChange}
       />
       {renderQuestionContent()}
       <ConfirmButtonContainer onClick={handleConfirm}>
