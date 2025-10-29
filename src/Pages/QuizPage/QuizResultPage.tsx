@@ -50,6 +50,8 @@ export const QuizResultPage = () => {
         questionOrder={questionOrder}
         questionText={questionTitle}
         difficultyLevel={difficultyLevel}
+        quizId={quizId}
+        isBookMarked={quizData.isBookmarked}
       />
       <ResultContainer>
         <ResultTitle isCorrect={isCorrect}>

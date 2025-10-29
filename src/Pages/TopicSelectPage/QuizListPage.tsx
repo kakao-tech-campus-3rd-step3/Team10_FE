@@ -1,12 +1,12 @@
 import { Container } from '@/Shared/components/Container';
 import Header from '@/Shared/components/Header';
+import { BookmarkIcon } from '@/Shared/components/BookmarkIcon';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { useState, useMemo } from 'react';
 import type { QuizListResponse } from '@/Pages/QuizPage/types';
-import { BookmarkIcon } from './BookmarkIcon';
 type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
 const getEmptyMessage = (filterType: FilterType, hasQuizzes: boolean): string => {
@@ -125,7 +125,9 @@ export const QuizListPage = () => {
                 </QuizItemHeader>
                 <QuizTitle>{quiz.questionTitle}</QuizTitle>
               </QuizItemContainer>
-              <BookmarkIcon quizId={quiz.quizId} isBookmarked={quiz.isBookmarked} />
+              <BookmarkIconContainer>
+                <BookmarkIcon quizId={quiz.quizId} isBookMarked={quiz.isBookMarked} />
+              </BookmarkIconContainer>
             </QuizItem>
           ))}
         </QuizList>
@@ -311,4 +313,10 @@ const QuizItemContainer = styled.div<{ isSolved: boolean }>`
   display: flex;
   flex-direction: column;
   opacity: ${(props) => (props.isSolved ? 0.5 : 1)};
+`;
+const BookmarkIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -16px;
 `;

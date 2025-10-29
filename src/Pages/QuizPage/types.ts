@@ -16,6 +16,7 @@ export interface QuizData {
   correctRate: number;
   topicId: number;
   topicName: string;
+  isBookmarked: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -27,7 +28,7 @@ export interface Quiz {
   questionTitle: string;
   difficultyLevel: 'EASY' | 'MEDIUM' | 'HARD';
   isSolved: boolean;
-  isBookmarked: boolean;
+  isBookMarked: boolean;
 }
 
 // 퀴즈 목록 API 응답

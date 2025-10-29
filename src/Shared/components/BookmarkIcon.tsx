@@ -6,19 +6,25 @@ import { useState } from 'react';
 
 interface BookmarkIconProps {
   quizId: number;
-  isBookmarked: boolean;
+  isBookMarked: boolean;
   onBookmarkChange?: (quizId: number, newBookmarkState: boolean) => void;
+  size?: number;
 }
 
-export const BookmarkIcon = ({ quizId, isBookmarked, onBookmarkChange }: BookmarkIconProps) => {
-  const [localBookmarkState, setLocalBookmarkState] = useState(isBookmarked);
+export const BookmarkIcon = ({
+  quizId,
+  isBookMarked,
+  onBookmarkChange,
+  size = 60,
+}: BookmarkIconProps) => {
+  const [localBookmarkState, setLocalBookmarkState] = useState(isBookMarked);
 
-  const bookmarkMutation = usePostApi<void, { quizId: number; isBookmarked: boolean }>(
+  const bookmarkMutation = usePostApi<void, { quizId: number; isBookMarked: boolean }>(
     `/quiz/bookmark/${quizId}`,
   );
 
   const handleClick = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // 퀴즈 아이템 클릭 이벤트 방지
+    e.stopPropagation();
 
     const newBookmarkState = !localBookmarkState;
 
@@ -27,31 +33,32 @@ export const BookmarkIcon = ({ quizId, isBookmarked, onBookmarkChange }: Bookmar
 
       await bookmarkMutation.mutateAsync({
         quizId,
-        isBookmarked: newBookmarkState,
+        isBookMarked: newBookmarkState,
       });
 
       onBookmarkChange?.(quizId, newBookmarkState);
     } catch {
-      setLocalBookmarkState(isBookmarked);
+      setLocalBookmarkState(isBookMarked);
     }
   };
 
   return (
-    <BookmarkBadge onClick={handleClick}>
+    <BookmarkBadge onClick={handleClick} $size={size}>
       <BookmarkImage
         src={localBookmarkState ? onBookmark : offBookmark}
         alt={localBookmarkState ? 'on bookmark' : 'off bookmark'}
+        $size={size}
       />
     </BookmarkBadge>
   );
 };
 
-const BookmarkBadge = styled.div`
+const BookmarkBadge = styled.div<{ $size: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: ${({ $size }) => `${$size}px`};
+  height: ${({ $size }) => `${$size}px`};
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -61,9 +68,9 @@ const BookmarkBadge = styled.div`
   }
 `;
 
-const BookmarkImage = styled.img`
-  width: 60px;
-  height: 60px;
+const BookmarkImage = styled.img<{ $size: number }>`
+  width: ${({ $size }) => `${$size}px`};
+  height: ${({ $size }) => `${$size}px`};
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;

@@ -124,13 +124,15 @@ export const QuizSolvePage = () => {
   };
 
   return (
-    <Container>
+    <Container $scrollable>
       <Header title={quizData.topicName} hasPrevPage={true} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
         questionText={questionTitle}
         difficultyLevel={difficultyLevel}
+        quizId={quizData.quizId}
+        isBookMarked={quizData.isBookmarked}
       />
       {renderQuestionContent()}
       <ConfirmButtonContainer onClick={handleConfirm}>
