@@ -16,6 +16,7 @@ describe('퀴즈 네비게이션 로직', () => {
       questionTitle: '문제1',
       difficultyLevel: 'EASY',
       isSolved: true,
+      isBookMarked: false,
     },
     {
       quizId: 2,
@@ -23,6 +24,7 @@ describe('퀴즈 네비게이션 로직', () => {
       questionTitle: '문제2',
       difficultyLevel: 'MEDIUM',
       isSolved: false,
+      isBookMarked: false,
     },
     {
       quizId: 3,
@@ -30,6 +32,7 @@ describe('퀴즈 네비게이션 로직', () => {
       questionTitle: '문제3',
       difficultyLevel: 'HARD',
       isSolved: false,
+      isBookMarked: false,
     },
     {
       quizId: 4,
@@ -37,6 +40,7 @@ describe('퀴즈 네비게이션 로직', () => {
       questionTitle: '문제4',
       difficultyLevel: 'EASY',
       isSolved: true,
+      isBookMarked: false,
     },
     {
       quizId: 5,
@@ -44,6 +48,7 @@ describe('퀴즈 네비게이션 로직', () => {
       questionTitle: '문제5',
       difficultyLevel: 'MEDIUM',
       isSolved: false,
+      isBookMarked: false,
     },
   ];
 
