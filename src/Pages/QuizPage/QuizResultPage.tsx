@@ -15,9 +15,12 @@ export const QuizResultPage = () => {
 
   const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
 
+  const isRecordPage = topicId === 'review' || topicId === 'bookmark';
+
   const { data: quizListData } = useQueryApi<QuizListResponse>(
     ['topics', topicId || ''],
     `/topics/${topicId || ''}`,
+    { enabled: !isRecordPage },
   );
 
   const handleBookmarkChange = (quizId: number) => {
@@ -45,8 +48,14 @@ export const QuizResultPage = () => {
   };
 
   const handleBackToList = () => {
-    navigate(`/topics/${topicId}/quizzes`);
-    queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    if (isRecordPage) {
+      navigate('/record');
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'review'] });
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
+    } else {
+      navigate(`/topics/${topicId}/quizzes`);
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
   return (
     <Container $scrollable>
@@ -100,14 +109,16 @@ export const QuizResultPage = () => {
         </ExplanationContainer>
       </ResultContainer>
       <ButtonsWrapper>
-        {!nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
+        {!isRecordPage && !nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
         <ButtonRow>
           <ButtonContainer onClick={handleBackToList}>
             <QuizConfirmButton text="목록 보기" />
           </ButtonContainer>
-          <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
-            <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
-          </ButtonContainer>
+          {!isRecordPage && (
+            <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
+              <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
+            </ButtonContainer>
+          )}
         </ButtonRow>
       </ButtonsWrapper>
     </Container>

@@ -19,6 +19,7 @@ type ReviewResponse = {
 type BookmarkedResponse = {
   bookmarkedQuizzes: {
     quizId: number;
+    topicId: number | string;
     questionTitle: string;
     questionTopic: string;
   }[];
@@ -29,7 +30,6 @@ export const RecordListSection = ({ isIncorrect }: { isIncorrect: boolean }) => 
     ['learningRecord', 'review'],
     '/quiz/review',
   );
-  console.log(reviewData);
 
   const { data: bookmarkData } = useQueryApi<BookmarkedResponse>(
     ['learningRecord', 'bookmark'],
@@ -39,15 +39,19 @@ export const RecordListSection = ({ isIncorrect }: { isIncorrect: boolean }) => 
   const mappedData = isIncorrect
     ? Array.from(new Map((reviewData?.reviewQuizzes || []).map((q) => [q.quizId, q])).values()).map(
         (q) => ({
-          questionId: q.quizId,
+          quizId: q.quizId,
+          topicId: 'review',
           questionSubject: `리뷰 ${q.reviewStep}`,
           questionText: q.questionTitle,
+          isBookmark: false,
         }),
       )
     : (bookmarkData?.bookmarkedQuizzes || []).map((q) => ({
-        questionId: q.quizId,
+        quizId: q.quizId,
+        topicId: 'bookmark',
         questionSubject: q.questionTopic,
         questionText: q.questionTitle,
+        isBookmark: true,
       }));
 
   return <RecordList data={mappedData} />;
