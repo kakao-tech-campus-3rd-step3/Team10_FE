@@ -15,7 +15,6 @@ type RecordListData = {
 export const RecordList = ({ data }: { data: RecordListData[] }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  console.log(data);
 
   const handleBookmarkChange = () => {
     queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
