@@ -13,16 +13,14 @@ export const MyRankSection = ({
   const prev = adjacentUsers[0];
   const next = adjacentUsers[1];
 
-  const myRank = 100;
-
   const data = {
-    prevRank: myRank - 1,
+    prevRank: prev?.rank ?? 0,
     prevName: prev?.nickname ?? '',
     prevScore: prev?.point ?? 0,
-    myRank: myRank,
+    myRank: currentUser.rank,
     myName: currentUser.nickname,
     myScore: currentUser.point,
-    nextRank: myRank + 1,
+    nextRank: next?.rank ?? 0,
     nextName: next?.nickname ?? '',
     nextScore: next?.point ?? 0,
   };

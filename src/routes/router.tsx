@@ -21,6 +21,7 @@ import { ContentsPage } from '@/Pages/Contents';
 import { ContentDetailPage } from '@/Pages/Contents/ContentDetailPage';
 import { CategoryDetailPage } from '@/Pages/Contents/CategoryDetailPage';
 import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
+import { CustomizePage } from '@/Pages/CustomizePage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -145,6 +146,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <CategoryDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/character',
+    element: (
+      <ProtectedRoute>
+        <CustomizePage />
       </ProtectedRoute>
     ),
   },
