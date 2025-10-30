@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import onBookmark from '@/assets/BookMarkImg/on.webp';
 import offBookmark from '@/assets/BookMarkImg/off.webp';
 import { usePostApi } from '@/Apis/useMutationApi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface BookmarkIconProps {
   quizId: number;
@@ -18,6 +18,10 @@ export const BookmarkIcon = ({
   size = 60,
 }: BookmarkIconProps) => {
   const [localBookmarkState, setLocalBookmarkState] = useState(isBookMarked);
+
+  useEffect(() => {
+    setLocalBookmarkState(isBookMarked);
+  }, [isBookMarked]);
 
   const bookmarkMutation = usePostApi<void, { quizId: number; isBookMarked: boolean }>(
     `/quiz/bookmark/${quizId}`,

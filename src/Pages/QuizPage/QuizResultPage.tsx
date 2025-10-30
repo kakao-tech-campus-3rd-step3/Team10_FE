@@ -20,6 +20,11 @@ export const QuizResultPage = () => {
     `/topics/${topicId || ''}`,
   );
 
+  const handleBookmarkChange = (quizId: number) => {
+    queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
+    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+  };
+
   if (!quizData) {
     return (
       <Container>
@@ -52,6 +57,7 @@ export const QuizResultPage = () => {
         difficultyLevel={difficultyLevel}
         quizId={quizId}
         isBookMarked={quizData.isBookmarked}
+        onBookmarkChange={handleBookmarkChange}
       />
       <ResultContainer>
         <ResultTitle isCorrect={isCorrect}>
