@@ -32,30 +32,25 @@ const Container = styled.div`
 const QuestionContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
+  align-items: center;
+
+  width: 98%;
   height: 100%;
   background-color: #ffffff;
   padding: ${theme.spacing(4)};
   position: relative;
-
-  &:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: ${theme.spacing(4)};
-    right: ${theme.spacing(4)};
-    bottom: 0;
-    height: 1px;
-    background-color: #878181;
-  }
+  border: 1px solid #c1c1c1;
+  border-radius: ${theme.spacing(4)};
+  margin: ${theme.spacing(2)} ${theme.spacing(2)};
 `;
 const QuestionSubject = styled.span`
+  width: 20%;
   font-size: 16px;
   font-weight: ${theme.font.bold.fontWeight};
   color: #000000;
 `;
 const QuestionText = styled.span`
+  width: 80%;
   font-size: 16px;
   font-weight: ${theme.font.regular.fontWeight};
   color: #000000;
