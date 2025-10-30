@@ -16,3 +16,8 @@ export interface TestPageProps {
 
 export type DiagnoseReq = { totalScore: number };
 export type DiagnoseRes = { propensityKoreanName: string };
+
+export type PropensityResponse = {
+  isTested: boolean;
+  propensityKoreanName?: string;
+};

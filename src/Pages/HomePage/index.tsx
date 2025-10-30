@@ -9,17 +9,23 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import type { HomeResponse } from './types';
+import type { HomeResponse, PropensityResponse } from './types';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
 
 export const HomePage = () => {
-  const isTested = true;
   const navigate = useNavigate();
   const {
     data: homeData,
-    error,
-    isLoading,
+    error: homeError,
+    isLoading: homeIsLoading,
   } = useQueryApi<HomeResponse>(['page', 'home'], '/page/home');
+
+  const {
+    data: propensityData,
+    error: propensityError,
+    isLoading: propensityIsLoading,
+  } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
+
   const handleInvestmentTest = () => {
     navigate('/topics');
   };
@@ -30,7 +36,7 @@ export const HomePage = () => {
     navigate('/contents');
   };
 
-  if (isLoading) {
+  if (homeIsLoading || propensityIsLoading) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
@@ -43,7 +49,7 @@ export const HomePage = () => {
     );
   }
 
-  if (error || !homeData) {
+  if (homeError || !homeData || propensityError || !propensityData) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
@@ -56,8 +62,10 @@ export const HomePage = () => {
     );
   }
 
-  const { characterUri, nickname, testResult } = homeData;
+  const { characterUri, nickname } = homeData;
   const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
+  const isTested = propensityData.isTested;
+  const testResult = propensityData.propensityKoreanName || '';
 
   return (
     <Container $scrollable={true}>

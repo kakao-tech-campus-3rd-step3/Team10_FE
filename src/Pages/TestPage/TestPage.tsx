@@ -4,8 +4,16 @@ import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { usePostApi } from '@/Apis/useMutationApi';
+import { useQueryApi } from '@/Apis/useQueryApi';
 import { Q1, Q2, Q3, Q4, Q5, Q6, Q7 } from './constants';
-import type { Answer, Step, TestPageProps, DiagnoseReq, DiagnoseRes } from './types';
+import type {
+  Answer,
+  Step,
+  TestPageProps,
+  DiagnoseReq,
+  DiagnoseRes,
+  PropensityResponse,
+} from './types';
 import { computeTotalScore, isStepValid } from './utils';
 
 export const TestPage = ({ onSubmit }: TestPageProps) => {
@@ -14,6 +22,11 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   const navigate = useNavigate();
 
   const diagnoseMutation = usePostApi<DiagnoseRes, DiagnoseReq>('/propensity/diagnose');
+  const {
+    data: propensityData,
+    error: propensityError,
+    isLoading: propensityIsLoading,
+  } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
 
   const pick = (key: keyof Answer, value: string) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -64,15 +77,30 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
     );
   };
 
+  const isTested = propensityData?.isTested;
+  const testResult = propensityData?.propensityKoreanName || '';
+  let propensityText: string = '';
+  if (propensityIsLoading) {
+    propensityText = '나의 지난 투자성향을 불러오는 중...';
+  } else if (propensityError || !propensityData) {
+    propensityText = '나의 지난 투자성향을 불러오는데 실패했습니다.';
+  } else if (!isTested) {
+    propensityText = '아직 테스트를 진행하지 않았습니다.';
+  }
+
   return (
     <Container $scrollable={true}>
       <TestHeader title="" hasPrevPage={true} onBack={handleBack} />
       <FormCard onSubmit={handleSubmit}>
         <CardHead>
           <Title>투자성향 진단 테스트</Title>
-          <InvestmentText>
-            나의 지난 투자성향은 <Em>000 투자자</Em> 입니다.
-          </InvestmentText>
+          {isTested ? (
+            <InvestmentText>
+              나의 지난 투자성향은 <Em>{testResult} 투자자</Em> 입니다.
+            </InvestmentText>
+          ) : (
+            <InvestmentText>{propensityText}</InvestmentText>
+          )}
         </CardHead>
         <Divider />
         {step === 0 && (

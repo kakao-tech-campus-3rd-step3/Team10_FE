@@ -4,3 +4,7 @@ export interface HomeResponse {
   tierName: string;
   testResult: string;
 }
+export type PropensityResponse = {
+  isTested: boolean;
+  propensityKoreanName?: string;
+};
