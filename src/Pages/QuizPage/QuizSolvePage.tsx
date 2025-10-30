@@ -70,6 +70,7 @@ export const QuizSolvePage = () => {
 
   const handleBookmarkChange = (quizId: number) => {
     queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
+    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
   };
 
   if (isLoading) {
