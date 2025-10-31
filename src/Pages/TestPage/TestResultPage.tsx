@@ -2,9 +2,10 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import ConfirmButton from './ConfirmButton';
 import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
+import { DESCRIPTIONS } from './constants';
 
 interface TestResultPageProps {
   typeText?: string;
@@ -16,6 +17,15 @@ export const TestResultPage = ({
   description = '“예금이나 적금 수준의 수익률을 기대하며, 투자원금에 손실이 발생하는 것을 원하지 않는다. 원금손실의 우려가 없는 상품에 투자하는 것이 바람직하다.”',
 }: TestResultPageProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const state = (location.state || {}) as {
+    propensityKoreanName?: string;
+    totalScore?: number;
+  };
+
+  const resolvedTypeText = state.propensityKoreanName || typeText;
+  const resolvedDescription = DESCRIPTIONS[resolvedTypeText] ?? description;
 
   const handleGoHome = () => {
     navigate('/home');
@@ -29,8 +39,8 @@ export const TestResultPage = ({
         </CardHead>
         <Divider />
         <Image src={TestResultImage} alt="테스트 결과 이미지" />
-        <Type>{typeText}</Type>
-        <Desc>{description}</Desc>
+        <Type>{resolvedTypeText}</Type>
+        <Desc>{resolvedDescription}</Desc>
       </ResultCard>
       <ButtonContainer onClick={handleGoHome}>
         <ConfirmButton text="저장하기" />
