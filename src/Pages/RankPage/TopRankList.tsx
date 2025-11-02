@@ -1,28 +1,20 @@
 import styled from '@emotion/styled';
-import { useMemo } from 'react';
 import { ChracterBox } from './ChracterBox';
-import RankData from '@/MockData/Rank.json';
 import { theme } from '@/styles/theme';
+import type { RankingUser } from './types';
+import { useTopRankList } from './hooks/useTopRankList';
 
-export const TopRankList = ({ isScoreRank }: { isScoreRank: boolean }) => {
-  const { data } = RankData;
-  const sortedData = useMemo(() => {
-    const desiredOrder = [2, 1, 3];
-    const getRank = (item: { ScoreRank: number; AttandanceRank: number }) =>
-      isScoreRank ? item.ScoreRank : item.AttandanceRank;
-    return [...data].sort(
-      (a, b) => desiredOrder.indexOf(getRank(a)) - desiredOrder.indexOf(getRank(b)),
-    );
-  }, [data, isScoreRank]);
+export const TopRankList = ({ topRankingUsers }: { topRankingUsers: RankingUser[] }) => {
+  const { arranged, rankLabels } = useTopRankList(topRankingUsers);
 
   return (
     <Wrapper>
-      {sortedData.map((item) => (
+      {arranged.map((user, idx) => (
         <ChracterBox
-          key={`${item.name}-${isScoreRank ? item.ScoreRank : item.AttandanceRank}`}
-          $rank={isScoreRank ? item.ScoreRank : item.AttandanceRank}
-          name={item.name}
-          score={item.score}
+          key={`${user.nickname}-${idx}`}
+          $rank={rankLabels[idx]}
+          name={user.nickname}
+          score={user.point}
         />
       ))}
     </Wrapper>

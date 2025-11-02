@@ -9,92 +9,121 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import type { HomeResponse } from './types';
+import type { HomeResponse, PropensityResponse } from './types';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
 
 export const HomePage = () => {
-  const isTested = true;
   const navigate = useNavigate();
   const {
     data: homeData,
-    error,
-    isLoading,
+    error: homeError,
+    isLoading: homeIsLoading,
   } = useQueryApi<HomeResponse>(['page', 'home'], '/page/home');
+
+  const {
+    data: propensityData,
+    error: propensityError,
+    isLoading: propensityIsLoading,
+  } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
+
   const handleInvestmentTest = () => {
     navigate('/topics');
   };
   const goToTestPage = () => {
     navigate('/test');
   };
+  const goToContentsPage = () => {
+    navigate('/contents');
+  };
 
-  if (isLoading) {
+  if (homeIsLoading || propensityIsLoading) {
     return (
-      <Container>
-        <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+      <Container $scrollable={true}>
+        <Header title="홈 화면" hasPrevPage={false} />
+        <NavigationBar />
+        <StatusActionBar />
+        <HomePageContainer>
+          <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+        </HomePageContainer>
       </Container>
     );
   }
 
-  if (error || !homeData) {
+  if (homeError || !homeData || propensityError || !propensityData) {
     return (
-      <Container>
-        <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      <Container $scrollable={true}>
+        <Header title="홈 화면" hasPrevPage={false} />
+        <NavigationBar />
+        <StatusActionBar />
+        <HomePageContainer>
+          <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+        </HomePageContainer>
       </Container>
     );
   }
 
-  const { characterUri, nickname, testResult } = homeData;
+  const { characterUri, nickname } = homeData;
   const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
+  const isTested = propensityData.isTested;
+  const testResult = propensityData.propensityKoreanName || '';
 
   return (
     <Container $scrollable={true}>
       <Header title="홈 화면" hasPrevPage={false} />
       <NavigationBar />
       <StatusActionBar />
-      <CharacterSectionWrapper>
-        <Character
-          key={characterSrc}
-          src={characterSrc}
-          alt="캐릭터"
-          onError={(e) => {
-            e.currentTarget.src = CharacterMain;
-          }}
-        />
-      </CharacterSectionWrapper>
-      <BottomSectionWrapper>
-        <NicknameBox>
-          <Nickname>{nickname}</Nickname>
-        </NicknameBox>
-        <InvestmentTypeBox>
-          {isTested ? (
-            <>
-              <InvestmentText>{testResult}</InvestmentText>
-              <RetestButton type="button" onClick={goToTestPage}>
-                다시 테스트 하기
-              </RetestButton>
-            </>
-          ) : (
-            <TestButton type="button" onClick={goToTestPage}>
-              나의 투자 성향을 테스트 해보세요
-            </TestButton>
-          )}
-        </InvestmentTypeBox>
-        <TwoButtonsWrapper>
-          <QuizButton onClick={handleInvestmentTest}>
-            <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
-            <ButtonText>퀴즈 풀기</ButtonText>
-          </QuizButton>
-          <FinanceButton>
-            <IconImg src={NewsIcon} alt="뉴스 아이콘" />
-            <ButtonText>금융 콘텐츠</ButtonText>
-          </FinanceButton>
-        </TwoButtonsWrapper>
-      </BottomSectionWrapper>
+      <HomePageContainer>
+        <CharacterSectionWrapper>
+          <Character
+            key={characterSrc}
+            src={characterSrc}
+            alt="캐릭터"
+            onError={(e) => {
+              e.currentTarget.src = CharacterMain;
+            }}
+          />
+        </CharacterSectionWrapper>
+        <BottomSectionWrapper>
+          <NicknameBox>
+            <Nickname>{nickname}</Nickname>
+          </NicknameBox>
+          <InvestmentTypeBox>
+            {isTested ? (
+              <>
+                <InvestmentText>{testResult}</InvestmentText>
+                <RetestButton type="button" onClick={goToTestPage}>
+                  다시 테스트 하기
+                </RetestButton>
+              </>
+            ) : (
+              <TestButton type="button" onClick={goToTestPage}>
+                나의 투자 성향을 테스트 해보세요
+              </TestButton>
+            )}
+          </InvestmentTypeBox>
+          <TwoButtonsWrapper>
+            <QuizButton onClick={handleInvestmentTest}>
+              <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
+              <ButtonText>퀴즈 풀기</ButtonText>
+            </QuizButton>
+            <FinanceButton onClick={goToContentsPage}>
+              <IconImg src={NewsIcon} alt="뉴스 아이콘" />
+              <ButtonText>금융 콘텐츠</ButtonText>
+            </FinanceButton>
+          </TwoButtonsWrapper>
+        </BottomSectionWrapper>
+      </HomePageContainer>
     </Container>
   );
 };
 
 export default HomePage;
+
+const HomePageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+`;
 
 const CharacterSectionWrapper = styled.div`
   position: relative;

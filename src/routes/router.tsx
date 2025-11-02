@@ -17,7 +17,12 @@ import { LearningRecordPage } from '@/Pages/LearningRecordPage';
 import { TierPage } from '@/Pages/TierPage';
 import { TopicSelectPage } from '@/Pages/TopicSelectPage/TopicSelectPage';
 import { QuizListPage } from '@/Pages/TopicSelectPage/QuizListPage';
+import { ContentsPage } from '@/Pages/Contents';
+import { ContentDetailPage } from '@/Pages/Contents/ContentDetailPage';
+import { CategoryDetailPage } from '@/Pages/Contents/CategoryDetailPage';
 import { ProtectedRoute } from '@/Shared/components/ProtectedRoute';
+import { CustomizePage } from '@/Pages/CustomizePage';
+import { AttendancePage } from '@/Pages/AttendancePage/AttendancePage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <SplashPage /> },
@@ -118,6 +123,47 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <TierPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/contents',
+    element: (
+      <ProtectedRoute>
+        <ContentsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/contents/:id',
+    element: (
+      <ProtectedRoute>
+        <ContentDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/contents/category/:id',
+    element: (
+      <ProtectedRoute>
+        <CategoryDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/attendance',
+    element: (
+      <ProtectedRoute>
+        <AttendancePage />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: '/character',
+    element: (
+      <ProtectedRoute>
+        <CustomizePage />
       </ProtectedRoute>
     ),
   },

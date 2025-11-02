@@ -6,6 +6,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { QuizResultState, QuizListResponse } from './types';
 import { findNextQuiz, getNextQuizPath } from '@/utils/quizNavigationLogic';
+import { queryClient } from '@/Apis/queryClient';
 
 export const QuizResultPage = () => {
   const navigate = useNavigate();
@@ -14,10 +15,18 @@ export const QuizResultPage = () => {
 
   const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
 
+  const isRecordPage = topicId === 'review' || topicId === 'bookmark';
+
   const { data: quizListData } = useQueryApi<QuizListResponse>(
     ['topics', topicId || ''],
     `/topics/${topicId || ''}`,
+    { enabled: !isRecordPage },
   );
+
+  const handleBookmarkChange = (quizId: number) => {
+    queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
+    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+  };
 
   if (!quizData) {
     return (
@@ -39,7 +48,14 @@ export const QuizResultPage = () => {
   };
 
   const handleBackToList = () => {
-    navigate(`/topics/${topicId}/quizzes`);
+    if (isRecordPage) {
+      navigate('/record');
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'review'] });
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
+    } else {
+      navigate(`/topics/${topicId}/quizzes`);
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
   return (
     <Container $scrollable>
@@ -48,6 +64,9 @@ export const QuizResultPage = () => {
         questionOrder={questionOrder}
         questionText={questionTitle}
         difficultyLevel={difficultyLevel}
+        quizId={quizId}
+        isBookMarked={quizData.isBookmarked}
+        onBookmarkChange={handleBookmarkChange}
       />
       <ResultContainer>
         <ResultTitle isCorrect={isCorrect}>
@@ -71,18 +90,14 @@ export const QuizResultPage = () => {
           <>
             <AnswerDisplay>
               <AnswerLabel>내가 선택한 답:</AnswerLabel>
-              <AnswerValue isCorrect={selectedAnswer === questionData.correctAnswer}>
-                {questionData.choices?.find((choice) => choice.choiceId === selectedAnswer)?.text}
+              <AnswerValue isCorrect={isCorrect}>
+                {questionData.choices?.[selectedAnswer as number]?.text}
               </AnswerValue>
             </AnswerDisplay>
             <AnswerDisplay>
               <AnswerLabel>정답:</AnswerLabel>
               <AnswerValue isCorrect={true}>
-                {
-                  questionData.choices?.find(
-                    (choice) => choice.choiceId === String(questionData.correctAnswer),
-                  )?.text
-                }
+                {questionData.choices?.find((choice) => choice.correctAnswer === true)?.text}
               </AnswerValue>
             </AnswerDisplay>
           </>
@@ -94,14 +109,16 @@ export const QuizResultPage = () => {
         </ExplanationContainer>
       </ResultContainer>
       <ButtonsWrapper>
-        {!nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
+        {!isRecordPage && !nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
         <ButtonRow>
           <ButtonContainer onClick={handleBackToList}>
             <QuizConfirmButton text="목록 보기" />
           </ButtonContainer>
-          <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
-            <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
-          </ButtonContainer>
+          {!isRecordPage && (
+            <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
+              <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
+            </ButtonContainer>
+          )}
         </ButtonRow>
       </ButtonsWrapper>
     </Container>
