@@ -26,17 +26,21 @@ export const StatusActionBar = ({
 }: StatusActionBarProps) => {
   const navigate = useNavigate();
 
-  const handleLabelClick = () => {
+  const handleCalenderClick = () => {
+    navigate('/attendance');
+  };
+
+  const handleTierClick = () => {
     navigate('/tier');
   };
   const { data: TierInfoData } = useQueryApi<TierInfoResponse>(['userTier'], '/users/me/tier');
   return (
     <Wrapper>
-      <Label onClick={handleLabelClick}>
+      <Label onClick={handleTierClick}>
         <LeftIcon src={TierIcon} alt="티어 아이콘" />
         {TierInfoData?.userTier}
       </Label>
-      <RightButton type="button" aria-label={rightIconAlt}>
+      <RightButton type="button" aria-label={rightIconAlt} onClick={handleCalenderClick}>
         <RightIcon src={rightIconSrc} alt={rightIconAlt} $size={rightIconSizePx} />
       </RightButton>
     </Wrapper>
