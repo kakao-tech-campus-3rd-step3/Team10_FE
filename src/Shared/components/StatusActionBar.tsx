@@ -1,48 +1,50 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import type { ReactNode } from 'react';
 import CalenderIcon from '@/assets/HomeImg/calendar.png';
-import TierIcon from '@/assets/HomeImg/tier.png';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
-
-interface TierInfoResponse {
-  userRatingPoint: number;
-  userTier: string;
-}
+import type { UserTier } from '@/Pages/TierPage/types';
+import { useCurrentTier } from '@/Pages/TierPage/hooks/useCurrentTier';
 
 export type StatusActionBarProps = {
-  leftIcon?: ReactNode;
-  rightIconSrc?: string;
-  rightIconAlt?: string;
-  onRightClick?: () => void;
-  rightIconSizePx?: number;
+  calendarIconSrc?: string;
+  calendarIconAlt?: string;
+  onCalendarClick?: () => void;
+  calendarIconSize?: number;
 };
 
 export const StatusActionBar = ({
-  rightIconSrc = CalenderIcon,
-  rightIconAlt = '캘린더',
-  rightIconSizePx = 48,
+  calendarIconSrc = CalenderIcon,
+  calendarIconAlt = '출석 체크 캘린더',
+  onCalendarClick,
+  calendarIconSize = 48,
 }: StatusActionBarProps) => {
   const navigate = useNavigate();
+  const { data: userTier } = useQueryApi<UserTier>(['user', 'tier'], '/users/me/tier');
 
-  const handleCalenderClick = () => {
-    navigate('/attendance');
-  };
+  const currentTier = useCurrentTier(userTier);
 
   const handleTierClick = () => {
     navigate('/tier');
   };
-  const { data: TierInfoData } = useQueryApi<TierInfoResponse>(['userTier'], '/users/me/tier');
+
+  const handleCalendarClick = () => {
+    if (onCalendarClick) {
+      onCalendarClick();
+    } else {
+      navigate('/attendance');
+    }
+  };
+
   return (
     <Wrapper>
-      <Label onClick={handleTierClick}>
-        <LeftIcon src={TierIcon} alt="티어 아이콘" />
-        {TierInfoData?.userTier}
-      </Label>
-      <RightButton type="button" aria-label={rightIconAlt} onClick={handleCalenderClick}>
-        <RightIcon src={rightIconSrc} alt={rightIconAlt} $size={rightIconSizePx} />
-      </RightButton>
+      <TierButton type="button" onClick={handleTierClick} aria-label="티어 정보 보기">
+        <TierIcon src={currentTier.icon} alt={`${currentTier.label} 티어 아이콘`} />
+        <TierLabel>{currentTier.label}</TierLabel>
+      </TierButton>
+      <CalendarButton type="button" aria-label={calendarIconAlt} onClick={handleCalendarClick}>
+        <CalendarIcon src={calendarIconSrc} alt={calendarIconAlt} $size={calendarIconSize} />
+      </CalendarButton>
     </Wrapper>
   );
 };
@@ -54,32 +56,51 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 ${theme.spacing(5)};
+  padding: 0 ${theme.spacing(8)};
   margin-top: ${theme.spacing(4)};
 `;
 
-const Label = styled.div`
+const TierButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${theme.spacing(1)};
-  color: ${theme.colors.text};
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-`;
-
-const LeftIcon = styled.img`
-  width: 48px;
-`;
-
-const RightButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
+  color: ${theme.colors.text};
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
-const RightIcon = styled.img<{ $size: number }>`
+const TierIcon = styled.img`
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+`;
+
+const TierLabel = styled.span`
+  color: ${theme.colors.text};
+`;
+
+const CalendarButton = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const CalendarIcon = styled.img<{ $size: number }>`
   width: ${({ $size }) => `${$size}px`};
   height: ${({ $size }) => `${$size}px`};
+  object-fit: contain;
 `;

@@ -2,12 +2,13 @@ import styled from '@emotion/styled';
 import { Container as BaseContainer } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { theme } from '@/styles/theme';
-import { useMemo } from 'react';
 
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { TIERS } from './constants';
+import type { Tier } from './types';
 import type { Nickname, UserTier } from './types';
+import { useCurrentTier } from './hooks/useCurrentTier';
 
 export const TierPage = () => {
   const {
@@ -21,16 +22,7 @@ export const TierPage = () => {
     isError: isUserTierError,
   } = useQueryApi<UserTier>(['user', 'tier'], '/users/me/tier');
 
-  const currentTier = useMemo(() => {
-    if (!userTier) return TIERS[TIERS.length - 1];
-    return (
-      TIERS.find(
-        (t) =>
-          userTier.userRatingPoint >= t.min &&
-          (t.max === undefined || userTier.userRatingPoint <= t.max),
-      ) ?? TIERS[TIERS.length - 1]
-    );
-  }, [userTier]);
+  const currentTier = useCurrentTier(userTier);
 
   const displayName = nickname?.nickname?.trim() || '사용자';
 
@@ -65,7 +57,7 @@ export const TierPage = () => {
       <ContentWrapper>
         <TierCard>
           <TierList>
-            {TIERS.map((t) => (
+            {TIERS.map((t: Tier) => (
               <TierRow key={t.grade}>
                 <IconImg src={t.icon} alt={`${t.label} 아이콘`} />
                 <TierTexts>
