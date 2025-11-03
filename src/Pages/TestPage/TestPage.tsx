@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { usePostApi } from '@/Apis/useMutationApi';
 import { useQueryApi } from '@/Apis/useQueryApi';
+import { useQueryClient } from '@tanstack/react-query';
 import { Q1, Q2, Q3, Q4, Q5, Q6, Q7 } from './constants';
 import type {
   Answer,
@@ -20,6 +21,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   const [answers, setAnswers] = useState<Answer>({ q3: [] });
   const [step, setStep] = useState<Step>(0);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const diagnoseMutation = usePostApi<DiagnoseRes, DiagnoseReq>('/propensity/diagnose');
   const {
@@ -62,6 +64,8 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       { totalScore },
       {
         onSuccess: (data) => {
+          // 투자성향 관련 쿼리 캐시 무효화
+          queryClient.invalidateQueries({ queryKey: ['users', 'me', 'propensity'] });
           navigate('/test/result', {
             state: {
               answers,

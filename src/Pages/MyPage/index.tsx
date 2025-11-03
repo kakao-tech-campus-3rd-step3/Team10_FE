@@ -8,6 +8,7 @@ import CharacterMain from '@/assets/HomeImg/character.png';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
+import { DESCRIPTIONS } from '@/Pages/TestPage/constants';
 
 interface MyPageResponse {
   characterUri: string;
@@ -17,16 +18,28 @@ interface MyPageResponse {
   testResult: string;
   testResultDescription: string;
 }
+interface TestResult {
+  propensity: string;
+  propensityKoreanName: string;
+  isTested: boolean;
+}
 
 export const MyPage = () => {
   const navigate = useNavigate();
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const { data: testResultData } = useQueryApi<TestResult>(
+    ['users', 'me', 'propensity'],
+    '/users/me/propensity',
+  );
   const handleShareClick = () => {
     navigate('/sharing');
   };
 
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+  const resultDescription = testResultData?.propensityKoreanName
+    ? DESCRIPTIONS[testResultData.propensityKoreanName]
+    : undefined;
 
   return (
     <Container>
@@ -47,11 +60,8 @@ export const MyPage = () => {
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
-          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
+        <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
+        <ResultDescription>{resultDescription}</ResultDescription>
       </ResultWrapper>
       <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
     </Container>
