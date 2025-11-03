@@ -52,6 +52,10 @@ export const QuizSolvePage = () => {
 
       await submitQuizMutation.mutateAsync({ isCorrect });
 
+      queryClient.invalidateQueries({ queryKey: ['quiz', quizId || ''] });
+      queryClient.invalidateQueries({ queryKey: ['topics'] });
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+
       navigate(`/topics/${topicId}/quizzes/${quizId}/result`, {
         state: {
           selectedAnswer,
