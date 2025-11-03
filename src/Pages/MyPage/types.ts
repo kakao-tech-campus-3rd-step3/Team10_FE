@@ -11,11 +11,3 @@ export interface TestResult {
   propensityKoreanName: string;
   isTested: boolean;
 }
-interface SharingResponse {
-  characterUri: string;
-  nickname: string;
-  tierName: string;
-  ratingPoint: number;
-  testResult: string;
-  testResultDescription: string;
-}
