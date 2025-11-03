@@ -25,7 +25,7 @@ export const TestResultPage = ({
 
   const resolvedTypeText = state.propensityKoreanName || typeText;
   const resolvedDescription = DESCRIPTIONS[resolvedTypeText] ?? description;
-  const resultImage = RESULT_IMAGES[resolvedTypeText] || TestResultImage;
+  const resultImage = RESULT_IMAGES[resolvedTypeText] || RESULT_IMAGES['안정형'];
 
   const handleGoHome = () => {
     navigate('/home');
