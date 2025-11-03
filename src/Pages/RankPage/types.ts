@@ -6,5 +6,6 @@ export interface RankingUser {
 export interface RankingResponse {
   currentUser: RankingUser;
   topRankingUsers: RankingUser[];
-  adjacentUsers: RankingUser[];
+  aboveUsers: RankingUser[];
+  belowUsers: RankingUser[];
 }

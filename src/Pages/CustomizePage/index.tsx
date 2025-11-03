@@ -4,27 +4,32 @@ import { theme } from '@/styles/theme';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
-import CoinIcon from '@/assets/CustomizeImg/coin.png';
 import CharacterMain from '@/assets/HomeImg/character.png';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import { usePostApi } from '@/Apis/useMutationApi';
-import type { CostumeItem, wearReq, wearRes } from './types';
+import type { CostumeItem, CostumeListResponse, HomeResponse } from './types';
 import CostumeButton from './CostumeButton';
-
-const MOCK_COIN_BALANCE = 1200;
-const price = 100;
+import { toAbsoluteUrl } from '@/utils/urlUtils';
+import { api } from '@/Apis/axios';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const CustomizePage = () => {
   const {
-    data: costumeList,
-    error,
-    isLoading,
-    refetch,
-  } = useQueryApi<CostumeItem[]>(['costume'], '/costume');
+    data: costumeData,
+    error: costumeError,
+    isLoading: costumeIsLoading,
+    refetch: refetchCostume,
+  } = useQueryApi<CostumeListResponse>(['costume'], '/costume');
+
+  const { data: homeData, refetch: refetchHome } = useQueryApi<HomeResponse>(
+    ['page', 'home'],
+    '/page/home',
+  );
+
+  const costumeList: CostumeItem[] = costumeData?.costumeItems ?? [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (costumeList && costumeList.length > 0) {
+    if (costumeList.length > 0) {
       const worn = costumeList.find((c) => c.isWorn);
       if (worn) {
         setSelectedId(worn.id);
@@ -34,40 +39,37 @@ export const CustomizePage = () => {
     }
   }, [costumeList]);
 
-  const wearMutation = usePostApi<wearRes, wearReq>('/costume');
-  const isSubmitting = wearMutation.isPending;
-  const handleWearCostume = () => {
-    if (selectedId !== null) {
-      wearMutation.mutate(
-        { id: selectedId },
-        {
-          onSuccess: () => {
-            refetch();
-          },
-          onError: (err) => {
-            console.error('착용 실패: ', err);
-          },
-        },
-      );
+  const queryClient = useQueryClient();
+
+  const handleWearCostume = async () => {
+    if (selectedId == null) return;
+    try {
+      await api.post(`/costume/${selectedId}`);
+      await Promise.all([
+        refetchCostume(),
+        refetchHome(),
+        queryClient.invalidateQueries({ queryKey: ['page', 'home'] }),
+        queryClient.invalidateQueries({ queryKey: ['usernickname'] }),
+      ]);
+    } catch (err) {
+      console.error('착용 실패: ', err);
     }
   };
 
-  if (isLoading) {
+  const characterSrc = homeData ? toAbsoluteUrl(homeData.characterUri) : CharacterMain;
+
+  if (costumeIsLoading) {
     return (
       <Container $scrollable={true}>
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
           <CharacterSectionWrapper>
-            <Character src={CharacterMain} alt="캐릭터" />
+            <Character src={characterSrc} alt="캐릭터" />
           </CharacterSectionWrapper>
           <ShopCard>
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
-              <CoinWrapper>
-                <CoinImg src={CoinIcon} alt="코인" />
-                <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-              </CoinWrapper>
             </ShopHeaderRow>
             <LoadingMessage>로딩 중...</LoadingMessage>
           </ShopCard>
@@ -76,22 +78,18 @@ export const CustomizePage = () => {
     );
   }
 
-  if (error || !costumeList) {
+  if (costumeError || !costumeList) {
     return (
       <Container $scrollable={true}>
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
           <CharacterSectionWrapper>
-            <Character src={CharacterMain} alt="캐릭터" />
+            <Character src={characterSrc} alt="캐릭터" />
           </CharacterSectionWrapper>
           <ShopCard>
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
-              <CoinWrapper>
-                <CoinImg src={CoinIcon} alt="코인" />
-                <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-              </CoinWrapper>
             </ShopHeaderRow>
             <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
           </ShopCard>
@@ -107,8 +105,8 @@ export const CustomizePage = () => {
       <CustomizePageContainer>
         <CharacterSectionWrapper>
           <Character
-            key={CharacterMain}
-            src={CharacterMain}
+            key={characterSrc}
+            src={characterSrc}
             alt="캐릭터"
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
@@ -118,10 +116,6 @@ export const CustomizePage = () => {
         <ShopCard>
           <ShopHeaderRow>
             <ShopTitle>옷 가게</ShopTitle>
-            <CoinWrapper>
-              <CoinImg src={CoinIcon} alt="코인" />
-              <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-            </CoinWrapper>
           </ShopHeaderRow>
           <CostumeGrid>
             {costumeList.map((item) => {
@@ -130,8 +124,7 @@ export const CustomizePage = () => {
                 <CostumeButton
                   key={item.id}
                   id={item.id}
-                  img={item.costumeItemImageUrl}
-                  price={price}
+                  img={toAbsoluteUrl(item.costumeItemImageUrl)}
                   active={isActive}
                   onSelect={setSelectedId}
                 />
@@ -139,12 +132,8 @@ export const CustomizePage = () => {
             })}
           </CostumeGrid>
           <ConfirmButtonContainer>
-            <ConfirmButton
-              type="button"
-              onClick={handleWearCostume}
-              disabled={!selectedId || wearMutation.isPending}
-            >
-              {isSubmitting ? '착용 중...' : '착용하기'}
+            <ConfirmButton type="button" onClick={handleWearCostume} disabled={!selectedId}>
+              착용하기
             </ConfirmButton>
           </ConfirmButtonContainer>
         </ShopCard>
@@ -194,6 +183,7 @@ const ShopHeaderRow = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  padding: ${theme.spacing(6)};
 `;
 
 const ShopTitle = styled.h2`
@@ -205,28 +195,6 @@ const ShopTitle = styled.h2`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 24px;
   margin: 0;
-`;
-
-const CoinWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #efeff0;
-  gap: 0;
-  border-radius: ${theme.spacing(3)};
-  padding-right: ${theme.spacing(2.5)};
-`;
-
-const CoinImg = styled.img`
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-`;
-
-const CoinText = styled.span`
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-  color: ${theme.colors.text};
 `;
 
 const CostumeGrid = styled.div`
