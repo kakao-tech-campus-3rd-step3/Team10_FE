@@ -1,3 +1,9 @@
+import ActiveInvestmentTypeImg from '@/assets/TestPage/Active_investment_type.png';
+import AttackInvestmentTypeImg from '@/assets/TestPage/Attack_investment_type.png';
+import RiskNeutralTypeImg from '@/assets/TestPage/Risk_neutral_type.png';
+import SafetySeekingTypeImg from '@/assets/TestPage/Safety_seeking_type.png';
+import StableTypeImg from '@/assets/TestPage/Stable_type.png';
+
 export const Q1 = ['19세 이하', '20세~40세', '41세~50세', '51세~60세', '61세 이상'] as const;
 export const Q2 = [
   '6개월 이내',
@@ -60,4 +66,12 @@ export const DESCRIPTIONS: Record<string, string> = {
     '“투자원금의 보전보다는 위험을 감내하더라도 높은 수준의 투자수익을 추구한다. 투자자금의 상당 부분을 주식, 주식형펀드 또는 파생상품 등의 위험자산에 투자할 의향이 있다. 국내외 주식형펀드와 원금비보장형 주가연계증권(ELS) 등 고수익·고위험 상품에 투자할 수 있다.”',
   공격투자형:
     '“시장평균수익률을 훨씬 넘어서는 높은 수준의 투자수익을 추구하며, 이를 위해 자산가치의 변동에 따른 손실위험을 적극 수용할 수 있다. 투자자금 대부분을 주식, 주식형펀드 또는 파생상품 등의 위험자산에 투자할 의향이 있다. 주식 비중이 70% 이상인 고위험 펀드가 적합하고, 자산의 10% 정도는 직접투자(주식)도 고려해볼 만하다.”',
+};
+
+export const RESULT_IMAGES: Record<string, string> = {
+  안정형: StableTypeImg,
+  안정추구형: SafetySeekingTypeImg,
+  위험중립형: RiskNeutralTypeImg,
+  적극투자형: ActiveInvestmentTypeImg,
+  공격투자형: AttackInvestmentTypeImg,
 };

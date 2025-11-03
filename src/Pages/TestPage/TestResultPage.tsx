@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import ConfirmButton from './ConfirmButton';
-import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
-import { DESCRIPTIONS } from './constants';
+import { DESCRIPTIONS, RESULT_IMAGES } from './constants';
 
 interface TestResultPageProps {
   typeText?: string;
@@ -26,6 +25,7 @@ export const TestResultPage = ({
 
   const resolvedTypeText = state.propensityKoreanName || typeText;
   const resolvedDescription = DESCRIPTIONS[resolvedTypeText] ?? description;
+  const resultImage = RESULT_IMAGES[resolvedTypeText] || TestResultImage;
 
   const handleGoHome = () => {
     navigate('/home');
@@ -38,7 +38,7 @@ export const TestResultPage = ({
           <Title>투자성향 진단 테스트</Title>
         </CardHead>
         <Divider />
-        <Image src={TestResultImage} alt="테스트 결과 이미지" />
+        <Image src={resultImage} alt={`${resolvedTypeText} 투자자 타입 이미지`} />
         <Type>{resolvedTypeText}</Type>
         <Desc>{resolvedDescription}</Desc>
       </ResultCard>
