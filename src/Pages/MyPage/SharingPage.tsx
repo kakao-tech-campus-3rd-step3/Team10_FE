@@ -5,6 +5,8 @@ import CharacterMain from '@/assets/HomeImg/character.png';
 import { Container } from '@/Shared/components/Container';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
+import { useRef, type RefObject } from 'react';
+import { useCaptureImage } from './useCaptureImage';
 
 interface SharingResponse {
   characterUri: string;
@@ -16,8 +18,10 @@ interface SharingResponse {
 }
 
 export const SharingPage = () => {
+  const captureRef = useRef<HTMLDivElement>(null);
+  const captureImage = useCaptureImage(captureRef as RefObject<HTMLElement>, 'capture.png');
   const handleSaveClick = () => {
-    alert('결과 이미지 저장하기 버튼 클릭!');
+    captureImage();
   };
 
   const { data: myPageData } = useQueryApi<SharingResponse>(['usernickname'], '/page/mypage');
@@ -28,26 +32,28 @@ export const SharingPage = () => {
     <Container>
       <Header title="공유하기" hasPrevPage={true} />
       <Spacing />
-      <CharacterAndNicknameWrapper>
-        <Character
-          key={characterSrc}
-          src={characterSrc}
-          alt="캐릭터"
-          onError={(e) => {
-            e.currentTarget.src = CharacterMain;
-          }}
-        />
-        <NicknameBox>
-          <Nickname>{myPageData?.nickname}</Nickname>
-        </NicknameBox>
-      </CharacterAndNicknameWrapper>
-      <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
-          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
-      </ResultWrapper>
+      <CaptureSession ref={captureRef}>
+        <CharacterAndNicknameWrapper>
+          <Character
+            key={characterSrc}
+            src={characterSrc}
+            alt="캐릭터"
+            onError={(e) => {
+              e.currentTarget.src = CharacterMain;
+            }}
+          />
+          <NicknameBox>
+            <Nickname>{myPageData?.nickname}</Nickname>
+          </NicknameBox>
+        </CharacterAndNicknameWrapper>
+        <ResultWrapper>
+          <ResultTitle>위험 중립형</ResultTitle>
+          <ResultDescription>
+            “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
+            수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
+          </ResultDescription>
+        </ResultWrapper>
+      </CaptureSession>
       <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
     </Container>
   );
@@ -131,4 +137,13 @@ const SaveButton = styled.button`
   border-radius: ${theme.spacing(5)};
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const CaptureSession = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: ${theme.spacing(8)};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  padding: ${theme.spacing(5)};
 `;
