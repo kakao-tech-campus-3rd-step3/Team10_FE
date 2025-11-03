@@ -2,15 +2,21 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 
 type RankNeighborData = {
-  prevRank: number;
-  prevName: string;
-  prevScore: number;
+  above1Rank: number;
+  above1Name: string;
+  above1Score: number;
+  above2Rank: number;
+  above2Name: string;
+  above2Score: number;
   myRank: number;
   myName: string;
   myScore: number;
-  nextRank: number;
-  nextName: string;
-  nextScore: number;
+  below1Rank: number;
+  below1Name: string;
+  below1Score: number;
+  below2Rank: number;
+  below2Name: string;
+  below2Score: number;
 };
 
 export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreRank: boolean }) => {
@@ -20,10 +26,18 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
       <Circle />
       <Circle />
       <OtherRankBox>
-        <OtherInfoScript>{data.prevRank}등</OtherInfoScript>
-        <OtherInfoScript>{data.prevName}</OtherInfoScript>
+        <OtherInfoScript>{data.above1Rank}등</OtherInfoScript>
+        <OtherInfoScript>{data.above1Name}</OtherInfoScript>
         <OtherInfoScript>
-          {data.prevScore}
+          {data.above1Score}
+          {isScoreRank ? '점' : '일'}
+        </OtherInfoScript>
+      </OtherRankBox>
+      <OtherRankBox>
+        <OtherInfoScript>{data.above2Rank}등</OtherInfoScript>
+        <OtherInfoScript>{data.above2Name}</OtherInfoScript>
+        <OtherInfoScript>
+          {data.above2Score}
           {isScoreRank ? '점' : '일'}
         </OtherInfoScript>
       </OtherRankBox>
@@ -36,10 +50,18 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
         </MyInfoScript>
       </MyRankBox>
       <OtherRankBox>
-        <OtherInfoScript>{data.nextRank}등</OtherInfoScript>
-        <OtherInfoScript>{data.nextName}</OtherInfoScript>
+        <OtherInfoScript>{data.below1Rank}등</OtherInfoScript>
+        <OtherInfoScript>{data.below1Name}</OtherInfoScript>
         <OtherInfoScript>
-          {data.nextScore}
+          {data.below1Score}
+          {isScoreRank ? '점' : '일'}
+        </OtherInfoScript>
+      </OtherRankBox>
+      <OtherRankBox>
+        <OtherInfoScript>{data.below2Rank}등</OtherInfoScript>
+        <OtherInfoScript>{data.below2Name}</OtherInfoScript>
+        <OtherInfoScript>
+          {data.below2Score}
           {isScoreRank ? '점' : '일'}
         </OtherInfoScript>
       </OtherRankBox>
