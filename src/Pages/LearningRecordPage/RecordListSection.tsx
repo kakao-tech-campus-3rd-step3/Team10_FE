@@ -27,8 +27,8 @@ type BookmarkedResponse = {
 
 export const RecordListSection = ({ isIncorrect }: { isIncorrect: boolean }) => {
   const { data: reviewData } = useQueryApi<ReviewResponse>(
-    ['learningRecord', 'review'],
-    '/quiz/review',
+    ['learningRecord', 'wrong'],
+    '/quiz/wrong',
   );
 
   const { data: bookmarkData } = useQueryApi<BookmarkedResponse>(
@@ -40,7 +40,7 @@ export const RecordListSection = ({ isIncorrect }: { isIncorrect: boolean }) => 
     ? Array.from(new Map((reviewData?.reviewQuizzes || []).map((q) => [q.quizId, q])).values()).map(
         (q) => ({
           quizId: q.quizId,
-          topicId: 'review',
+          topicId: 'wrong',
           questionSubject: `리뷰 ${q.reviewStep}`,
           questionText: q.questionTitle,
           isBookmark: false,

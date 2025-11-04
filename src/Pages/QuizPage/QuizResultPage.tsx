@@ -15,7 +15,7 @@ export const QuizResultPage = () => {
 
   const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
 
-  const isRecordPage = topicId === 'review' || topicId === 'bookmark';
+  const isRecordPage = topicId === 'wrong' || topicId === 'bookmark';
 
   const { data: quizListData } = useQueryApi<QuizListResponse>(
     ['topics', topicId || ''],
@@ -50,7 +50,7 @@ export const QuizResultPage = () => {
   const handleBackToList = () => {
     if (isRecordPage) {
       navigate('/record');
-      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'review'] });
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'wrong'] });
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
     } else {
       navigate(`/topics/${topicId}/quizzes`);

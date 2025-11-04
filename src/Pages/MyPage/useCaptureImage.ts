@@ -22,6 +22,9 @@ export const useCaptureImage = (
         quality: 1.0,
         pixelRatio: 2,
         backgroundColor: '#ffffff',
+        style: {
+          margin: '0',
+        },
       });
 
       const link = document.createElement('a');
@@ -48,6 +51,9 @@ export const useCaptureImage = (
         quality: 1.0,
         pixelRatio: 2,
         backgroundColor: '#ffffff',
+        style: {
+          margin: '0',
+        },
       });
 
       if (!blob) {
@@ -66,6 +72,9 @@ export const useCaptureImage = (
           quality: 1.0,
           pixelRatio: 2,
           backgroundColor: '#ffffff',
+          style: {
+            margin: '0',
+          },
         });
 
         // 임시로 canvas에 그려서 복사
