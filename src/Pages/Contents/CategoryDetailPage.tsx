@@ -5,6 +5,7 @@ import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { categoryContentsDetail } from './constants';
+import ReactMarkdown from 'react-markdown';
 
 export const CategoryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +37,9 @@ export const CategoryDetailPage = () => {
         </CategoryHeader>
 
         <CategoryBody>
-          <CategoryContent dangerouslySetInnerHTML={{ __html: category.content }} />
+          <CategoryContent>
+            <ReactMarkdown>{category.content}</ReactMarkdown>
+          </CategoryContent>
         </CategoryBody>
 
         <ActionButtonContainer>
