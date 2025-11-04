@@ -74,12 +74,6 @@ export const CustomizePage = () => {
   const handleWearCostume = async () => {
     if (selectedId == null) return;
 
-    // 이미 착용 중인 옷이면 API 호출하지 않음
-    const selectedCostume = costumeList.find((c) => c.id === selectedId);
-    if (selectedCostume?.isWorn) {
-      return;
-    }
-
     try {
       await api.post(`/costume/${selectedId}`);
       await Promise.all([
@@ -195,7 +189,7 @@ export const CustomizePage = () => {
             })}
           </CostumeGrid>
           <ConfirmButtonContainer>
-            <ConfirmButton type="button" onClick={handleWearCostume} disabled={!selectedId}>
+            <ConfirmButton type="button" onClick={handleWearCostume}>
               착용하기
             </ConfirmButton>
           </ConfirmButtonContainer>
