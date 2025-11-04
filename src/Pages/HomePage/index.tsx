@@ -11,6 +11,7 @@ import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { HomeResponse, PropensityResponse } from './types';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
+import type { ReviewQuizResponse } from '@/Pages/QuizPage/types';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -26,8 +27,32 @@ export const HomePage = () => {
     isLoading: propensityIsLoading,
   } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
 
-  const handleInvestmentTest = () => {
-    navigate('/topics');
+  // 복습 퀴즈 확인 (수동으로만 호출)
+  const { refetch: refetchReviewQuizzes } = useQueryApi<ReviewQuizResponse>(
+    ['quiz', 'review'],
+    '/quiz/review',
+    {
+      enabled: false,
+    },
+  );
+
+  const handleInvestmentTest = async () => {
+    // 복습 퀴즈 확인
+    const { data } = await refetchReviewQuizzes();
+
+    if (data?.reviewQuizzes && data.reviewQuizzes.length > 0) {
+      // 복습 퀴즈가 있으면 첫 번째 복습 퀴즈로 이동
+      navigate(`/quiz/review/${data.reviewQuizzes[0].quizId}`, {
+        state: {
+          isReview: true,
+          reviewQuizzes: data.reviewQuizzes,
+          currentReviewIndex: 0,
+        },
+      });
+    } else {
+      // 복습 퀴즈가 없으면 토픽 선택 페이지로 이동
+      navigate('/topics');
+    }
   };
   const goToTestPage = () => {
     navigate('/test');

@@ -11,21 +11,25 @@ import { queryClient } from '@/Apis/queryClient';
 export const QuizResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { topicId } = useParams<{ topicId: string }>();
+  const { topicId } = useParams<{ topicId?: string }>();
 
-  const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
+  const { selectedAnswer, isCorrect, quizData, isReview, reviewQuizzes, currentReviewIndex } =
+    location.state as QuizResultState;
 
   const isRecordPage = topicId === 'wrong' || topicId === 'bookmark';
+  const isReviewMode = isReview === true;
 
   const { data: quizListData } = useQueryApi<QuizListResponse>(
     ['topics', topicId || ''],
     `/topics/${topicId || ''}`,
-    { enabled: !isRecordPage },
+    { enabled: !isRecordPage && !isReviewMode },
   );
 
   const handleBookmarkChange = (quizId: number) => {
     queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
-    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+    if (topicId) {
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
 
   if (!quizData) {
@@ -40,15 +44,40 @@ export const QuizResultPage = () => {
     quizData;
 
   const quizzes = quizListData?.quizzes || [];
-  const nextQuiz = findNextQuiz(quizzes, quizId);
+  const nextQuiz = !isReviewMode ? findNextQuiz(quizzes, quizId) : null;
+
+  // 복습 모드일 때 다음 복습 퀴즈 찾기
+  let nextReviewQuiz = null;
+  if (isReviewMode && reviewQuizzes && currentReviewIndex !== undefined) {
+    const nextIndex = currentReviewIndex + 1;
+    if (nextIndex < reviewQuizzes.length) {
+      nextReviewQuiz = reviewQuizzes[nextIndex];
+    }
+  }
 
   const handleNextQuestion = () => {
-    const nextPath = getNextQuizPath(Number(topicId), nextQuiz?.quizId || null);
-    navigate(nextPath);
+    if (isReviewMode && nextReviewQuiz) {
+      // 다음 복습 퀴즈로 이동
+      navigate(`/quiz/review/${nextReviewQuiz.quizId}`, {
+        state: {
+          isReview: true,
+          reviewQuizzes,
+          currentReviewIndex: currentReviewIndex! + 1,
+        },
+      });
+    } else if (!isReviewMode && nextQuiz) {
+      // 일반 모드일 때 다음 퀴즈로 이동
+      const nextPath = getNextQuizPath(Number(topicId), nextQuiz.quizId);
+      navigate(nextPath);
+    }
   };
 
   const handleBackToList = () => {
-    if (isRecordPage) {
+    if (isReviewMode) {
+      // 복습 모드일 때는 모든 복습을 완료했거나 사용자가 나가기를 선택한 경우 토픽 선택 페이지로
+      navigate('/topics');
+      queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
+    } else if (isRecordPage) {
       navigate('/record');
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'wrong'] });
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
@@ -57,6 +86,10 @@ export const QuizResultPage = () => {
       queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
     }
   };
+
+  // 복습 모드일 때 모든 복습 퀴즈 완료 여부
+  const isLastReviewQuiz = isReviewMode && !nextReviewQuiz;
+
   return (
     <Container $scrollable>
       <Space />
@@ -109,14 +142,21 @@ export const QuizResultPage = () => {
         </ExplanationContainer>
       </ResultContainer>
       <ButtonsWrapper>
-        {!isRecordPage && !nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
+        {!isReviewMode && !isRecordPage && !nextQuiz && (
+          <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>
+        )}
+        {isReviewMode && isLastReviewQuiz && (
+          <LastQuizMessage>모든 복습 퀴즈를 완료했습니다!</LastQuizMessage>
+        )}
         <ButtonRow>
           <ButtonContainer onClick={handleBackToList}>
-            <QuizConfirmButton text="목록 보기" />
+            <QuizConfirmButton
+              text={isReviewMode && isLastReviewQuiz ? '토픽 선택하기' : '목록 보기'}
+            />
           </ButtonContainer>
-          {!isRecordPage && (
-            <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
-              <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
+          {((!isRecordPage && !isReviewMode && nextQuiz) || (isReviewMode && nextReviewQuiz)) && (
+            <ButtonContainer onClick={handleNextQuestion}>
+              <QuizConfirmButton text="다음 문제" />
             </ButtonContainer>
           )}
         </ButtonRow>

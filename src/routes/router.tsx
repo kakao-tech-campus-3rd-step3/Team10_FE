@@ -70,6 +70,22 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: '/quiz/review/:quizId',
+    element: (
+      <ProtectedRoute>
+        <QuizSolvePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quiz/review/:quizId/result',
+    element: (
+      <ProtectedRoute>
+        <QuizResultPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/mypage',
     element: (
       <ProtectedRoute>

@@ -3,18 +3,27 @@ import QuestionButton from './QuestionButton';
 import QuizConfirmButton from './QuizConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { usePostApi } from '@/Apis/useMutationApi';
 import { useState } from 'react';
-import type { QuizData, QuizSubmitRequest } from './types';
+import type { QuizData, QuizSubmitRequest, ReviewQuiz } from './types';
 import Header from '@/Shared/components/Header';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const QuizSolvePage = () => {
   const navigate = useNavigate();
-  const { topicId, quizId } = useParams<{ topicId: string; quizId: string }>();
+  const location = useLocation();
+  const { topicId, quizId } = useParams<{ topicId?: string; quizId: string }>();
   const queryClient = useQueryClient();
+
+  // 복습 모드 확인
+  const isReview = location.pathname.startsWith('/quiz/review');
+  const reviewState = location.state as {
+    isReview?: boolean;
+    reviewQuizzes?: ReviewQuiz[];
+    currentReviewIndex?: number;
+  } | null;
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | number | null>(null);
 
@@ -24,7 +33,10 @@ export const QuizSolvePage = () => {
     isLoading,
   } = useQueryApi<QuizData>(['quiz', quizId || ''], `/quiz/${quizId || ''}`);
 
-  const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(`/quiz/${quizId}/submit`);
+  // 복습 모드일 때는 /quiz/review/{quizId}, 일반 모드일 때는 /quiz/{quizId}/submit
+  const submitUrl = isReview ? `/quiz/review/${quizId}` : `/quiz/${quizId}/submit`;
+
+  const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(submitUrl);
 
   const checkAnswer = (selectedAnswer: string | boolean | number, quizData: QuizData): boolean => {
     if (quizData.questionType === 'OX') {
@@ -54,13 +66,25 @@ export const QuizSolvePage = () => {
 
       queryClient.invalidateQueries({ queryKey: ['quiz', quizId || ''] });
       queryClient.invalidateQueries({ queryKey: ['topics'] });
-      queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+      if (topicId) {
+        queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+      }
+      // 복습 퀴즈 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
 
-      navigate(`/topics/${topicId}/quizzes/${quizId}/result`, {
+      // 복습 모드일 때와 일반 모드일 때 결과 페이지 경로가 다름
+      const resultPath = isReview
+        ? `/quiz/review/${quizId}/result`
+        : `/topics/${topicId}/quizzes/${quizId}/result`;
+
+      navigate(resultPath, {
         state: {
           selectedAnswer,
           isCorrect,
           quizData,
+          isReview: isReview || reviewState?.isReview,
+          reviewQuizzes: reviewState?.reviewQuizzes,
+          currentReviewIndex: reviewState?.currentReviewIndex,
         },
       });
     } catch {
@@ -74,7 +98,9 @@ export const QuizSolvePage = () => {
 
   const handleBookmarkChange = (quizId: number) => {
     queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
-    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+    if (topicId) {
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
 
   if (isLoading) {
@@ -93,7 +119,9 @@ export const QuizSolvePage = () => {
     );
   }
 
-  const { questionTitle, difficultyLevel, questionOrder, questionType, questionData } = quizData;
+  const { questionTitle, difficultyLevel, questionOrder, questionType, questionData, topicName } =
+    quizData;
+  const headerTitle = isReview ? '복습 퀴즈' : topicName;
 
   const renderQuestionContent = () => {
     switch (questionType) {
@@ -136,7 +164,7 @@ export const QuizSolvePage = () => {
 
   return (
     <Container $scrollable>
-      <Header title={quizData.topicName} hasPrevPage={true} />
+      <Header title={headerTitle} hasPrevPage={true} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
