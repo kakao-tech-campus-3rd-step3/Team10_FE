@@ -16,6 +16,7 @@ export const getKakaoLoginUrl = (): string => {
     client_id: KAKAO_CLIENT_ID,
     redirect_uri: KAKAO_REDIRECT_URI,
     response_type: 'code',
+    prompt: 'login', // 항상 로그인 페이지 표시 (다른 계정으로 로그인 가능)
   });
 
   return `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
