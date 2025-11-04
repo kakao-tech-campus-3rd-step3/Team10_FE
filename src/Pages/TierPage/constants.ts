@@ -1,8 +1,8 @@
-import IconBoss from '@/assets/TierImg/tier_boss.png';
-import IconDividend from '@/assets/TierImg/tier_dividend.png';
-import IconBlueChip from '@/assets/TierImg/tier_bluechip.png';
-import IconGrowth from '@/assets/TierImg/tier_growth.png';
-import IconSeed from '@/assets/TierImg/tier_seed.png';
+import IconBoss from '@/assets/TierImg/tier_boss.webp';
+import IconDividend from '@/assets/TierImg/tier_dividend.webp';
+import IconBlueChip from '@/assets/TierImg/tier_bluechip.webp';
+import IconGrowth from '@/assets/TierImg/tier_growth.webp';
+import IconSeed from '@/assets/TierImg/tier_seed.webp';
 import type { Tier } from './types';
 
 export const TIERS: Tier[] = [

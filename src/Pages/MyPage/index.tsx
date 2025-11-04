@@ -4,7 +4,7 @@ import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';

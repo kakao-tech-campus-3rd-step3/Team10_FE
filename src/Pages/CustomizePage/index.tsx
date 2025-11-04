@@ -4,7 +4,7 @@ import { theme } from '@/styles/theme';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { CostumeItem, CostumeListResponse, HomeResponse } from './types';
 import CostumeButton from './CostumeButton';

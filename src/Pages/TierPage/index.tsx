@@ -3,7 +3,7 @@ import { Container as BaseContainer } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { theme } from '@/styles/theme';
 
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { TIERS } from './constants';
 import type { Tier } from './types';

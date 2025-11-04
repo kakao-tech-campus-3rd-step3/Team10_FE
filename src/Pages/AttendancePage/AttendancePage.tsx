@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import CheckImage from '@/assets/AttendImg/check.png';
+import CheckImage from '@/assets/AttendImg/check.webp';
 
 interface AttendanceStatusResponse {
   todayCount: number;

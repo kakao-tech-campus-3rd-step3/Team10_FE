@@ -5,6 +5,7 @@ import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { detailContents } from './constants';
+import ReactMarkdown from 'react-markdown';
 
 export const ContentDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +42,9 @@ export const ContentDetailPage = () => {
         </ContentHeader>
 
         <ContentBody>
-          <ContentText dangerouslySetInnerHTML={{ __html: content.content }} />
+          <ContentText>
+            <ReactMarkdown>{content.content}</ReactMarkdown>
+          </ContentText>
         </ContentBody>
 
         <ActionButtonContainer>
@@ -104,7 +107,6 @@ const ContentText = styled.div`
   font-size: 16px;
   line-height: 1.8;
   color: ${theme.colors.text};
-  white-space: pre-line;
 `;
 
 const ActionButtonContainer = styled.div`

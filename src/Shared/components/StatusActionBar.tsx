@@ -1,6 +1,6 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import CalenderIcon from '@/assets/HomeImg/calendar.png';
+import CalenderIcon from '@/assets/HomeImg/calendar.webp';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { UserTier } from '@/Pages/TierPage/types';

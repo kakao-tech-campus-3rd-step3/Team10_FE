@@ -1,8 +1,8 @@
-import ActiveInvestmentTypeImg from '@/assets/TestPage/Active_investment_type.png';
-import AttackInvestmentTypeImg from '@/assets/TestPage/Attack_investment_type.png';
-import RiskNeutralTypeImg from '@/assets/TestPage/Risk_neutral_type.png';
-import SafetySeekingTypeImg from '@/assets/TestPage/Safety_seeking_type.png';
-import StableTypeImg from '@/assets/TestPage/Stable_type.png';
+import ActiveInvestmentTypeImg from '@/assets/TestPage/Active_investment_type.webp';
+import AttackInvestmentTypeImg from '@/assets/TestPage/Attack_investment_type.webp';
+import RiskNeutralTypeImg from '@/assets/TestPage/Risk_neutral_type.webp';
+import SafetySeekingTypeImg from '@/assets/TestPage/Safety_seeking_type.webp';
+import StableTypeImg from '@/assets/TestPage/Stable_type.webp';
 
 export const Q1 = ['19세 이하', '20세~40세', '41세~50세', '51세~60세', '61세 이상'] as const;
 export const Q2 = [
