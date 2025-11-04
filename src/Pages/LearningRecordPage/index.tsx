@@ -6,7 +6,7 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { RecordListSection } from './RecordListSection';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 
 export const LearningRecordPage = () => {
   const [isIncorrect, setIsIncorrect] = useState<boolean>(true);

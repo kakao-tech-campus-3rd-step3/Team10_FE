@@ -4,29 +4,39 @@ import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
-
-interface MyPageResponse {
-  characterUri: string;
-  nickname: string;
-  tierName: string;
-  ratingPoint: number;
-  testResult: string;
-  testResultDescription: string;
-}
+import { DESCRIPTIONS } from '@/Pages/TestPage/constants';
+import type { MyPageResponse, TestResult } from './types';
+import { useTokenCookies } from '@/utils/cookie';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const MyPage = () => {
   const navigate = useNavigate();
+  const { clearTokens } = useTokenCookies();
+  const queryClient = useQueryClient();
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['usernickname'], '/page/mypage');
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const { data: testResultData } = useQueryApi<TestResult>(
+    ['users', 'me', 'propensity'],
+    '/users/me/propensity',
+  );
   const handleShareClick = () => {
     navigate('/sharing');
   };
 
+  const handleLogout = () => {
+    clearTokens();
+    queryClient.clear();
+    navigate('/login');
+  };
+
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
+  const resultDescription = testResultData?.propensityKoreanName
+    ? DESCRIPTIONS[testResultData.propensityKoreanName]
+    : undefined;
 
   return (
     <Container>
@@ -47,13 +57,13 @@ export const MyPage = () => {
         </NicknameBox>
       </CharacterAndNicknameWrapper>
       <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
-          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
+        <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
+        <ResultDescription>{resultDescription}</ResultDescription>
       </ResultWrapper>
-      <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
+      <ButtonWrapper>
+        <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
+        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -121,9 +131,16 @@ const ResultDescription = styled.p`
   margin: 0;
 `;
 
-const ShareButton = styled.button`
+const ButtonWrapper = styled.div`
   width: 90%;
   margin: ${theme.spacing(4)} auto;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+`;
+
+const ShareButton = styled.button`
+  width: 100%;
   padding: ${theme.spacing(4)};
   background-color: ${theme.colors.secondary};
   color: #fff;
@@ -134,4 +151,35 @@ const ShareButton = styled.button`
   border-radius: ${theme.spacing(5)};
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const LogoutButton = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(4)};
+  background-color: #ffffff;
+  color: #666666;
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: ${theme.spacing(5)};
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f7f7f7;
+    border-color: #999999;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;

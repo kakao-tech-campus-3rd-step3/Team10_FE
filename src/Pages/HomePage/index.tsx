@@ -2,15 +2,16 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/assets/HomeImg/character.png';
-import QuizIcon from '@/assets/HomeImg/quiz.png';
-import NewsIcon from '@/assets/HomeImg/news.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
+import QuizIcon from '@/assets/HomeImg/quiz.webp';
+import NewsIcon from '@/assets/HomeImg/news.webp';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { HomeResponse, PropensityResponse } from './types';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
+import type { ReviewQuizResponse } from '@/Pages/QuizPage/types';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -26,8 +27,32 @@ export const HomePage = () => {
     isLoading: propensityIsLoading,
   } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
 
-  const handleInvestmentTest = () => {
-    navigate('/topics');
+  // 복습 퀴즈 확인 (수동으로만 호출)
+  const { refetch: refetchReviewQuizzes } = useQueryApi<ReviewQuizResponse>(
+    ['quiz', 'review'],
+    '/quiz/review',
+    {
+      enabled: false,
+    },
+  );
+
+  const handleInvestmentTest = async () => {
+    // 복습 퀴즈 확인
+    const { data } = await refetchReviewQuizzes();
+
+    if (data?.reviewQuizzes && data.reviewQuizzes.length > 0) {
+      // 복습 퀴즈가 있으면 첫 번째 복습 퀴즈로 이동
+      navigate(`/quiz/review/${data.reviewQuizzes[0].quizId}`, {
+        state: {
+          isReview: true,
+          reviewQuizzes: data.reviewQuizzes,
+          currentReviewIndex: 0,
+        },
+      });
+    } else {
+      // 복습 퀴즈가 없으면 토픽 선택 페이지로 이동
+      navigate('/topics');
+    }
   };
   const goToTestPage = () => {
     navigate('/test');
@@ -36,7 +61,7 @@ export const HomePage = () => {
     navigate('/contents');
   };
 
-  if (homeIsLoading || propensityIsLoading) {
+  if (homeIsLoading) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
@@ -49,7 +74,7 @@ export const HomePage = () => {
     );
   }
 
-  if (homeError || !homeData || propensityError || !propensityData) {
+  if (homeError || !homeData) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
@@ -64,8 +89,17 @@ export const HomePage = () => {
 
   const { characterUri, nickname } = homeData;
   const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
-  const isTested = propensityData.isTested;
-  const testResult = propensityData.propensityKoreanName || '';
+
+  const isTested = propensityData?.isTested;
+  const testResult = propensityData?.propensityKoreanName || '';
+  let propensityText: string = '';
+  if (propensityIsLoading) {
+    propensityText = '나의 투자 성향을 불러오는 중...';
+  } else if (propensityError || !propensityData) {
+    propensityText = '나의 투자 성향을 불러오는데 실패했습니다';
+  } else if (!isTested) {
+    propensityText = '나의 투자 성향을 테스트 해보세요';
+  }
 
   return (
     <Container $scrollable={true}>
@@ -97,7 +131,7 @@ export const HomePage = () => {
               </>
             ) : (
               <TestButton type="button" onClick={goToTestPage}>
-                나의 투자 성향을 테스트 해보세요
+                {propensityText}
               </TestButton>
             )}
           </InvestmentTypeBox>

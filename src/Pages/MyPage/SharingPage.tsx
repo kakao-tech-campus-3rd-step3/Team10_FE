@@ -1,54 +1,67 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { Header } from '@/Shared/components/Header';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { Container } from '@/Shared/components/Container';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
-
-interface SharingResponse {
-  characterUri: string;
-  nickname: string;
-  tierName: string;
-  ratingPoint: number;
-  testResult: string;
-  testResultDescription: string;
-}
+import { useRef, type RefObject } from 'react';
+import { useCaptureImage } from './useCaptureImage';
+import { DESCRIPTIONS } from '../TestPage/constants';
+import type { MyPageResponse, TestResult } from './types';
 
 export const SharingPage = () => {
+  const captureRef = useRef<HTMLDivElement>(null);
+  const { captureImage, copyToClipboard } = useCaptureImage(
+    captureRef as RefObject<HTMLElement>,
+    '마이페이지.png',
+  );
   const handleSaveClick = () => {
-    alert('결과 이미지 저장하기 버튼 클릭!');
+    captureImage();
   };
 
-  const { data: myPageData } = useQueryApi<SharingResponse>(['usernickname'], '/page/mypage');
+  const handleCopyClick = () => {
+    copyToClipboard();
+  };
 
+  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const { data: testResultData } = useQueryApi<TestResult>(
+    ['users', 'me', 'propensity'],
+    '/users/me/propensity',
+  );
+  const resultDescription = testResultData?.propensityKoreanName
+    ? DESCRIPTIONS[testResultData.propensityKoreanName]
+    : undefined;
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
 
   return (
     <Container>
       <Header title="공유하기" hasPrevPage={true} />
       <Spacing />
-      <CharacterAndNicknameWrapper>
-        <Character
-          key={characterSrc}
-          src={characterSrc}
-          alt="캐릭터"
-          onError={(e) => {
-            e.currentTarget.src = CharacterMain;
-          }}
-        />
-        <NicknameBox>
-          <Nickname>{myPageData?.nickname}</Nickname>
-        </NicknameBox>
-      </CharacterAndNicknameWrapper>
-      <ResultWrapper>
-        <ResultTitle>위험 중립형</ResultTitle>
-        <ResultDescription>
-          “투자에 그는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은
-          수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다.”
-        </ResultDescription>
-      </ResultWrapper>
-      <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
+      <CaptureSession ref={captureRef}>
+        <CharacterAndNicknameWrapper>
+          <Space />
+          <Character
+            key={characterSrc}
+            src={characterSrc}
+            alt="캐릭터"
+            onError={(e) => {
+              e.currentTarget.src = CharacterMain;
+            }}
+          />
+          <NicknameBox>
+            <Nickname>{myPageData?.nickname}</Nickname>
+          </NicknameBox>
+        </CharacterAndNicknameWrapper>
+        <ResultWrapper>
+          <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
+          <ResultDescription>{resultDescription}</ResultDescription>
+        </ResultWrapper>
+      </CaptureSession>
+      <ButtonWrapper>
+        <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
+        <CopyButton onClick={handleCopyClick}>복사하기</CopyButton>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -118,9 +131,16 @@ const ResultDescription = styled.p`
   margin: 0;
 `;
 
-const SaveButton = styled.button`
+const ButtonWrapper = styled.div`
   width: 90%;
   margin: ${theme.spacing(4)} auto;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+`;
+
+const SaveButton = styled.button`
+  width: 100%;
   padding: ${theme.spacing(4)};
   background-color: ${theme.colors.secondary};
   color: #fff;
@@ -131,4 +151,46 @@ const SaveButton = styled.button`
   border-radius: ${theme.spacing(5)};
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const CopyButton = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(4)};
+  background-color: #ffffff;
+  color: ${theme.colors.secondary};
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  border: 2px solid ${theme.colors.secondary};
+  border-radius: ${theme.spacing(5)};
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f7f7f7;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const CaptureSession = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: ${theme.spacing(8)};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  padding: ${theme.spacing(5)};
+`;
+const Space = styled.div`
+  height: ${theme.spacing(10)};
 `;

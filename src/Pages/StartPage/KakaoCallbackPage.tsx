@@ -50,7 +50,7 @@ export const KakaoCallbackPage: React.FC = () => {
             <div style={{ fontSize: '60px', marginBottom: '20px' }}>🎉</div>
             <h2 style={{ color: '#00a86b', marginBottom: '10px' }}>로그인 성공!</h2>
             <p style={{ color: '#666', marginBottom: '20px' }}>{currentMessage}</p>
-            <p style={{ color: '#999', fontSize: '14px' }}>3초 후 메인 페이지로 이동합니다...</p>
+            <p style={{ color: '#999', fontSize: '14px' }}>메인 페이지로 이동 중...</p>
           </>
         )}
 

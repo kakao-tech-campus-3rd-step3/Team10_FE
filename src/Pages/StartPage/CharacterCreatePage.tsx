@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import NameInput from './NameInput';
 import ConfirmButton from './ConfirmButton';
-import CharacterImage from '@/assets/HomeImg/character.png';
+import CharacterImage from '@/assets/HomeImg/character.webp';
 import { useState } from 'react';
 import { Container } from '@/Shared/components/Container';
 import { getKakaoLoginUrl } from '@/Apis/kakao/utils';

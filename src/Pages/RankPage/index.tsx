@@ -69,7 +69,9 @@ export const RankPage = () => {
         <MyRankSection
           isScoreRank={isScoreRank}
           currentUser={rankingData.currentUser}
-          adjacentUsers={rankingData.adjacentUsers}
+          aboveUsers={rankingData.aboveUsers}
+          belowUsers={rankingData.belowUsers}
+          topRankingUsers={rankingData.topRankingUsers}
         />
       </RankPageContainer>
     </Container>

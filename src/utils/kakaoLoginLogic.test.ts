@@ -36,15 +36,15 @@ describe('카카오 로그인 비즈니스 로직', () => {
       expect(getRedirectDelay('/character-create')).toBe(2000);
     });
 
-    it('기존 사용자 플로우: 로그인 성공 → 홈 (3초)', () => {
+    it('기존 사용자 플로우: 로그인 성공 → 홈 (즉시 이동)', () => {
       const isRegistration = false;
 
       expect(getSuccessMessage(isRegistration)).toContain('로그인이 완료');
-      expect(getLoginSuccessDelay(isRegistration)).toBe(3000);
+      expect(getLoginSuccessDelay(isRegistration)).toBe(0); // 성공 시 즉시 이동
       expect(getSuccessNavigationTarget()).toBe('/home');
     });
 
-    it('회원가입 플로우: 닉네임 있음 → 회원가입 → 홈 (2초)', () => {
+    it('회원가입 플로우: 닉네임 있음 → 회원가입 → 홈 (즉시 이동)', () => {
       saveNickname('테스트유저');
 
       expect(shouldUseRegisterFlow()).toBe(true);
@@ -52,7 +52,7 @@ describe('카카오 로그인 비즈니스 로직', () => {
 
       const isRegistration = true;
       expect(getSuccessMessage(isRegistration)).toContain('회원가입이 완료');
-      expect(getLoginSuccessDelay(isRegistration)).toBe(2000);
+      expect(getLoginSuccessDelay(isRegistration)).toBe(0); // 성공 시 즉시 이동
       expect(getSuccessNavigationTarget()).toBe('/home');
 
       clearSavedNickname();

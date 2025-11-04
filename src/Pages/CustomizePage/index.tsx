@@ -4,27 +4,55 @@ import { theme } from '@/styles/theme';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import NavigationBar from '@/Shared/components/NavigationBar';
-import CoinIcon from '@/assets/CustomizeImg/coin.png';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import { usePostApi } from '@/Apis/useMutationApi';
-import type { CostumeItem, wearReq, wearRes } from './types';
+import type { CostumeItem, CostumeListResponse, HomeResponse } from './types';
 import CostumeButton from './CostumeButton';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
+import { api } from '@/Apis/axios';
+import { useQueryClient } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/Shared/components/LoadingSpinner';
+// 코스튬 미리보기 이미지들
+import Costume0 from '@/assets/CustomizeImg/0.webp';
+import Costume1 from '@/assets/CustomizeImg/1.webp';
+import Costume2 from '@/assets/CustomizeImg/2.webp';
+import Costume3 from '@/assets/CustomizeImg/3.webp';
+import Costume4 from '@/assets/CustomizeImg/4.webp';
+import Costume5 from '@/assets/CustomizeImg/5.webp';
+import Costume6 from '@/assets/CustomizeImg/6.webp';
+import Costume7 from '@/assets/CustomizeImg/7.webp';
 
-const MOCK_COIN_BALANCE = 1200;
-const price = 100;
+// 코스튬 id -> 미리보기 이미지 매핑
+const costumePreviewMap: Record<number, string> = {
+  0: Costume0,
+  1: Costume1,
+  2: Costume2,
+  3: Costume3,
+  4: Costume4,
+  5: Costume5,
+  6: Costume6,
+  7: Costume7,
+};
 
 export const CustomizePage = () => {
   const {
-    data: costumeList,
-    error,
-    isLoading,
-    refetch,
-  } = useQueryApi<CostumeItem[]>(['costume'], '/costume');
+    data: costumeData,
+    error: costumeError,
+    isLoading: costumeIsLoading,
+    refetch: refetchCostume,
+  } = useQueryApi<CostumeListResponse>(['costume'], '/costume');
+
+  const { data: homeData, refetch: refetchHome } = useQueryApi<HomeResponse>(
+    ['page', 'home'],
+    '/page/home',
+  );
+
+  const costumeList: CostumeItem[] = costumeData?.costumeItems ?? [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
-    if (costumeList && costumeList.length > 0) {
+    if (costumeList.length > 0) {
       const worn = costumeList.find((c) => c.isWorn);
       if (worn) {
         setSelectedId(worn.id);
@@ -34,40 +62,62 @@ export const CustomizePage = () => {
     }
   }, [costumeList]);
 
-  const wearMutation = usePostApi<wearRes, wearReq>('/costume');
-  const isSubmitting = wearMutation.isPending;
-  const handleWearCostume = () => {
-    if (selectedId !== null) {
-      wearMutation.mutate(
-        { id: selectedId },
-        {
-          onSuccess: () => {
-            refetch();
-          },
-          onError: (err) => {
-            console.error('착용 실패: ', err);
-          },
-        },
-      );
+  const queryClient = useQueryClient();
+
+  // 코스튬 선택 시 미리보기만 업데이트 (API 호출 없음)
+  const handleCostumeSelect = (costumeId: number) => {
+    setSelectedId(costumeId);
+    setIsImageLoading(true); // 이미지 변경 시 로딩 상태로 설정
+  };
+
+  // 제출하기 버튼 클릭 시 API 호출 후 alert 표시
+  const handleWearCostume = async () => {
+    if (selectedId == null) return;
+
+    try {
+      await api.post(`/costume/${selectedId}`);
+      await Promise.all([
+        refetchCostume(),
+        refetchHome(),
+        queryClient.invalidateQueries({ queryKey: ['page', 'home'] }),
+        queryClient.invalidateQueries({ queryKey: ['usernickname'] }),
+      ]);
+      // 성공 시 alert 표시
+      alert('착용하기 완료');
+    } catch (err) {
+      console.error('착용 실패: ', err);
     }
   };
 
-  if (isLoading) {
+  const getPreviewCharacterSrc = (): string => {
+    if (selectedId !== null && costumePreviewMap[selectedId]) {
+      return costumePreviewMap[selectedId];
+    }
+    if (homeData) {
+      return toAbsoluteUrl(homeData.characterUri) || CharacterMain;
+    }
+    return CharacterMain;
+  };
+
+  const previewCharacterSrc = getPreviewCharacterSrc();
+
+  // 이미지 변경 시 로딩 상태로 설정
+  useEffect(() => {
+    setIsImageLoading(true);
+  }, [previewCharacterSrc]);
+
+  if (costumeIsLoading) {
     return (
       <Container $scrollable={true}>
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
           <CharacterSectionWrapper>
-            <Character src={CharacterMain} alt="캐릭터" />
+            <Character src={previewCharacterSrc} alt="캐릭터" />
           </CharacterSectionWrapper>
           <ShopCard>
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
-              <CoinWrapper>
-                <CoinImg src={CoinIcon} alt="코인" />
-                <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-              </CoinWrapper>
             </ShopHeaderRow>
             <LoadingMessage>로딩 중...</LoadingMessage>
           </ShopCard>
@@ -76,22 +126,18 @@ export const CustomizePage = () => {
     );
   }
 
-  if (error || !costumeList) {
+  if (costumeError || !costumeList) {
     return (
       <Container $scrollable={true}>
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
           <CharacterSectionWrapper>
-            <Character src={CharacterMain} alt="캐릭터" />
+            <Character src={previewCharacterSrc} alt="캐릭터" />
           </CharacterSectionWrapper>
           <ShopCard>
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
-              <CoinWrapper>
-                <CoinImg src={CoinIcon} alt="코인" />
-                <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-              </CoinWrapper>
             </ShopHeaderRow>
             <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
           </ShopCard>
@@ -106,22 +152,27 @@ export const CustomizePage = () => {
       <NavigationBar />
       <CustomizePageContainer>
         <CharacterSectionWrapper>
+          {isImageLoading && (
+            <CharacterPlaceholder>
+              <LoadingSpinner size="medium" color={theme.colors.primary} message="" />
+            </CharacterPlaceholder>
+          )}
           <Character
-            key={CharacterMain}
-            src={CharacterMain}
+            key={previewCharacterSrc}
+            src={previewCharacterSrc}
             alt="캐릭터"
+            draggable={false}
+            style={{ display: isImageLoading ? 'none' : 'block' }}
+            onLoad={() => setIsImageLoading(false)}
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
+              setIsImageLoading(false);
             }}
           />
         </CharacterSectionWrapper>
         <ShopCard>
           <ShopHeaderRow>
             <ShopTitle>옷 가게</ShopTitle>
-            <CoinWrapper>
-              <CoinImg src={CoinIcon} alt="코인" />
-              <CoinText>{MOCK_COIN_BALANCE}</CoinText>
-            </CoinWrapper>
           </ShopHeaderRow>
           <CostumeGrid>
             {costumeList.map((item) => {
@@ -130,21 +181,16 @@ export const CustomizePage = () => {
                 <CostumeButton
                   key={item.id}
                   id={item.id}
-                  img={item.costumeItemImageUrl}
-                  price={price}
+                  img={toAbsoluteUrl(item.costumeItemImageUrl)}
                   active={isActive}
-                  onSelect={setSelectedId}
+                  onSelect={handleCostumeSelect}
                 />
               );
             })}
           </CostumeGrid>
           <ConfirmButtonContainer>
-            <ConfirmButton
-              type="button"
-              onClick={handleWearCostume}
-              disabled={!selectedId || wearMutation.isPending}
-            >
-              {isSubmitting ? '착용 중...' : '착용하기'}
+            <ConfirmButton type="button" onClick={handleWearCostume}>
+              착용하기
             </ConfirmButton>
           </ConfirmButtonContainer>
         </ShopCard>
@@ -166,13 +212,29 @@ const CharacterSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: ${theme.spacing(5)};
+  min-height: 300px;
+`;
+
+const CharacterPlaceholder = styled.div`
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Character = styled.img`
   width: 250px;
   height: auto;
   object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  pointer-events: none;
 `;
 
 const ShopCard = styled.section`
@@ -194,6 +256,7 @@ const ShopHeaderRow = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  padding: ${theme.spacing(6)};
 `;
 
 const ShopTitle = styled.h2`
@@ -205,28 +268,6 @@ const ShopTitle = styled.h2`
   font-weight: ${theme.font.bold.fontWeight};
   font-size: 24px;
   margin: 0;
-`;
-
-const CoinWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #efeff0;
-  gap: 0;
-  border-radius: ${theme.spacing(3)};
-  padding-right: ${theme.spacing(2.5)};
-`;
-
-const CoinImg = styled.img`
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-`;
-
-const CoinText = styled.span`
-  font-family: ${theme.font.bold.fontFamily};
-  font-weight: ${theme.font.bold.fontWeight};
-  font-size: 16px;
-  color: ${theme.colors.text};
 `;
 
 const CostumeGrid = styled.div`
@@ -241,6 +282,24 @@ const CostumeGrid = styled.div`
   @media (max-width: 220px) {
     grid-template-columns: 1fr;
   }
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;
 
 const ConfirmButtonContainer = styled.div`
@@ -265,22 +324,8 @@ const ConfirmButton = styled.button`
   color: ${({ theme }) => theme.colors.background};
   cursor: pointer;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-`;
-
-const LoadingMessage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 16px;
-  color: #666666;
-`;
-
-const ErrorMessage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 16px;
-  color: #dc3545;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;

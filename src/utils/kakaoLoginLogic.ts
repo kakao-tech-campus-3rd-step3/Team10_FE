@@ -70,7 +70,7 @@ export const getSuccessNavigationTarget = (): string => {
 export const getRedirectDelay = (target: string): number => {
   switch (target) {
     case '/home':
-      return 2000; // 회원가입 성공 시
+      return 1000; // 회원가입 성공 시
     case '/character-create':
       return 2000; // 신규 사용자
     case '/login':
@@ -82,11 +82,11 @@ export const getRedirectDelay = (target: string): number => {
 
 /**
  * 로그인 성공 시 지연 시간 결정
- * @param isRegistration - 회원가입 플로우인지 여부
+ * @param _isRegistration - 회원가입 플로우인지 여부 (현재 미사용, 즉시 이동)
  * @returns 지연 시간 (ms)
  */
-export const getLoginSuccessDelay = (isRegistration: boolean): number => {
-  return isRegistration ? 2000 : 3000;
+export const getLoginSuccessDelay = (_isRegistration: boolean): number => {
+  return 0; // 성공 시 즉시 이동
 };
 
 /**
