@@ -167,6 +167,7 @@ export const CustomizePage = () => {
             key={previewCharacterSrc}
             src={previewCharacterSrc}
             alt="캐릭터"
+            draggable={false}
             style={{ display: isImageLoading ? 'none' : 'block' }}
             onLoad={() => setIsImageLoading(false)}
             onError={(e) => {
@@ -234,6 +235,12 @@ const Character = styled.img`
   width: 250px;
   height: auto;
   object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  pointer-events: none;
 `;
 
 const ShopCard = styled.section`
