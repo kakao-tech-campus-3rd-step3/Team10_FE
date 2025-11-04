@@ -1,8 +1,8 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
-import CalenderIcon from '@/assets/HomeImg/calendar.png';
-import TierIcon from '@/assets/HomeImg/tier.png';
+import CalenderIcon from '@/assets/HomeImg/calendar.webp';
+import TierIcon from '@/assets/HomeImg/tier.webp';
 import { useNavigate } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 

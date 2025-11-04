@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import ConfirmButton from './ConfirmButton';
-import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
+import TestResultImage from '@/assets/TestPage/kongsik_sleep.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';

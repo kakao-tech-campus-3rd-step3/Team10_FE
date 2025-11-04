@@ -1,8 +1,8 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import Rank1 from '@/assets/RankImg/first.png';
-import Rank2 from '@/assets/RankImg/second.png';
-import Rank3 from '@/assets/RankImg/third.png';
+import Rank1 from '@/assets/RankImg/first.webp';
+import Rank2 from '@/assets/RankImg/second.webp';
+import Rank3 from '@/assets/RankImg/third.webp';
 
 export const ChracterBox = ({
   $rank,

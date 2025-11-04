@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { Header } from '@/Shared/components/Header';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 import { Container } from '@/Shared/components/Container';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { toAbsoluteUrl } from '@/utils/urlUtils';

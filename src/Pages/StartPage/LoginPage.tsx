@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import LogoFace from '@/assets/HomeImg/character.png';
+import LogoFace from '@/assets/HomeImg/character.webp';
 import KakaoLoginButton from './KakaoLoginButton';
 import { Container } from '@/Shared/components/Container';
 
