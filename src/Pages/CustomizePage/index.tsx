@@ -11,6 +11,7 @@ import CostumeButton from './CostumeButton';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
 import { api } from '@/Apis/axios';
 import { useQueryClient } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/Shared/components/LoadingSpinner';
 // 코스튬 미리보기 이미지들
 import Costume0 from '@/assets/CustomizeImg/0.webp';
 import Costume1 from '@/assets/CustomizeImg/1.webp';
@@ -48,6 +49,7 @@ export const CustomizePage = () => {
 
   const costumeList: CostumeItem[] = costumeData?.costumeItems ?? [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     if (costumeList.length > 0) {
@@ -65,6 +67,7 @@ export const CustomizePage = () => {
   // 코스튬 선택 시 미리보기만 업데이트 (API 호출 없음)
   const handleCostumeSelect = (costumeId: number) => {
     setSelectedId(costumeId);
+    setIsImageLoading(true); // 이미지 변경 시 로딩 상태로 설정
   };
 
   // 제출하기 버튼 클릭 시 API 호출 후 alert 표시
@@ -103,6 +106,11 @@ export const CustomizePage = () => {
   };
 
   const previewCharacterSrc = getPreviewCharacterSrc();
+
+  // 이미지 변경 시 로딩 상태로 설정
+  useEffect(() => {
+    setIsImageLoading(true);
+  }, [previewCharacterSrc]);
 
   if (costumeIsLoading) {
     return (
@@ -150,12 +158,20 @@ export const CustomizePage = () => {
       <NavigationBar />
       <CustomizePageContainer>
         <CharacterSectionWrapper>
+          {isImageLoading && (
+            <CharacterPlaceholder>
+              <LoadingSpinner size="medium" color={theme.colors.primary} message="" />
+            </CharacterPlaceholder>
+          )}
           <Character
             key={previewCharacterSrc}
             src={previewCharacterSrc}
             alt="캐릭터"
+            style={{ display: isImageLoading ? 'none' : 'block' }}
+            onLoad={() => setIsImageLoading(false)}
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
+              setIsImageLoading(false);
             }}
           />
         </CharacterSectionWrapper>
@@ -201,7 +217,17 @@ const CharacterSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: ${theme.spacing(5)};
+  min-height: 300px;
+`;
+
+const CharacterPlaceholder = styled.div`
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Character = styled.img`
