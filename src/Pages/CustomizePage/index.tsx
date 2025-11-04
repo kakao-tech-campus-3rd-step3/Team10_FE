@@ -41,10 +41,19 @@ export const CustomizePage = () => {
 
   const queryClient = useQueryClient();
 
-  const handleWearCostume = async () => {
-    if (selectedId == null) return;
+  // 코스튬 버튼 클릭 시 즉시 착용
+  const handleCostumeSelect = async (costumeId: number) => {
+    // 이미 착용 중인 옷이면 API 호출하지 않음
+    if (selectedId === costumeId) {
+      const selectedCostume = costumeList.find((c) => c.id === costumeId);
+      if (selectedCostume?.isWorn) {
+        return;
+      }
+    }
+
     try {
-      await api.post(`/costume/${selectedId}`);
+      setSelectedId(costumeId);
+      await api.post(`/costume/${costumeId}`);
       await Promise.all([
         refetchCostume(),
         refetchHome(),
@@ -53,6 +62,9 @@ export const CustomizePage = () => {
       ]);
     } catch (err) {
       console.error('착용 실패: ', err);
+      // 실패 시 이전 선택으로 되돌리기
+      const worn = costumeList.find((c) => c.isWorn);
+      setSelectedId(worn?.id ?? null);
     }
   };
 
@@ -126,16 +138,11 @@ export const CustomizePage = () => {
                   id={item.id}
                   img={toAbsoluteUrl(item.costumeItemImageUrl)}
                   active={isActive}
-                  onSelect={setSelectedId}
+                  onSelect={handleCostumeSelect}
                 />
               );
             })}
           </CostumeGrid>
-          <ConfirmButtonContainer>
-            <ConfirmButton type="button" onClick={handleWearCostume} disabled={!selectedId}>
-              착용하기
-            </ConfirmButton>
-          </ConfirmButtonContainer>
         </ShopCard>
       </CustomizePageContainer>
     </Container>
@@ -209,30 +216,6 @@ const CostumeGrid = styled.div`
   @media (max-width: 220px) {
     grid-template-columns: 1fr;
   }
-`;
-
-const ConfirmButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: ${theme.spacing(3)};
-`;
-
-const ConfirmButton = styled.button`
-  width: 155px;
-  height: 50px;
-  flex-shrink: 0;
-  background-color: ${({ theme }) => theme.colors.secondary};
-  border-radius: 52px;
-  border: 2px solid #d3e0b4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font: ${({ theme }) => theme.font.bold};
-  font-size: 18px;
-  color: ${({ theme }) => theme.colors.background};
-  cursor: pointer;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
 const LoadingMessage = styled.div`
