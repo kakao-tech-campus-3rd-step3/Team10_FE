@@ -25,6 +25,7 @@ export const useCaptureImage = (
         style: {
           margin: '0',
         },
+        cacheBust: true,
       });
 
       const link = document.createElement('a');

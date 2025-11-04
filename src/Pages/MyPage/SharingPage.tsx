@@ -14,7 +14,7 @@ export const SharingPage = () => {
   const captureRef = useRef<HTMLDivElement>(null);
   const { captureImage, copyToClipboard } = useCaptureImage(
     captureRef as RefObject<HTMLElement>,
-    'capture.png',
+    '마이페이지.png',
   );
   const handleSaveClick = () => {
     captureImage();
@@ -40,6 +40,7 @@ export const SharingPage = () => {
       <Spacing />
       <CaptureSession ref={captureRef}>
         <CharacterAndNicknameWrapper>
+          <Space />
           <Character
             key={characterSrc}
             src={characterSrc}
@@ -189,4 +190,7 @@ const CaptureSession = styled.div`
   border-radius: ${theme.spacing(8)};
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   padding: ${theme.spacing(5)};
+`;
+const Space = styled.div`
+  height: ${theme.spacing(10)};
 `;
