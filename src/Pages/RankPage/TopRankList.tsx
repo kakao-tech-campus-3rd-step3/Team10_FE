@@ -3,6 +3,7 @@ import { ChracterBox } from './ChracterBox';
 import { theme } from '@/styles/theme';
 import type { RankingUser } from './types';
 import { useTopRankList } from './hooks/useTopRankList';
+import { toAbsoluteUrl } from '@/utils/urlUtils';
 
 export const TopRankList = ({ topRankingUsers }: { topRankingUsers: RankingUser[] }) => {
   const { arranged, rankLabels } = useTopRankList(topRankingUsers);
@@ -15,6 +16,7 @@ export const TopRankList = ({ topRankingUsers }: { topRankingUsers: RankingUser[
           $rank={rankLabels[idx]}
           name={user.nickname}
           score={user.point}
+          kongSkinUrl={toAbsoluteUrl(user.kongSkinUrl)}
         />
       ))}
     </Wrapper>

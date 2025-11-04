@@ -8,10 +8,12 @@ export const ChracterBox = ({
   $rank,
   name,
   score,
+  kongSkinUrl,
 }: {
   $rank: number;
   name: string;
   score: number;
+  kongSkinUrl: string;
 }) => {
   const rankIconMap: Record<number, string> = {
     1: Rank1,
@@ -21,7 +23,7 @@ export const ChracterBox = ({
   return (
     <Container $rank={$rank}>
       <RankIcon $rank={$rank} src={rankIconMap[$rank]} alt={`${$rank} rank`} />
-      <ImageContainer $rank={$rank} />
+      <ImageContainer $rank={$rank} src={kongSkinUrl} alt="kong skin" />
       <InfoContainer $rank={$rank}>
         <Name $rank={$rank}>{name}</Name>
         <Score $rank={$rank}>{score}</Score>
@@ -42,7 +44,7 @@ const Container = styled.div<{ $rank: number }>`
   flex: 1;
   min-width: 0;
 `;
-const ImageContainer = styled.div<{ $rank: number }>`
+const ImageContainer = styled.img<{ $rank: number }>`
   width: ${({ $rank }) => ($rank === 1 ? '28vw' : '24vw')};
   max-width: ${({ $rank }) => ($rank === 1 ? '180px' : '160px')};
   min-width: ${({ $rank }) => ($rank === 1 ? '92px' : '80px')};
