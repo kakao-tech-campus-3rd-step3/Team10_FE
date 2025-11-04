@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { MyRank } from './MyRank';
 import type { RankingUser } from './types';
 
@@ -6,37 +7,51 @@ export const MyRankSection = ({
   currentUser,
   aboveUsers,
   belowUsers,
+  topRankingUsers,
 }: {
   isScoreRank: boolean;
   currentUser: RankingUser;
   aboveUsers: RankingUser[];
   belowUsers: RankingUser[];
+  topRankingUsers: RankingUser[];
 }) => {
-  const sortedAbove = [...(aboveUsers ?? [])].sort((a, b) => b.point - a.point).slice(0, 2);
-  const sortedBelow = [...(belowUsers ?? [])].sort((a, b) => b.point - a.point).slice(0, 2);
+  const availableUsers = useMemo(() => {
+    return topRankingUsers
+      .filter((user) => user.nickname !== currentUser.nickname)
+      .sort((a, b) => b.point - a.point);
+  }, [topRankingUsers, currentUser.nickname]);
 
-  const above1 = sortedAbove[0];
-  const above2 = sortedAbove[1];
+  const allAboveUsers = useMemo(() => {
+    const combined = [
+      ...(aboveUsers ?? []),
+      ...availableUsers.filter((user) => user.rank < currentUser.rank),
+    ];
+    const unique = Array.from(new Map(combined.map((user) => [user.nickname, user])).values());
+    return unique.sort((a, b) => b.point - a.point).slice(0, 2);
+  }, [aboveUsers, availableUsers, currentUser.rank]);
 
-  const below1 = sortedBelow[0];
-  const below2 = sortedBelow[1];
+  const allBelowUsers = useMemo(() => {
+    const combined = [
+      ...(belowUsers ?? []),
+      ...availableUsers.filter((user) => user.rank > currentUser.rank),
+    ];
+    const unique = Array.from(new Map(combined.map((user) => [user.nickname, user])).values());
+    return unique.sort((a, b) => a.rank - b.rank).slice(0, 2);
+  }, [belowUsers, availableUsers, currentUser.rank]);
+
+  const above1 = allAboveUsers[0];
+  const above2 = allAboveUsers[1];
+  const below1 = allBelowUsers[0];
+  const below2 = allBelowUsers[1];
 
   const data = {
-    above1Rank: above1?.rank ?? 0,
-    above1Name: above1?.nickname ?? '',
-    above1Score: above1?.point ?? 0,
-    above2Rank: above2?.rank ?? 0,
-    above2Name: above2?.nickname ?? '',
-    above2Score: above2?.point ?? 0,
+    above1: above1 || null,
+    above2: above2 || null,
     myRank: currentUser.rank,
     myName: currentUser.nickname,
     myScore: currentUser.point,
-    below1Rank: below1?.rank ?? 0,
-    below1Name: below1?.nickname ?? '',
-    below1Score: below1?.point ?? 0,
-    below2Rank: below2?.rank ?? 0,
-    below2Name: below2?.nickname ?? '',
-    below2Score: below2?.point ?? 0,
+    below1: below1 || null,
+    below2: below2 || null,
   };
 
   return <MyRank data={data} isScoreRank={isScoreRank} />;
