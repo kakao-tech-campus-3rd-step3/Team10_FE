@@ -95,32 +95,32 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   return (
     <Container $scrollable={true}>
       <TestHeader title="" hasPrevPage={true} onBack={handleBack} />
-      <FormCard onSubmit={handleSubmit}>
-        <CardHead>
+      <FormCard onSubmit={handleSubmit} role="form" aria-label="투자성향 진단 테스트 폼">
+        <CardHead role="group" aria-label="테스트 헤더">
           <Title>투자성향 진단 테스트</Title>
           {isTested ? (
-            <InvestmentText>
+            <InvestmentText aria-label={`나의 지난 투자성향: ${testResult} 투자자`}>
               나의 지난 투자성향은 <Em>{testResult} 투자자</Em> 입니다.
             </InvestmentText>
           ) : (
             <InvestmentText>{propensityText}</InvestmentText>
           )}
         </CardHead>
-        <Divider />
+        <Divider role="separator" />
         {step === 0 && (
           <>
-            <Block>
+            <Block role="group" aria-label="질문 1: 연령대">
               <Q>1. 당신의 연령대는 어떻게 됩니까?</Q>
-              <Options>
+              <Options role="list" aria-label="연령대 선택지">
                 {Q1.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="연령대 선택">
                 {Q1.map((t, i) => {
                   const active = answers.q1 === t;
                   return (
@@ -129,6 +129,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q1', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -137,18 +141,18 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
               </ChipRow>
             </Block>
 
-            <Block>
+            <Block role="group" aria-label="질문 2: 투자 가능 기간">
               <Q>2. 투자하고자 하는 자금의 투자 가능 기간은 얼마나 됩니까?</Q>
-              <Options>
+              <Options role="list" aria-label="투자 가능 기간 선택지">
                 {Q2.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="투자 가능 기간 선택">
                 {Q2.map((t, i) => {
                   const active = answers.q2 === t;
                   return (
@@ -157,6 +161,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q2', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -169,18 +177,18 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
         {step === 1 && (
           <>
-            <Block>
+            <Block role="group" aria-label="질문 3: 투자경험 (중복 선택 가능)">
               <Q>3. 다음 중 투자경험과 가장 가까운 것은 어느 것입니까? (중복 가능)</Q>
-              <Options>
+              <Options role="list" aria-label="투자경험 선택지">
                 {Q3.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="group" aria-label="투자경험 선택 (중복 가능)">
                 {Q3.map((t, i) => {
                   const active = answers.q3.includes(t);
                   return (
@@ -189,6 +197,8 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => toggleQ3(t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -197,18 +207,18 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
               </ChipRow>
             </Block>
 
-            <Block>
+            <Block role="group" aria-label="질문 4: 금융상품 투자 지식수준">
               <Q>4. 금융상품 투자에 대한 본인의 지식수준은 어느 정도라고 생각하십니까?</Q>
-              <Options>
+              <Options role="list" aria-label="지식수준 선택지">
                 {Q4.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="지식수준 선택">
                 {Q4.map((t, i) => {
                   const active = answers.q4 === t;
                   return (
@@ -217,6 +227,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q4', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -229,21 +243,21 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
         {step === 2 && (
           <>
-            <Block>
+            <Block role="group" aria-label="질문 5: 투자 자금 비중">
               <Q>
                 5. 현재 투자하고자 하는 자금은 전체 금융자산(부동산 제외) 중 어느 정도의 비중을
                 차지합니까?
               </Q>
-              <Options>
+              <Options role="list" aria-label="투자 자금 비중 선택지">
                 {Q5.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="투자 자금 비중 선택">
                 {Q5.map((t, i) => {
                   const active = answers.q5 === t;
                   return (
@@ -252,6 +266,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q5', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -260,18 +278,18 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
               </ChipRow>
             </Block>
 
-            <Block>
+            <Block role="group" aria-label="질문 6: 수입원">
               <Q>6. 다음 중 당신의 수입원을 가장 잘 나타내는 것은 무엇입니까?</Q>
-              <Options>
+              <Options role="list" aria-label="수입원 선택지">
                 {Q6.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="수입원 선택">
                 {Q6.map((t, i) => {
                   const active = answers.q6 === t;
                   return (
@@ -280,6 +298,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q6', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -292,18 +314,18 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
 
         {step === 3 && (
           <>
-            <Block>
+            <Block role="group" aria-label="질문 7: 손실 감수 수준">
               <Q>7. 만약 투자원금에 손실이 발생할 경우 감수할 수 있는 손실 수준은?</Q>
-              <Options>
+              <Options role="list" aria-label="손실 감수 수준 선택지">
                 {Q7.map((t, i) => (
-                  <Option key={t}>
+                  <Option key={t} role="listitem">
                     <label>
                       <span className="no">{i + 1}.</span> {t}
                     </label>
                   </Option>
                 ))}
               </Options>
-              <ChipRow>
+              <ChipRow role="radiogroup" aria-label="손실 감수 수준 선택">
                 {Q7.map((t, i) => {
                   const active = answers.q7 === t;
                   return (
@@ -312,6 +334,10 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
                       key={t}
                       data-active={active ? 'true' : 'false'}
                       onClick={() => pick('q7', t)}
+                      aria-label={`${i + 1}번 선택지: ${t} ${active ? '선택됨' : ''}`}
+                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                     >
                       {i + 1}
                     </ChipButton>
@@ -320,7 +346,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
               </ChipRow>
             </Block>
 
-            <DoneNotice>
+            <DoneNotice role="status" aria-live="polite">
               <p>
                 투자성향 진단 테스트가 <b className="done">종료</b>되었습니다.
               </p>
@@ -331,9 +357,15 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
           </>
         )}
       </FormCard>
-      <ConfirmButtonContainer>
+      <ConfirmButtonContainer role="group" aria-label="단계 네비게이션">
         {!isLast ? (
-          <ConfirmButton key="next" type="button" onClick={nextStep} disabled={isButtonDisabled}>
+          <ConfirmButton
+            key="next"
+            type="button"
+            onClick={nextStep}
+            disabled={isButtonDisabled}
+            aria-label="다음 단계로"
+          >
             다음
           </ConfirmButton>
         ) : (
@@ -342,6 +374,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
             type="submit"
             onClick={handleSubmit}
             disabled={isButtonDisabled || isSubmitting}
+            aria-label={isSubmitting ? '제출 중' : '테스트 제출하기'}
           >
             {isSubmitting ? '제출 중...' : '제출하기'}
           </ConfirmButton>
@@ -368,11 +401,13 @@ const TestHeader = ({
   return (
     <HeaderContainer>
       {hasPrevPage && (
-        <LocalBackButton type="button" onClick={onBack}>
-          <ArrowLeftIcon size={24} />
+        <LocalBackButton type="button" onClick={onBack} aria-label="이전 단계로 이동">
+          <ArrowLeftIcon size={24} aria-hidden="true" />
         </LocalBackButton>
       )}
-      <HeaderTitle onClick={onTitleClick}>{title}</HeaderTitle>
+      <HeaderTitle onClick={onTitleClick} role="button" aria-label="홈으로 이동" tabIndex={0}>
+        {title}
+      </HeaderTitle>
     </HeaderContainer>
   );
 };

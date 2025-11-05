@@ -15,9 +15,11 @@ export const Header = ({ title, hasPrevPage, backButtonTo }: HeaderProps) => {
     navigate('/home');
   };
   return (
-    <Container>
+    <Container role="banner">
       {hasPrevPage && <BackButton to={backButtonTo} />}
-      <Title onClick={onTitleClick}>{title}</Title>
+      <Title onClick={onTitleClick} role="button" aria-label="홈으로 이동" tabIndex={0}>
+        {title}
+      </Title>
     </Container>
   );
 };

@@ -108,19 +108,32 @@ export const CharacterCreatePage = ({
   const buttonText = isPending ? '처리 중...' : '완료';
 
   return (
-    <CenteredContainer>
+    <CenteredContainer
+      role="main"
+      aria-label={mode === 'edit' ? '닉네임 변경 페이지' : '캐릭터 생성 페이지'}
+    >
       <Title>{title}</Title>
-      <CharacterImg src={CharacterImage} alt="콩식이" />
+      <CharacterImg src={CharacterImage} alt="콩식이 캐릭터" />
       <NameInput
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={placeholder}
         onValidationChange={handleValidationChange}
       />
-      <ConfirmButtonContainer>
-        <ConfirmButton text={buttonText} onClick={handleConfirm} disabled={isButtonDisabled} />
+      <ConfirmButtonContainer role="group" aria-label="액션 버튼">
+        <ConfirmButton
+          text={buttonText}
+          onClick={handleConfirm}
+          disabled={isButtonDisabled}
+          aria-label={mode === 'edit' ? '닉네임 변경 완료' : '캐릭터 생성 완료'}
+        />
         {mode === 'edit' && (
-          <CancelButton type="button" onClick={handleCancel} disabled={isPending}>
+          <CancelButton
+            type="button"
+            onClick={handleCancel}
+            disabled={isPending}
+            aria-label="닉네임 변경 취소"
+          >
             취소
           </CancelButton>
         )}

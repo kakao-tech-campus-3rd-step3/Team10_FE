@@ -112,14 +112,16 @@ export const CustomizePage = () => {
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
-          <CharacterSectionWrapper>
-            <Character src={previewCharacterSrc} alt="캐릭터" />
+          <CharacterSectionWrapper role="region" aria-label="캐릭터 미리보기">
+            <Character src={previewCharacterSrc} alt="캐릭터 미리보기" />
           </CharacterSectionWrapper>
-          <ShopCard>
+          <ShopCard role="region" aria-label="코스튬 선택">
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
             </ShopHeaderRow>
-            <LoadingMessage>로딩 중...</LoadingMessage>
+            <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+              로딩 중...
+            </LoadingMessage>
           </ShopCard>
         </CustomizePageContainer>
       </Container>
@@ -132,14 +134,16 @@ export const CustomizePage = () => {
         <Header title="꾸미기" hasPrevPage={true} />
         <NavigationBar />
         <CustomizePageContainer>
-          <CharacterSectionWrapper>
-            <Character src={previewCharacterSrc} alt="캐릭터" />
+          <CharacterSectionWrapper role="region" aria-label="캐릭터 미리보기">
+            <Character src={previewCharacterSrc} alt="캐릭터 미리보기" />
           </CharacterSectionWrapper>
-          <ShopCard>
+          <ShopCard role="region" aria-label="코스튬 선택">
             <ShopHeaderRow>
               <ShopTitle>옷 가게</ShopTitle>
             </ShopHeaderRow>
-            <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
+            <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+              데이터를 불러오는데 실패했습니다.
+            </ErrorMessage>
           </ShopCard>
         </CustomizePageContainer>
       </Container>
@@ -151,16 +155,16 @@ export const CustomizePage = () => {
       <Header title="꾸미기" hasPrevPage={true} />
       <NavigationBar />
       <CustomizePageContainer>
-        <CharacterSectionWrapper>
+        <CharacterSectionWrapper role="region" aria-label="캐릭터 미리보기">
           {isImageLoading && (
-            <CharacterPlaceholder>
+            <CharacterPlaceholder role="status" aria-live="polite" aria-label="이미지 로딩 중">
               <LoadingSpinner size="medium" color={theme.colors.primary} message="" />
             </CharacterPlaceholder>
           )}
           <Character
             key={previewCharacterSrc}
             src={previewCharacterSrc}
-            alt="캐릭터"
+            alt="선택된 코스튬을 착용한 캐릭터 미리보기"
             draggable={false}
             style={{ display: isImageLoading ? 'none' : 'block' }}
             onLoad={() => setIsImageLoading(false)}
@@ -170,11 +174,11 @@ export const CustomizePage = () => {
             }}
           />
         </CharacterSectionWrapper>
-        <ShopCard>
+        <ShopCard role="region" aria-label="코스튬 선택">
           <ShopHeaderRow>
             <ShopTitle>옷 가게</ShopTitle>
           </ShopHeaderRow>
-          <CostumeGrid>
+          <CostumeGrid role="list" aria-label="코스튬 목록">
             {costumeList.map((item) => {
               const isActive = item.id === selectedId;
               return (
@@ -189,7 +193,11 @@ export const CustomizePage = () => {
             })}
           </CostumeGrid>
           <ConfirmButtonContainer>
-            <ConfirmButton type="button" onClick={handleWearCostume}>
+            <ConfirmButton
+              type="button"
+              aria-label="선택한 코스튬 착용하기"
+              onClick={handleWearCostume}
+            >
               착용하기
             </ConfirmButton>
           </ConfirmButtonContainer>

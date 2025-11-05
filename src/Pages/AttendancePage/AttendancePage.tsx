@@ -23,11 +23,19 @@ export const AttendancePage: React.FC = () => {
 
   // 예외 처리
   if (isLoading) {
-    return <PageContainer>데이터를 불러오는 중입니다...</PageContainer>;
+    return (
+      <PageContainer role="status" aria-live="polite" aria-label="로딩 중">
+        데이터를 불러오는 중입니다...
+      </PageContainer>
+    );
   }
 
   if (isError || !attendanceData) {
-    return <PageContainer>오류가 발생했습니다. 잠시 후 다시 시도해주세요.</PageContainer>;
+    return (
+      <PageContainer role="alert" aria-live="assertive" aria-label="오류 메시지">
+        오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+      </PageContainer>
+    );
   }
 
   const solvedCount = attendanceData.todayCount;
@@ -49,32 +57,41 @@ export const AttendancePage: React.FC = () => {
 
   return (
     <Container $scrollable $hasBottomNav={false}>
-      <PageContainer>
+      <PageContainer role="main" aria-label="출석 체크 페이지">
         <Header>출석 체크</Header>
 
-        <InfoBox>
+        <InfoBox role="group" aria-label="누적 출석 정보">
           <InfoLabel>누적 출석 횟수</InfoLabel>
-          <StreakValue>{consecutiveDays}일</StreakValue>
+          <StreakValue aria-label={`누적 출석 ${consecutiveDays}일`}>
+            {consecutiveDays}일
+          </StreakValue>
         </InfoBox>
 
-        <InfoBox>
+        <InfoBox role="group" aria-label="오늘 푼 문제 수">
           <InfoLabel>오늘 푼 문제 수</InfoLabel>
-          <ProgressContainer>
+          <ProgressContainer
+            role="list"
+            aria-label={`오늘 푼 문제 ${clampedSolvedCount}개 중 ${totalProblems}개`}
+          >
             {Array.from({ length: totalProblems }).map((_, index) =>
               index < clampedSolvedCount ? (
-                <CheckedBox key={index}>
+                <CheckedBox key={index} role="listitem" aria-label={`문제 ${index + 1} 완료`}>
                   <CheckIcon />
                 </CheckedBox>
               ) : (
-                <EmptyBox key={index} />
+                <EmptyBox key={index} role="listitem" aria-label={`문제 ${index + 1} 미완료`} />
               ),
             )}
           </ProgressContainer>
         </InfoBox>
 
-        <StatusMessage>{renderStatusMessage()}</StatusMessage>
+        <StatusMessage role="status" aria-live="polite">
+          {renderStatusMessage()}
+        </StatusMessage>
 
-        <HomeButton onClick={goToHome}>홈으로</HomeButton>
+        <HomeButton onClick={goToHome} aria-label="홈으로 이동">
+          홈으로
+        </HomeButton>
       </PageContainer>
     </Container>
   );

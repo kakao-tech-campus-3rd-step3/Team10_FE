@@ -5,8 +5,8 @@ import { Container } from '@/Shared/components/Container';
 
 export const LoginPage = () => {
   return (
-    <CenteredContainer>
-      <Logo src={LogoFace} alt="앱 로고" />
+    <CenteredContainer role="main" aria-label="로그인 페이지">
+      <Logo src={LogoFace} alt="이게 머니 앱 로고" />
       <Slogan>쉽고 정확하게, 나만의 경제 교과서</Slogan>
       <AppName>이게 머니</AppName>
       <KakaoLoginButton />

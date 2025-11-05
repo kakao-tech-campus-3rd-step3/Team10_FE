@@ -8,13 +8,16 @@ export const NavigationBar = () => {
   const location = useLocation();
 
   return (
-    <NavWrapper>
+    <NavWrapper role="navigation" aria-label="메인 네비게이션">
       {NAV_ITEMS.map((item) => (
         <NavItem
           key={item.path}
           active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
           $isLongText={item.name === '마이 페이지'}
+          role="button"
+          aria-label={`${item.name} 페이지로 이동`}
+          aria-current={location.pathname === item.path ? 'page' : undefined}
         >
           {item.name}
         </NavItem>

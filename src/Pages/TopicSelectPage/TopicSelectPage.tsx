@@ -31,7 +31,9 @@ export const TopicSelectPage = () => {
       <Container>
         <Header hasPrevPage={true} title="" />
         <QuizListContainer>
-          <QuizListTitle>에러가 발생했습니다</QuizListTitle>
+          <QuizListTitle role="alert" aria-live="assertive">
+            에러가 발생했습니다
+          </QuizListTitle>
         </QuizListContainer>
       </Container>
     );
@@ -40,10 +42,10 @@ export const TopicSelectPage = () => {
   return (
     <Container>
       <Header hasPrevPage={true} title="" />
-      <QuizListContainer>
-        <QuizListImage src={QuizListImg} />
+      <QuizListContainer role="main" aria-label="퀴즈 토픽 선택 페이지">
+        <QuizListImage src={QuizListImg} alt="퀴즈 목록 아이콘" />
         <QuizListTitle>분야를 선택 해주세요</QuizListTitle>
-        <QuizListButtonSection>
+        <QuizListButtonSection role="list" aria-label="토픽 목록">
           {quizListData?.topics?.map((topic) => (
             <TopicButton
               key={topic.topicId}

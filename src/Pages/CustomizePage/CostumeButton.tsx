@@ -12,11 +12,19 @@ export const CostumeButton = ({ id, img, active = false, onSelect }: CostumeButt
   const isDefault = id === 0;
 
   return (
-    <Container type="button" data-active={active ? 'true' : 'false'} onClick={() => onSelect(id)}>
+    <Container
+      type="button"
+      data-active={active ? 'true' : 'false'}
+      onClick={() => onSelect(id)}
+      aria-label={`코스튬 ${id}번 ${active ? '선택됨' : '선택하기'}`}
+      aria-pressed={active}
+      role="option"
+      aria-selected={active}
+    >
       {isDefault ? (
         <DefaultText>기본 의상</DefaultText>
       ) : (
-        <Thumb src={img} alt={`${id}번 이미지`} draggable={false} />
+        <Thumb src={img} alt="" aria-hidden="true" draggable={false} />
       )}
     </Container>
   );

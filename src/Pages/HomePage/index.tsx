@@ -68,7 +68,9 @@ export const HomePage = () => {
         <NavigationBar />
         <StatusActionBar />
         <HomePageContainer>
-          <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+          <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+            홈 데이터를 불러오는 중...
+          </LoadingMessage>
         </HomePageContainer>
       </Container>
     );
@@ -81,7 +83,9 @@ export const HomePage = () => {
         <NavigationBar />
         <StatusActionBar />
         <HomePageContainer>
-          <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+          <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+            홈 데이터를 불러오는데 실패했습니다.
+          </ErrorMessage>
         </HomePageContainer>
       </Container>
     );
@@ -107,44 +111,54 @@ export const HomePage = () => {
       <NavigationBar />
       <StatusActionBar />
       <HomePageContainer>
-        <CharacterSectionWrapper>
+        <CharacterSectionWrapper role="region" aria-label="캐릭터 섹션">
           <Character
             key={characterSrc}
             src={characterSrc}
-            alt="캐릭터"
+            alt="사용자 캐릭터"
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
             }}
           />
         </CharacterSectionWrapper>
-        <BottomSectionWrapper>
-          <NicknameBox>
-            <Nickname>{nickname}</Nickname>
-            <NicknameChangeButton type="button" onClick={() => navigate('/nickname-edit')}>
+        <BottomSectionWrapper role="region" aria-label="사용자 정보 및 메뉴">
+          <NicknameBox role="group" aria-label="닉네임 정보">
+            <Nickname aria-label={`닉네임: ${nickname}`}>{nickname}</Nickname>
+            <NicknameChangeButton
+              type="button"
+              aria-label="닉네임 변경하기"
+              onClick={() => navigate('/nickname-edit')}
+            >
               닉네임 변경하기
             </NicknameChangeButton>
           </NicknameBox>
-          <InvestmentTypeBox>
+          <InvestmentTypeBox role="region" aria-label="투자 성향 정보">
             {isTested ? (
               <>
-                <InvestmentText>{testResult}</InvestmentText>
-                <RetestButton type="button" onClick={goToTestPage}>
+                <InvestmentText aria-label={`투자 성향: ${testResult}`}>
+                  {testResult}
+                </InvestmentText>
+                <RetestButton
+                  type="button"
+                  aria-label="투자 성향 테스트 다시하기"
+                  onClick={goToTestPage}
+                >
                   다시 테스트 하기
                 </RetestButton>
               </>
             ) : (
-              <TestButton type="button" onClick={goToTestPage}>
+              <TestButton type="button" aria-label="투자 성향 테스트하기" onClick={goToTestPage}>
                 {propensityText}
               </TestButton>
             )}
           </InvestmentTypeBox>
-          <TwoButtonsWrapper>
-            <QuizButton onClick={handleInvestmentTest}>
-              <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
+          <TwoButtonsWrapper role="group" aria-label="주요 메뉴">
+            <QuizButton onClick={handleInvestmentTest} aria-label="퀴즈 풀기">
+              <IconImg src={QuizIcon} alt="" aria-hidden="true" />
               <ButtonText>퀴즈 풀기</ButtonText>
             </QuizButton>
-            <FinanceButton onClick={goToContentsPage}>
-              <IconImg src={NewsIcon} alt="뉴스 아이콘" />
+            <FinanceButton onClick={goToContentsPage} aria-label="금융 콘텐츠 보기">
+              <IconImg src={NewsIcon} alt="" aria-hidden="true" />
               <ButtonText>금융 콘텐츠</ButtonText>
             </FinanceButton>
           </TwoButtonsWrapper>

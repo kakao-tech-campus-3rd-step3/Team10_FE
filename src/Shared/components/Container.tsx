@@ -6,7 +6,7 @@ type ContainerProps = {
   $scrollable?: boolean;
   $hasBottomNav?: boolean; // 하단 네비게이션 바가 있는지 여부
   children?: ReactNode;
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export const Container = ({
   $scrollable,

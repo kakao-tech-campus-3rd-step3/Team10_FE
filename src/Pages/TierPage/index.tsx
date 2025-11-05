@@ -34,7 +34,9 @@ export const TierPage = () => {
       <Container $scrollable={true} $hasBottomNav={false}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
-          <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
+          <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+            데이터를 불러오는 중...
+          </LoadingMessage>
         </ContentWrapper>
       </Container>
     );
@@ -45,7 +47,9 @@ export const TierPage = () => {
       <Container $scrollable={true} $hasBottomNav={false}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
-          <ErrorMessage>티어 정보를 불러올 수 없습니다.</ErrorMessage>
+          <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+            티어 정보를 불러올 수 없습니다.
+          </ErrorMessage>
         </ContentWrapper>
       </Container>
     );
@@ -55,11 +59,15 @@ export const TierPage = () => {
     <Container $scrollable={true} $hasBottomNav={false}>
       <Header title="티어 페이지" hasPrevPage={true} />
       <ContentWrapper>
-        <TierCard>
-          <TierList>
+        <TierCard role="region" aria-label="티어 정보">
+          <TierList role="list" aria-label="티어 목록">
             {TIERS.map((t: Tier) => (
-              <TierRow key={t.grade}>
-                <IconImg src={t.icon} alt={`${t.label} 아이콘`} />
+              <TierRow
+                key={t.grade}
+                role="listitem"
+                aria-label={`${t.label} 티어: ${t.max ? `${t.min}점 ~ ${t.max}점` : `${t.min}점 이상`}`}
+              >
+                <IconImg src={t.icon} alt={`${t.label} 티어 아이콘`} />
                 <TierTexts>
                   <TierName>{t.label}</TierName>
                   <TierRange>{t.max ? `${t.min}점 ~ ${t.max}점` : `${t.min}점 이상`}</TierRange>
@@ -67,9 +75,9 @@ export const TierPage = () => {
               </TierRow>
             ))}
           </TierList>
-          <TierSummary>
+          <TierSummary role="region" aria-label="현재 사용자 티어 정보">
             <SummaryContent>
-              <img src={currentTier.icon} alt="현재 티어 아이콘" width="100" />
+              <img src={currentTier.icon} alt={`${currentTier.label} 티어 아이콘`} width="100" />
               <SummaryText>
                 <b>{displayName}</b>님은 현재
                 <br />
@@ -77,9 +85,11 @@ export const TierPage = () => {
               </SummaryText>
             </SummaryContent>
             <ScoreArea>
-              <ScoreBlock>
+              <ScoreBlock role="group" aria-label="점수 정보">
                 <ScoreLabel>현재 점수</ScoreLabel>
-                <ScoreValue>{userTier.userRatingPoint.toLocaleString()}</ScoreValue>
+                <ScoreValue aria-label={`${userTier.userRatingPoint.toLocaleString()}점`}>
+                  {userTier.userRatingPoint.toLocaleString()}
+                </ScoreValue>
               </ScoreBlock>
               <CharacterImg src={CharacterMain} alt="캐릭터 이미지" />
             </ScoreArea>

@@ -108,7 +108,9 @@ export const QuizSolvePage = () => {
   if (isLoading) {
     return (
       <Container $hasBottomNav={false}>
-        <LoadingMessage>퀴즈를 불러오는 중...</LoadingMessage>
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          퀴즈를 불러오는 중...
+        </LoadingMessage>
       </Container>
     );
   }
@@ -116,7 +118,9 @@ export const QuizSolvePage = () => {
   if (error || !quizData) {
     return (
       <Container $hasBottomNav={false}>
-        <ErrorMessage>퀴즈를 불러오는데 실패했습니다.</ErrorMessage>
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          퀴즈를 불러오는데 실패했습니다.
+        </ErrorMessage>
       </Container>
     );
   }
@@ -180,7 +184,12 @@ export const QuizSolvePage = () => {
         onBookmarkChange={handleBookmarkChange}
       />
       {renderQuestionContent()}
-      <ConfirmButtonContainer onClick={handleConfirm}>
+      <ConfirmButtonContainer
+        onClick={handleConfirm}
+        role="button"
+        aria-label="답안 제출하기"
+        tabIndex={0}
+      >
         <QuizConfirmButton
           text={submitQuizMutation.isPending ? '제출 중...' : '제출하기'}
           disabled={submitQuizMutation.isPending}

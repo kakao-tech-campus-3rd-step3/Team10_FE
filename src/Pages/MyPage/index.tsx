@@ -45,7 +45,9 @@ export const MyPage = () => {
         <Header title="마이 페이지" hasPrevPage={true} />
         <NavigationBar />
         <StatusActionBar />
-        <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          데이터를 불러오는 중...
+        </LoadingMessage>
       </Container>
     );
   }
@@ -56,7 +58,9 @@ export const MyPage = () => {
         <Header title="마이 페이지" hasPrevPage={true} />
         <NavigationBar />
         <StatusActionBar />
-        <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          데이터를 불러오는데 실패했습니다.
+        </ErrorMessage>
       </Container>
     );
   }
@@ -71,26 +75,30 @@ export const MyPage = () => {
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
-      <CharacterAndNicknameWrapper>
+      <CharacterAndNicknameWrapper role="region" aria-label="사용자 정보">
         <Character
           key={characterSrc}
           src={characterSrc}
-          alt="캐릭터"
+          alt="사용자 캐릭터"
           onError={(e) => {
             e.currentTarget.src = CharacterMain;
           }}
         />
-        <NicknameBox>
-          <Nickname>{myPageData?.nickname}</Nickname>
+        <NicknameBox role="group" aria-label="닉네임">
+          <Nickname aria-label={`닉네임: ${myPageData?.nickname}`}>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
-      <ResultWrapper>
+      <ResultWrapper role="region" aria-label="투자 성향 결과">
         <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
         <ResultDescription>{resultDescription}</ResultDescription>
       </ResultWrapper>
-      <ButtonWrapper>
-        <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
-        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      <ButtonWrapper role="group" aria-label="액션 버튼">
+        <ShareButton onClick={handleShareClick} aria-label="투자 성향 결과 공유하기">
+          공유하기
+        </ShareButton>
+        <LogoutButton onClick={handleLogout} aria-label="로그아웃">
+          로그아웃
+        </LogoutButton>
       </ButtonWrapper>
     </Container>
   );
