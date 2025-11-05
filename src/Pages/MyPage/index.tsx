@@ -39,7 +39,7 @@ export const MyPage = () => {
     : undefined;
 
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />

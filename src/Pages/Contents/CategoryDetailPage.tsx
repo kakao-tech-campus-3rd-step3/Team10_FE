@@ -45,7 +45,6 @@ export const CategoryDetailPage = () => {
         <ActionButtonContainer>
           <ActionButton onClick={() => navigate('/contents')}>목록으로 돌아가기</ActionButton>
         </ActionButtonContainer>
-        <BottomSpacer />
       </DetailPageContainer>
     </Container>
   );
@@ -136,12 +135,6 @@ const ActionButtonContainer = styled.div`
   background-color: #f8f9fa;
   display: flex;
   justify-content: center;
-`;
-
-const BottomSpacer = styled.div`
-  width: 100%;
-  height: ${theme.spacing(15)};
-  flex-shrink: 0;
 `;
 
 const ActionButton = styled.button`

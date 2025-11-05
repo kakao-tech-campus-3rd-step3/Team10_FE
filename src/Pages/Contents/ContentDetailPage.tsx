@@ -55,7 +55,6 @@ export const ContentDetailPage = () => {
             </ExternalLinkButton>
           )}
         </ActionButtonContainer>
-        <BottomSpacer />
       </DetailPageContainer>
     </Container>
   );
@@ -117,12 +116,6 @@ const ActionButtonContainer = styled.div`
   justify-content: center;
   gap: ${theme.spacing(3)};
   flex-wrap: wrap;
-`;
-
-const BottomSpacer = styled.div`
-  width: 100%;
-  height: ${theme.spacing(15)};
-  flex-shrink: 0;
 `;
 
 const ActionButton = styled.button`
