@@ -23,7 +23,9 @@ export const ChracterBox = ({
   return (
     <Container $rank={$rank}>
       <RankIcon $rank={$rank} src={rankIconMap[$rank]} alt={`${$rank} rank`} />
-      <ImageContainer $rank={$rank} src={kongSkinUrl} alt="kong skin" />
+      <ImageWrapper $rank={$rank}>
+        <ImageContainer $rank={$rank} src={kongSkinUrl} alt="kong skin" />
+      </ImageWrapper>
       <InfoContainer $rank={$rank}>
         <Name $rank={$rank}>{name}</Name>
         <Score $rank={$rank}>{score}</Score>
@@ -44,7 +46,7 @@ const Container = styled.div<{ $rank: number }>`
   flex: 1;
   min-width: 0;
 `;
-const ImageContainer = styled.img<{ $rank: number }>`
+const ImageWrapper = styled.div<{ $rank: number }>`
   width: ${({ $rank }) => ($rank === 1 ? '28vw' : '24vw')};
   max-width: ${({ $rank }) => ($rank === 1 ? '180px' : '160px')};
   min-width: ${({ $rank }) => ($rank === 1 ? '92px' : '80px')};
@@ -54,6 +56,16 @@ const ImageContainer = styled.img<{ $rank: number }>`
   background-color: ${({ $rank }) =>
     $rank === 1 ? '#AABCEC' : $rank === 2 ? '#B4B6BC' : '#FEBAC7'};
   border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  position: relative;
+`;
+
+const ImageContainer = styled.img<{ $rank: number }>`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: scale(1.5) translateY(16px);
 `;
 const InfoContainer = styled.div<{ $rank: number }>`
   width: ${({ $rank }) => ($rank === 1 ? '28vw' : '24vw')};
