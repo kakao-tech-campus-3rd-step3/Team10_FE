@@ -5,25 +5,10 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import type { QuizListResponse } from '@/Pages/QuizPage/types';
-type FilterType = 'ALL' | 'UNSOLVED' | 'SOLVED';
 
-const getEmptyMessage = (filterType: FilterType, hasQuizzes: boolean): string => {
-  if (!hasQuizzes) {
-    return '아직 퀴즈가 없습니다.';
-  }
-
-  switch (filterType) {
-    case 'SOLVED':
-      return '푼 문제가 없습니다.';
-    case 'UNSOLVED':
-      return '안 푼 문제가 없습니다.';
-    case 'ALL':
-    default:
-      return '아직 퀴즈가 없습니다.';
-  }
-};
+const PAGE_SIZE = 10;
 
 export const QuizListPage = () => {
   const navigate = useNavigate();
@@ -31,28 +16,20 @@ export const QuizListPage = () => {
   const location = useLocation();
 
   const topicName = location.state?.topicName;
-  const [filterType, setFilterType] = useState<FilterType>('ALL');
+  const totalQuizCount = location.state?.totalQuizCount || 0;
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data: quizListData,
     error,
     isLoading,
-  } = useQueryApi<QuizListResponse>(['topics', topicId || ''], `/topics/${topicId || ''}`);
+  } = useQueryApi<QuizListResponse>(
+    ['topics', topicId || '', currentPage],
+    `/topics/${topicId || ''}?page=${currentPage}&size=${PAGE_SIZE}`,
+  );
 
-  const filteredQuizzes = useMemo(() => {
-    const allQuizzes = quizListData?.quizzes || [];
-    switch (filterType) {
-      case 'SOLVED':
-        return allQuizzes.filter((quiz) => quiz.isSolved);
-      case 'UNSOLVED':
-        return allQuizzes.filter((quiz) => !quiz.isSolved);
-      case 'ALL':
-      default:
-        return allQuizzes;
-    }
-  }, [quizListData?.quizzes, filterType]);
-
-  const allQuizzes = quizListData?.quizzes || [];
+  const quizzes = quizListData?.quizzes || [];
+  const totalPages = Math.ceil(totalQuizCount / PAGE_SIZE);
 
   const handleQuizClick = (quizId: number) => {
     navigate(`/topics/${topicId}/quizzes/${quizId}`);
@@ -80,30 +57,51 @@ export const QuizListPage = () => {
     );
   }
 
+  const hasPrevPage = currentPage > 0;
+  const hasNextPage = currentPage < totalPages - 1;
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const getPageNumbers = () => {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    const blockStart = Math.floor(currentPage / maxVisiblePages) * maxVisiblePages;
+    let startPage = blockStart;
+    let endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
   return (
     <Container $hasBottomNav={false}>
       <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} backButtonTo={'/topics'} />
       <QuizListContainer>
         <QuizListTitle>{topicName} 퀴즈</QuizListTitle>
-        <QuizListDescription>총 {allQuizzes.length}개의 퀴즈가 있습니다.</QuizListDescription>
-
-        <FilterButtonContainer>
-          <FilterButton isActive={filterType === 'ALL'} onClick={() => setFilterType('ALL')}>
-            전체
-          </FilterButton>
-          <FilterButton
-            isActive={filterType === 'UNSOLVED'}
-            onClick={() => setFilterType('UNSOLVED')}
-          >
-            안 푼 문제
-          </FilterButton>
-          <FilterButton isActive={filterType === 'SOLVED'} onClick={() => setFilterType('SOLVED')}>
-            푼 문제
-          </FilterButton>
-        </FilterButtonContainer>
+        <QuizListDescription>총 {totalQuizCount}개의 문제가 있습니다.</QuizListDescription>
 
         <QuizList>
-          {filteredQuizzes.map((quiz) => (
+          {quizzes.map((quiz) => (
             <QuizItem
               key={quiz.quizId}
               onClick={() => handleQuizClick(quiz.quizId)}
@@ -131,8 +129,29 @@ export const QuizListPage = () => {
             </QuizItem>
           ))}
         </QuizList>
-        {(filteredQuizzes.length === 0 || allQuizzes.length === 0) && (
-          <EmptyMessage>{getEmptyMessage(filterType, allQuizzes.length > 0)}</EmptyMessage>
+
+        {quizzes.length === 0 && <EmptyMessage>아직 퀴즈가 없습니다.</EmptyMessage>}
+
+        {totalPages > 0 && (
+          <PaginationContainer>
+            <PaginationButton onClick={handlePrevPage} disabled={!hasPrevPage}>
+              이전
+            </PaginationButton>
+            <PageNumberContainer>
+              {getPageNumbers().map((page) => (
+                <PageNumberButton
+                  key={page}
+                  onClick={() => handlePageClick(page)}
+                  $isActive={page === currentPage}
+                >
+                  {page + 1}
+                </PageNumberButton>
+              ))}
+            </PageNumberContainer>
+            <PaginationButton onClick={handleNextPage} disabled={!hasNextPage}>
+              다음
+            </PaginationButton>
+          </PaginationContainer>
         )}
       </QuizListContainer>
     </Container>
@@ -163,35 +182,6 @@ const QuizListDescription = styled.p`
   margin: 0 0 20px 0;
 `;
 
-const FilterButtonContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  justify-content: center;
-`;
-
-const FilterButton = styled.button<{ isActive: boolean }>`
-  padding: 8px 16px;
-  border: 1px solid ${(props) => (props.isActive ? theme.colors.primary : '#e0e0e0')};
-  border-radius: 20px;
-  background: ${(props) => (props.isActive ? theme.colors.primary : '#ffffff')};
-  color: ${(props) => (props.isActive ? '#ffffff' : '#666666')};
-  font-size: 12px;
-  font-family: ${theme.font.regular.fontFamily};
-  font-weight: ${theme.font.regular.fontWeight};
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: ${theme.colors.primary};
-    background: ${(props) => (props.isActive ? theme.colors.primary : '#f8f9fa')};
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-`;
-
 const QuizList = styled.div`
   display: flex;
   flex-direction: column;
@@ -213,6 +203,7 @@ const QuizItem = styled.div<{ isSolved: boolean }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   &:hover {
     background: #f8f9fa;
     border-color: ${theme.colors.primary};
@@ -312,11 +303,73 @@ const BadgeContainer = styled.div`
 const QuizItemContainer = styled.div<{ isSolved: boolean }>`
   display: flex;
   flex-direction: column;
-  opacity: ${(props) => (props.isSolved ? 0.5 : 1)};
+  opacity: ${(props) => (props.isSolved ? 0.3 : 1)};
 `;
 const BookmarkIconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: -16px;
+`;
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  padding: 20px 0;
+`;
+
+const PaginationButton = styled.button<{ disabled?: boolean }>`
+  padding: 8px 16px;
+  border: 1px solid ${(props) => (props.disabled ? '#e0e0e0' : theme.colors.primary)};
+  border-radius: 8px;
+  background: ${(props) => (props.disabled ? '#f5f5f5' : '#ffffff')};
+  color: ${(props) => (props.disabled ? '#999999' : theme.colors.primary)};
+  font-size: 12px;
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: ${theme.colors.primary};
+    color: #ffffff;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+`;
+
+const PageNumberContainer = styled.div`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+`;
+
+const PageNumberButton = styled.button<{ $isActive: boolean }>`
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid ${(props) => (props.$isActive ? theme.colors.primary : '#e0e0e0')};
+  border-radius: 8px;
+  background: ${(props) => (props.$isActive ? theme.colors.primary : '#ffffff')};
+  color: ${(props) => (props.$isActive ? '#ffffff' : '#666666')};
+  font-size: 14px;
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${(props) =>
+    props.$isActive ? theme.font.bold.fontWeight : theme.font.regular.fontWeight};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${theme.colors.primary};
+    background: ${(props) => (props.$isActive ? theme.colors.primary : '#f8f9fa')};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;

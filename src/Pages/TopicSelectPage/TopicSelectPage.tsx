@@ -20,8 +20,10 @@ interface TopicResponse {
 
 export const TopicSelectPage = () => {
   const navigate = useNavigate();
-  const handleTopicButtonClick = (topicId: number, topicName: string) => {
-    navigate(`/topics/${topicId}/quizzes`, { state: { topicName } });
+  const handleTopicButtonClick = (topicId: number, topicName: string, totalQuizCount: number) => {
+    navigate(`/topics/${topicId}/quizzes`, {
+      state: { topicName, totalQuizCount },
+    });
   };
 
   const { data: quizListData, error } = useQueryApi<TopicResponse>(['topics'], '/topics');
@@ -53,7 +55,9 @@ export const TopicSelectPage = () => {
               solvedQuizCount={topic.solvedQuizCount}
               totalQuizCount={topic.totalQuizCount}
               isAble={true}
-              onClick={() => handleTopicButtonClick(topic.topicId, topic.topicName)}
+              onClick={() =>
+                handleTopicButtonClick(topic.topicId, topic.topicName, topic.totalQuizCount)
+              }
             />
           ))}
         </QuizListButtonSection>
