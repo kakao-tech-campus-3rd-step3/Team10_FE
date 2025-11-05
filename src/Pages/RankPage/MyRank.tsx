@@ -28,16 +28,6 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
       ) : (
         <Spacer />
       )}
-      {data.above2 && (
-        <OtherRankBox>
-          <OtherInfoScript>{data.above2.rank}등</OtherInfoScript>
-          <OtherInfoScript>{data.above2.nickname}</OtherInfoScript>
-          <OtherInfoScript>
-            {data.above2.point}
-            {isScoreRank ? '점' : '일'}
-          </OtherInfoScript>
-        </OtherRankBox>
-      )}
       {data.above1 && (
         <OtherRankBox>
           <OtherInfoScript>{data.above1.rank}등</OtherInfoScript>
@@ -48,6 +38,17 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
           </OtherInfoScript>
         </OtherRankBox>
       )}
+      {data.above2 && (
+        <OtherRankBox>
+          <OtherInfoScript>{data.above2.rank}등</OtherInfoScript>
+          <OtherInfoScript>{data.above2.nickname}</OtherInfoScript>
+          <OtherInfoScript>
+            {data.above2.point}
+            {isScoreRank ? '점' : '일'}
+          </OtherInfoScript>
+        </OtherRankBox>
+      )}
+
       <MyRankBox>
         <MyInfoScript>{data.myRank}등</MyInfoScript>
         <MyInfoScript>{data.myName}</MyInfoScript>

@@ -71,7 +71,6 @@ export const RankPage = () => {
           currentUser={rankingData.currentUser}
           aboveUsers={rankingData.aboveUsers}
           belowUsers={rankingData.belowUsers}
-          topRankingUsers={rankingData.topRankingUsers}
         />
       </RankPageContainer>
     </Container>
