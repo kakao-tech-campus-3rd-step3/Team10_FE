@@ -14,6 +14,7 @@ export const NavigationBar = () => {
           key={item.path}
           active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
+          $isLongText={item.name === '마이 페이지'}
         >
           {item.name}
         </NavItem>
@@ -25,15 +26,27 @@ export const NavigationBar = () => {
 export default NavigationBar;
 
 const NavWrapper = styled.nav`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: ${theme.spacing(15)};
+  max-width: 720px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-bottom: 1px solid ${theme.colors.line};
+  border-top: 1px solid ${theme.colors.line};
   background-color: ${theme.colors.background};
+  z-index: 1000;
 `;
 
-const NavItem = styled.div<{ active?: boolean }>`
+const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   padding: ${theme.spacing(3)} 0;
   font-family: ${theme.font.bold.fontFamily};
@@ -44,12 +57,25 @@ const NavItem = styled.div<{ active?: boolean }>`
   position: relative;
   word-break: keep-all;
   white-space: normal;
+  min-height: 100%;
+  line-height: 1.3;
+
+  ${(props) =>
+    props.$isLongText &&
+    `
+    @media (max-width: 400px) {
+      font-size: 15px;
+    }
+    @media (max-width: 360px) {
+      font-size: 14px;
+    }
+  `}
 
   &::after {
     content: '';
     display: ${(props) => (props.active ? 'block' : 'none')};
     position: absolute;
-    bottom: -2px;
+    top: 0;
     left: 15%;
     width: 70%;
     height: 2px;
