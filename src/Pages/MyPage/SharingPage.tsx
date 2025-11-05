@@ -36,7 +36,7 @@ export const SharingPage = () => {
 
   return (
     <Container>
-      <Header title="공유하기" hasPrevPage={true} />
+      <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
       <Spacing />
       <CaptureSession ref={captureRef}>
         <CharacterAndNicknameWrapper>

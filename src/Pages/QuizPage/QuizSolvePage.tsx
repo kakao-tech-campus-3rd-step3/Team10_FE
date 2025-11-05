@@ -125,6 +125,9 @@ export const QuizSolvePage = () => {
     quizData;
   const headerTitle = isReview ? '복습 퀴즈' : topicName;
 
+  // 백버튼 경로 설정: 일반 모드일 때는 해당 토픽의 퀴즈 목록으로, 복습 모드일 때는 홈으로
+  const backButtonPath = isReview ? '/home' : topicId ? `/topics/${topicId}/quizzes` : '/topics';
+
   const renderQuestionContent = () => {
     switch (questionType) {
       case 'OX':
@@ -166,7 +169,7 @@ export const QuizSolvePage = () => {
 
   return (
     <Container $scrollable>
-      <Header title={headerTitle} hasPrevPage={true} backButtonTo={-1} />
+      <Header title={headerTitle} hasPrevPage={true} backButtonTo={backButtonPath} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
