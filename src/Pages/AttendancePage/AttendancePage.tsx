@@ -16,7 +16,9 @@ export const AttendancePage: React.FC = () => {
     data: attendanceData,
     isLoading,
     isError,
-  } = useQueryApi<AttendanceStatusResponse>(['attendanceStatus'], '/attendance/status');
+  } = useQueryApi<AttendanceStatusResponse>(['attendanceStatus'], '/attendance/status', {
+    refetchOnMount: true,
+  });
 
   // 예외 처리
   if (isLoading) {

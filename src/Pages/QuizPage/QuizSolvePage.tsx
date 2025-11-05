@@ -71,6 +71,8 @@ export const QuizSolvePage = () => {
       }
       // 복습 퀴즈 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
+      // 출석체크 상태 캐시 무효화 (퀴즈를 풀면 출석체크가 업데이트되므로)
+      queryClient.invalidateQueries({ queryKey: ['attendanceStatus'] });
 
       // 복습 모드일 때와 일반 모드일 때 결과 페이지 경로가 다름
       const resultPath = isReview
@@ -164,7 +166,7 @@ export const QuizSolvePage = () => {
 
   return (
     <Container $scrollable>
-      <Header title={headerTitle} hasPrevPage={true} backButtonTo={'-1'} />
+      <Header title={headerTitle} hasPrevPage={true} backButtonTo={-1} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}

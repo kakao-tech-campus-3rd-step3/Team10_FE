@@ -27,7 +27,7 @@ export const MyRankSection = ({
       ...availableUsers.filter((user) => user.rank < currentUser.rank),
     ];
     const unique = Array.from(new Map(combined.map((user) => [user.nickname, user])).values());
-    return unique.sort((a, b) => b.point - a.point).slice(0, 2);
+    return unique.sort((a, b) => a.rank - b.rank).slice(0, 2);
   }, [aboveUsers, availableUsers, currentUser.rank]);
 
   const allBelowUsers = useMemo(() => {
