@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import CheckImage from '@/assets/AttendImg/check.webp';
+import { Container } from '@/Shared/components/Container';
 
 interface AttendanceStatusResponse {
   todayCount: number;
@@ -47,33 +48,35 @@ export const AttendancePage: React.FC = () => {
   };
 
   return (
-    <PageContainer>
-      <Header>출석 체크</Header>
+    <Container $scrollable $hasBottomNav={false}>
+      <PageContainer>
+        <Header>출석 체크</Header>
 
-      <InfoBox>
-        <InfoLabel>누적 출석 횟수</InfoLabel>
-        <StreakValue>{consecutiveDays}일</StreakValue>
-      </InfoBox>
+        <InfoBox>
+          <InfoLabel>누적 출석 횟수</InfoLabel>
+          <StreakValue>{consecutiveDays}일</StreakValue>
+        </InfoBox>
 
-      <InfoBox>
-        <InfoLabel>오늘 푼 문제 수</InfoLabel>
-        <ProgressContainer>
-          {Array.from({ length: totalProblems }).map((_, index) =>
-            index < clampedSolvedCount ? (
-              <CheckedBox key={index}>
-                <CheckIcon />
-              </CheckedBox>
-            ) : (
-              <EmptyBox key={index} />
-            ),
-          )}
-        </ProgressContainer>
-      </InfoBox>
+        <InfoBox>
+          <InfoLabel>오늘 푼 문제 수</InfoLabel>
+          <ProgressContainer>
+            {Array.from({ length: totalProblems }).map((_, index) =>
+              index < clampedSolvedCount ? (
+                <CheckedBox key={index}>
+                  <CheckIcon />
+                </CheckedBox>
+              ) : (
+                <EmptyBox key={index} />
+              ),
+            )}
+          </ProgressContainer>
+        </InfoBox>
 
-      <StatusMessage>{renderStatusMessage()}</StatusMessage>
+        <StatusMessage>{renderStatusMessage()}</StatusMessage>
 
-      <HomeButton onClick={goToHome}>홈으로</HomeButton>
-    </PageContainer>
+        <HomeButton onClick={goToHome}>홈으로</HomeButton>
+      </PageContainer>
+    </Container>
   );
 };
 
@@ -81,9 +84,9 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 90%;
   padding: 40px 20px;
-  max-width: 400px;
-  margin: 0 auto;
+  margin: 50px auto;
   background-color: ${theme.colors.background};
   font-family: ${theme.font.bold.fontFamily};
   border: 1px solid #e0e0e0;
