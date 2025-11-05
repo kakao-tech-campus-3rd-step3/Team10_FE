@@ -120,6 +120,9 @@ export const HomePage = () => {
         <BottomSectionWrapper>
           <NicknameBox>
             <Nickname>{nickname}</Nickname>
+            <NicknameChangeButton type="button" onClick={() => navigate('/nickname-edit')}>
+              닉네임 변경하기
+            </NicknameChangeButton>
           </NicknameBox>
           <InvestmentTypeBox>
             {isTested ? (
@@ -202,6 +205,23 @@ const Nickname = styled.p`
   margin: 0;
 `;
 
+const NicknameChangeButton = styled.button`
+  background: transparent;
+  border: none;
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  font-size: 12px;
+  color: ${theme.colors.text};
+  opacity: 0.7;
+  cursor: pointer;
+  margin-top: ${theme.spacing(1)};
+  padding: 0;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const InvestmentTypeBox = styled.div`
   width: 100%;
   padding: ${theme.spacing(2)};
@@ -227,7 +247,7 @@ const RetestButton = styled.button`
   border: none;
   font-family: ${theme.font.regular.fontFamily};
   font-weight: ${theme.font.regular.fontWeight};
-  font-size: 14px;
+  font-size: 12px;
   color: ${theme.colors.text};
   opacity: 0.85;
   cursor: pointer;

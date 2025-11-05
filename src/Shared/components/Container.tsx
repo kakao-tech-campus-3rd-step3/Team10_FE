@@ -41,5 +41,7 @@ const ScrollableArea = styled.div<{ $scrollable?: boolean }>`
 const BottomSpacer = styled.div`
   width: 100%;
   height: ${theme.spacing(15)};
+  background-color: transparent;
   flex-shrink: 0;
+  z-index: -100;
 `;

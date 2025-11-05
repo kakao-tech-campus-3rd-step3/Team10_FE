@@ -17,8 +17,10 @@ export const LoginPage = () => {
 export default LoginPage;
 
 const CenteredContainer = styled(Container)`
-  align-items: center;
-  justify-content: center;
+  > * {
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const Logo = styled.img`
