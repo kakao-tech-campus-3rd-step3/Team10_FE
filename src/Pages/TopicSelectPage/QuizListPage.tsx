@@ -72,7 +72,7 @@ export const QuizListPage = () => {
   if (error) {
     return (
       <Container>
-        <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} />
+        <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} backButtonTo={'/topics'} />
         <QuizListContainer>
           <ErrorText>퀴즈 목록을 불러오는데 실패했습니다.</ErrorText>
         </QuizListContainer>
@@ -82,7 +82,7 @@ export const QuizListPage = () => {
 
   return (
     <Container>
-      <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} />
+      <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} backButtonTo={'/topics'} />
       <QuizListContainer>
         <QuizListTitle>{topicName} 퀴즈</QuizListTitle>
         <QuizListDescription>총 {allQuizzes.length}개의 퀴즈가 있습니다.</QuizListDescription>

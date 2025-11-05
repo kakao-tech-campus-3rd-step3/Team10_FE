@@ -43,9 +43,6 @@ export const TopicSelectPage = () => {
       <QuizListContainer>
         <QuizListImage src={QuizListImg} />
         <QuizListTitle>분야를 선택 해주세요</QuizListTitle>
-        <QuizListDescription>
-          "경제 기초"를 제외한 분야는 새싹 단계 이상에서 잠금 해제 됩니다!
-        </QuizListDescription>
         <QuizListButtonSection>
           {quizListData?.topics?.map((topic) => (
             <TopicButton
@@ -79,14 +76,6 @@ const QuizListTitle = styled.div`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   color: #000000;
-`;
-const QuizListDescription = styled.div`
-  font-size: 12px;
-  font-family: ${theme.font.regular.fontFamily};
-  font-weight: ${theme.font.regular.fontWeight};
-  color: #000000;
-  opacity: 0.4;
-  margin-top: 8px;
 `;
 const QuizListButtonSection = styled.div`
   flex: 1;

@@ -164,7 +164,7 @@ export const QuizSolvePage = () => {
 
   return (
     <Container $scrollable>
-      <Header title={headerTitle} hasPrevPage={true} />
+      <Header title={headerTitle} hasPrevPage={true} backButtonTo={'-1'} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
