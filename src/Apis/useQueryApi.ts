@@ -14,7 +14,6 @@ const queryFnFactory =
       return response.data;
     } catch (error) {
       processApiError(error);
-      options?.onError?.(error as AxiosError);
       throw error;
     }
   };

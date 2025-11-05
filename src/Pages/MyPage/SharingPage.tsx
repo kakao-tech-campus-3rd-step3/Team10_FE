@@ -24,11 +24,37 @@ export const SharingPage = () => {
     copyToClipboard();
   };
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
-  const { data: testResultData } = useQueryApi<TestResult>(
-    ['users', 'me', 'propensity'],
-    '/users/me/propensity',
-  );
+  const {
+    data: myPageData,
+    error: myPageError,
+    isLoading: myPageIsLoading,
+  } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const {
+    data: testResultData,
+    error: testResultError,
+    isLoading: testResultIsLoading,
+  } = useQueryApi<TestResult>(['users', 'me', 'propensity'], '/users/me/propensity');
+
+  if (myPageIsLoading || testResultIsLoading) {
+    return (
+      <Container $scrollable $hasBottomNav={false}>
+        <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
+        <Spacing />
+        <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (myPageError || testResultError || !myPageData || !testResultData) {
+    return (
+      <Container $scrollable $hasBottomNav={false}>
+        <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
+        <Spacing />
+        <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      </Container>
+    );
+  }
+
   const resultDescription = testResultData?.propensityKoreanName
     ? DESCRIPTIONS[testResultData.propensityKoreanName]
     : undefined;
@@ -193,4 +219,22 @@ const CaptureSession = styled.div`
 `;
 const Space = styled.div`
   height: ${theme.spacing(10)};
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;

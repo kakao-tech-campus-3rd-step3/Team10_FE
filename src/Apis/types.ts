@@ -24,7 +24,6 @@ export interface QueryOptions {
 // 쿼리 API 옵션 타입
 export interface QueryApiOptions<TData>
   extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
-  onError?: (error: AxiosError) => void;
   headers?: Record<string, string>;
 }
 export interface MutationOptions<TData = unknown, TVariables = unknown> {

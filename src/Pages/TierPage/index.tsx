@@ -210,16 +210,22 @@ const ScoreLabel = styled.div`
 const ScoreValue = styled.div`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
-  font-size: 52px;
+  font-size: 42px;
   color: #3f4a3c;
   line-height: 1;
   text-align: center;
 
   &::after {
     content: '점';
-    font-size: 30px;
+    font-size: 16px;
     font-weight: 500;
-    margin-left: 4px;
+    margin-left: 2px;
+  }
+
+  @media (max-width: 420px) {
+    &::after {
+      content: none;
+    }
   }
 `;
 

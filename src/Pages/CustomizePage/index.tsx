@@ -85,7 +85,7 @@ export const CustomizePage = () => {
       // 성공 시 alert 표시
       alert('착용하기 완료');
     } catch (err) {
-      console.error('착용 실패: ', err);
+      alert('착용하기에 실패했습니다. 다시 시도해주세요.');
     }
   };
 

@@ -66,8 +66,7 @@ export const CharacterCreatePage = ({
       queryClient.invalidateQueries({ queryKey: ['page', 'home'] });
       navigate('/home');
     },
-    onError: (error) => {
-      console.error('닉네임 변경 실패:', error);
+    onError: () => {
       alert('닉네임 변경에 실패했습니다. 다시 시도해주세요.');
     },
   });
@@ -88,8 +87,8 @@ export const CharacterCreatePage = ({
 
         const loginUrl = getKakaoLoginUrl();
         window.location.href = loginUrl;
-      } catch (error) {
-        console.error('에러:', error);
+      } catch {
+        // sessionStorage 저장 실패는 무시 (비정상적이지만 로그인은 계속 진행)
       }
     }
   };

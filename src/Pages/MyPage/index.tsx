@@ -18,11 +18,17 @@ export const MyPage = () => {
   const { clearTokens } = useTokenCookies();
   const queryClient = useQueryClient();
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
-  const { data: testResultData } = useQueryApi<TestResult>(
-    ['users', 'me', 'propensity'],
-    '/users/me/propensity',
-  );
+  const {
+    data: myPageData,
+    error: myPageError,
+    isLoading: myPageIsLoading,
+  } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const {
+    data: testResultData,
+    error: testResultError,
+    isLoading: testResultIsLoading,
+  } = useQueryApi<TestResult>(['users', 'me', 'propensity'], '/users/me/propensity');
+
   const handleShareClick = () => {
     navigate('/sharing');
   };
@@ -32,6 +38,28 @@ export const MyPage = () => {
     queryClient.clear();
     navigate('/login');
   };
+
+  if (myPageIsLoading || testResultIsLoading) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="마이 페이지" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (myPageError || testResultError || !myPageData || !testResultData) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="마이 페이지" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <ErrorMessage>데이터를 불러오는데 실패했습니다.</ErrorMessage>
+      </Container>
+    );
+  }
 
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
   const resultDescription = testResultData?.propensityKoreanName
@@ -182,4 +210,22 @@ const LogoutButton = styled.button`
   &:active {
     transform: scale(0.98);
   }
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;
