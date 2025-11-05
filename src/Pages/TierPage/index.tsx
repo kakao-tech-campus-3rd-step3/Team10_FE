@@ -31,7 +31,7 @@ export const TierPage = () => {
 
   if (isLoading) {
     return (
-      <Container $scrollable={true}>
+      <Container $scrollable={true} $hasBottomNav={false}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
           <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
@@ -42,7 +42,7 @@ export const TierPage = () => {
 
   if (isError || !userTier) {
     return (
-      <Container $scrollable={true}>
+      <Container $scrollable={true} $hasBottomNav={false}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
           <ErrorMessage>티어 정보를 불러올 수 없습니다.</ErrorMessage>
@@ -52,7 +52,7 @@ export const TierPage = () => {
   }
 
   return (
-    <Container $scrollable={true}>
+    <Container $scrollable={true} $hasBottomNav={false}>
       <Header title="티어 페이지" hasPrevPage={true} />
       <ContentWrapper>
         <TierCard>

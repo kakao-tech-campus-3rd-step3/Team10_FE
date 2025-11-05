@@ -4,14 +4,20 @@ import type { ReactNode } from 'react';
 
 type ContainerProps = {
   $scrollable?: boolean;
+  $hasBottomNav?: boolean; // 하단 네비게이션 바가 있는지 여부
   children?: ReactNode;
 };
 
-export const Container = ({ $scrollable, children, ...props }: ContainerProps) => {
+export const Container = ({
+  $scrollable,
+  $hasBottomNav = true,
+  children,
+  ...props
+}: ContainerProps) => {
   return (
     <StyledContainer {...props}>
       <ScrollableArea $scrollable={$scrollable}>{children}</ScrollableArea>
-      <BottomSpacer />
+      {$hasBottomNav && <BottomSpacer />}
     </StyledContainer>
   );
 };

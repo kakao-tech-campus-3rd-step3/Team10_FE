@@ -35,7 +35,7 @@ export const SharingPage = () => {
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
 
   return (
-    <Container>
+    <Container $scrollable $hasBottomNav={false}>
       <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
       <Spacing />
       <CaptureSession ref={captureRef}>

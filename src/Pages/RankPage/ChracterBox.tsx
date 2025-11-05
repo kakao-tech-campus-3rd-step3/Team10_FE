@@ -20,6 +20,10 @@ export const ChracterBox = ({
     2: Rank2,
     3: Rank3,
   };
+
+  // 닉네임이 4글자 이상이면 4글자만 표시하고 ... 추가
+  const displayName = name.length > 4 ? `${name.slice(0, 4)}...` : name;
+
   return (
     <Container $rank={$rank}>
       <RankIcon $rank={$rank} src={rankIconMap[$rank]} alt={`${$rank} rank`} />
@@ -27,7 +31,7 @@ export const ChracterBox = ({
         <ImageContainer $rank={$rank} src={kongSkinUrl} alt="kong skin" />
       </ImageWrapper>
       <InfoContainer $rank={$rank}>
-        <Name $rank={$rank}>{name}</Name>
+        <Name $rank={$rank}>{displayName}</Name>
         <Score $rank={$rank}>{score}</Score>
       </InfoContainer>
     </Container>
