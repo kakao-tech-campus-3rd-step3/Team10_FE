@@ -14,7 +14,7 @@ export const CostumeButton = ({ id, img, active = false, onSelect }: CostumeButt
   return (
     <Container type="button" data-active={active ? 'true' : 'false'} onClick={() => onSelect(id)}>
       {isDefault ? (
-        <DefaultText>옷 벗기</DefaultText>
+        <DefaultText>기본 의상</DefaultText>
       ) : (
         <Thumb src={img} alt={`${id}번 이미지`} draggable={false} />
       )}

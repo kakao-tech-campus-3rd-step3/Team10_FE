@@ -17,7 +17,7 @@ export const ContentDetailPage = () => {
   if (!content) {
     return (
       <Container $scrollable={true}>
-        <Header title="컨텐츠 상세" hasPrevPage={true} />
+        <Header title="컨텐츠 상세" hasPrevPage={true} backButtonTo={'/contents'} />
         <NavigationBar />
         <DetailPageContainer>
           <ErrorMessage>해당 컨텐츠를 찾을 수 없습니다.</ErrorMessage>
@@ -28,7 +28,7 @@ export const ContentDetailPage = () => {
 
   return (
     <Container $scrollable={true}>
-      <Header title={content.title} hasPrevPage={true} />
+      <Header title={content.title} hasPrevPage={true} backButtonTo={'/contents'} />
       <NavigationBar />
       <DetailPageContainer>
         <ContentHeader $backgroundColor={content.backgroundColor}>
@@ -55,6 +55,7 @@ export const ContentDetailPage = () => {
             </ExternalLinkButton>
           )}
         </ActionButtonContainer>
+        <BottomSpacer />
       </DetailPageContainer>
     </Container>
   );
@@ -66,7 +67,7 @@ const DetailPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 const ContentHeader = styled.div<{ $backgroundColor: string }>`
@@ -116,6 +117,12 @@ const ActionButtonContainer = styled.div`
   justify-content: center;
   gap: ${theme.spacing(3)};
   flex-wrap: wrap;
+`;
+
+const BottomSpacer = styled.div`
+  width: 100%;
+  height: ${theme.spacing(15)};
+  flex-shrink: 0;
 `;
 
 const ActionButton = styled.button`

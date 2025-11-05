@@ -17,7 +17,7 @@ export const CategoryDetailPage = () => {
   if (!category) {
     return (
       <Container $scrollable={true}>
-        <Header title="카테고리 상세" hasPrevPage={true} />
+        <Header title="카테고리 상세" hasPrevPage={true} backButtonTo={'/contents'} />
         <NavigationBar />
         <DetailPageContainer>
           <ErrorMessage>해당 카테고리를 찾을 수 없습니다.</ErrorMessage>
@@ -28,7 +28,7 @@ export const CategoryDetailPage = () => {
 
   return (
     <Container $scrollable={true}>
-      <Header title={category.title} hasPrevPage={true} />
+      <Header title={category.title} hasPrevPage={true} backButtonTo={'/contents'} />
       <NavigationBar />
       <DetailPageContainer>
         <CategoryHeader>
@@ -45,6 +45,7 @@ export const CategoryDetailPage = () => {
         <ActionButtonContainer>
           <ActionButton onClick={() => navigate('/contents')}>목록으로 돌아가기</ActionButton>
         </ActionButtonContainer>
+        <BottomSpacer />
       </DetailPageContainer>
     </Container>
   );
@@ -56,7 +57,7 @@ const DetailPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 const CategoryHeader = styled.div`
@@ -135,6 +136,12 @@ const ActionButtonContainer = styled.div`
   background-color: #f8f9fa;
   display: flex;
   justify-content: center;
+`;
+
+const BottomSpacer = styled.div`
+  width: 100%;
+  height: ${theme.spacing(15)};
+  flex-shrink: 0;
 `;
 
 const ActionButton = styled.button`
