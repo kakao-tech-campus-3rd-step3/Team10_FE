@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { HomeResponse } from '@/Pages/HomePage/types';
+import type { AxiosError } from 'axios';
 
 interface RegisterRequest {
   code: string;
@@ -54,6 +55,12 @@ export const CharacterCreatePage = ({
   useEffect(() => {
     if (mode === 'edit' && homeData?.nickname) {
       setName(homeData.nickname);
+    } else if (mode === 'create') {
+      // 신규 가입 모드일 때 sessionStorage에 저장된 닉네임이 있으면 사용
+      const savedNickname = sessionStorage.getItem('temp_nickname');
+      if (savedNickname) {
+        setName(savedNickname);
+      }
     }
   }, [mode, homeData]);
 
@@ -66,8 +73,13 @@ export const CharacterCreatePage = ({
       queryClient.invalidateQueries({ queryKey: ['page', 'home'] });
       navigate('/home');
     },
-    onError: () => {
-      alert('닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+    onError: (error: AxiosError) => {
+      // 404 에러는 중복 닉네임을 의미
+      if (error.response?.status === 404) {
+        alert('이미 사용중인 닉네임 입니다. 다른 닉네임으로 시도해주세요.');
+      } else {
+        alert('닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+      }
     },
   });
 

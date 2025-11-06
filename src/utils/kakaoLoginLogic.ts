@@ -14,6 +14,14 @@ export const isNewUserError = (error: unknown): boolean => {
 };
 
 /**
+ * 중복 닉네임 에러인지 확인 (400 에러)
+ */
+export const isDuplicateNicknameError = (error: unknown): boolean => {
+  const axiosError = error as AxiosError;
+  return axiosError?.response?.status === 400;
+};
+
+/**
  * 회원가입 플로우를 사용해야 하는지 확인
  * sessionStorage에 닉네임이 저장되어 있는지 체크
  */
@@ -49,6 +57,10 @@ export const clearSavedNickname = (): void => {
  */
 export const getErrorNavigationTarget = (error: unknown): string => {
   if (isNewUserError(error)) {
+    return '/character-create';
+  }
+  // 중복 닉네임 에러는 캐릭터 생성 페이지로 돌아가서 다시 입력할 수 있도록
+  if (isDuplicateNicknameError(error)) {
     return '/character-create';
   }
   return '/login';
@@ -107,6 +119,11 @@ export const getSuccessMessage = (isRegistration: boolean): string => {
 export const getErrorMessage = (error: unknown, kakaoErrorMessage?: string | null): string => {
   if (isNewUserError(error)) {
     return '새로운 계정이 생성되었습니다!';
+  }
+
+  // 중복 닉네임 에러
+  if (isDuplicateNicknameError(error)) {
+    return '이미 사용중인 닉네임 입니다. 다른 닉네임으로 시도해주세요.';
   }
 
   if (kakaoErrorMessage) {
