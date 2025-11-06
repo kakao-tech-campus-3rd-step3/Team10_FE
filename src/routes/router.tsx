@@ -10,7 +10,6 @@ import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
 import { RankPage } from '@/Pages/RankPage';
-import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 import TestPage from '@/Pages/TestPage/TestPage';
 import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
@@ -109,7 +108,6 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  { path: '/dev/api-test', element: <ApiTestPage /> },
   {
     path: '/test',
     element: (

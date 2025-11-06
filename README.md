@@ -322,7 +322,6 @@ const { mutate, isPending } = usePostApi<ResponseType, RequestType>('/api/endpoi
 | `/nickname-edit`                          | 닉네임 수정 페이지         | 인증 필요 |
 | `/mypage`                                 | 마이페이지                 | 인증 필요 |
 | `/sharing`                                | 공유 페이지                | 인증 필요 |
-| `/dev/api-test`                           | API 테스트 페이지 (개발용) | 공개      |
 
 ### Protected Route
 
