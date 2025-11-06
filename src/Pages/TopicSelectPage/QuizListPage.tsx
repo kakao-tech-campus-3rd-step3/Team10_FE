@@ -161,9 +161,10 @@ export const QuizListPage = () => {
 const QuizListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 0;
+  flex: 1;
   padding: 20px;
-  padding-bottom: 60px;
+  padding-bottom: 20px;
 `;
 
 const QuizListTitle = styled.h1`
@@ -187,6 +188,7 @@ const QuizList = styled.div`
   flex-direction: column;
   gap: 12px;
   flex: 1;
+  max-height: 100%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 20px;
@@ -317,12 +319,12 @@ const PaginationContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: 30px;
-  padding: 20px 0;
+  margin-top: 20px;
+  padding: 10px 0;
 `;
 
 const PaginationButton = styled.button<{ disabled?: boolean }>`
-  padding: 8px 16px;
+  padding: 8px 12px;
   border: 1px solid ${(props) => (props.disabled ? '#e0e0e0' : theme.colors.primary)};
   border-radius: 8px;
   background: ${(props) => (props.disabled ? '#f5f5f5' : '#ffffff')};

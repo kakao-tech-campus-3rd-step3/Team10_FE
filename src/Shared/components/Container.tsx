@@ -25,7 +25,7 @@ export const Container = ({
 const StyledContainer = styled.div`
   width: 100%;
   max-width: 720px;
-  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   background-color: ${({ theme }) => theme.colors.background};
   display: flex;
