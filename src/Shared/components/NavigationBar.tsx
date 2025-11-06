@@ -32,7 +32,7 @@ const NavWrapper = styled.nav`
   position: fixed;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateZ(0);
   width: 100%;
   height: ${theme.spacing(15)};
   max-width: 720px;
@@ -41,7 +41,9 @@ const NavWrapper = styled.nav`
   align-items: center;
   border-top: 1px solid ${theme.colors.line};
   background-color: ${theme.colors.background};
-  z-index: 1000;
+  z-index: 9999;
+  -webkit-transform: translateX(-50%) translateZ(0);
+  will-change: transform;
 `;
 
 const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`
