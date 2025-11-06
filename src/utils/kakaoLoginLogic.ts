@@ -59,7 +59,6 @@ export const getErrorNavigationTarget = (error: unknown): string => {
   if (isNewUserError(error)) {
     return '/character-create';
   }
-  // 중복 닉네임 에러는 캐릭터 생성 페이지로 돌아가서 다시 입력할 수 있도록
   if (isDuplicateNicknameError(error)) {
     return '/character-create';
   }
@@ -121,7 +120,6 @@ export const getErrorMessage = (error: unknown, kakaoErrorMessage?: string | nul
     return '새로운 계정이 생성되었습니다!';
   }
 
-  // 중복 닉네임 에러
   if (isDuplicateNicknameError(error)) {
     return '이미 사용중인 닉네임 입니다. 다른 닉네임으로 시도해주세요.';
   }

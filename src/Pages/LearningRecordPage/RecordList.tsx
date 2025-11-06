@@ -21,8 +21,10 @@ export const RecordList = ({ data }: { data: RecordListData[] }) => {
   };
 
   const handleItemClick = (topicId: string | number, quizId: number, isBookmark: boolean) => {
-    const routeTopicId = typeof topicId === 'string' ? topicId : isBookmark ? 'bookmark' : 'review';
-    navigate(`/topics/${routeTopicId}/quizzes/${quizId}`);
+    const routeTopicId = typeof topicId === 'string' ? topicId : isBookmark ? 'bookmark' : 'wrong';
+    navigate(`/topics/${routeTopicId}/quizzes/${quizId}`, {
+      state: { from: 'record' },
+    });
   };
 
   return (

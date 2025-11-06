@@ -17,12 +17,12 @@ export const QuizSolvePage = () => {
   const { topicId, quizId } = useParams<{ topicId?: string; quizId: string }>();
   const queryClient = useQueryClient();
 
-  // 복습 모드 확인
   const isReview = location.pathname.startsWith('/quiz/review');
   const reviewState = location.state as {
     isReview?: boolean;
     reviewQuizzes?: ReviewQuiz[];
     currentReviewIndex?: number;
+    from?: string;
   } | null;
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | number | null>(null);
@@ -33,7 +33,6 @@ export const QuizSolvePage = () => {
     isLoading,
   } = useQueryApi<QuizData>(['quiz', quizId || ''], `/quiz/${quizId || ''}`);
 
-  // 복습 모드일 때는 /quiz/review/{quizId}, 일반 모드일 때는 /quiz/{quizId}/submit
   const submitUrl = isReview ? `/quiz/review/${quizId}` : `/quiz/${quizId}/submit`;
 
   const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(submitUrl);
@@ -69,12 +68,9 @@ export const QuizSolvePage = () => {
       if (topicId) {
         queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
       }
-      // 복습 퀴즈 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
-      // 출석체크 상태 캐시 무효화 (퀴즈를 풀면 출석체크가 업데이트되므로)
       queryClient.invalidateQueries({ queryKey: ['attendanceStatus'] });
 
-      // 복습 모드일 때와 일반 모드일 때 결과 페이지 경로가 다름
       const resultPath = isReview
         ? `/quiz/review/${quizId}/result`
         : `/topics/${topicId}/quizzes/${quizId}/result`;
@@ -87,7 +83,6 @@ export const QuizSolvePage = () => {
           isReview: isReview || reviewState?.isReview,
           reviewQuizzes: reviewState?.reviewQuizzes,
           currentReviewIndex: reviewState?.currentReviewIndex,
-          // 페이지네이션 정보 전달
           currentPage: location.state?.currentPage,
           topicName: location.state?.topicName,
           totalQuizCount: location.state?.totalQuizCount,
@@ -133,8 +128,23 @@ export const QuizSolvePage = () => {
     quizData;
   const headerTitle = isReview ? '복습 퀴즈' : topicName;
 
-  // 백버튼 경로 설정: 일반 모드일 때는 해당 토픽의 퀴즈 목록으로, 복습 모드일 때는 홈으로
-  const backButtonPath = isReview ? '/home' : topicId ? `/topics/${topicId}/quizzes` : '/topics';
+  const backButtonPath =
+    reviewState?.from === 'record'
+      ? '/record'
+      : isReview
+        ? '/home'
+        : topicId
+          ? `/topics/${topicId}/quizzes`
+          : '/topics';
+
+  const backButtonState =
+    reviewState?.from === 'record' || isReview
+      ? undefined
+      : {
+          currentPage: location.state?.currentPage ?? 0,
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
+        };
 
   const renderQuestionContent = () => {
     switch (questionType) {
@@ -177,7 +187,12 @@ export const QuizSolvePage = () => {
 
   return (
     <Container $scrollable $hasTopNav={false} $hasHeader={true}>
-      <Header title={headerTitle} hasPrevPage={true} backButtonTo={backButtonPath} />
+      <Header
+        title={headerTitle}
+        hasPrevPage={true}
+        backButtonTo={backButtonPath}
+        backButtonState={backButtonState}
+      />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}

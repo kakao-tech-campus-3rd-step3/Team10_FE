@@ -12,7 +12,6 @@ export const MyRankSection = ({
   aboveUsers: RankingUser[];
   belowUsers: RankingUser[];
 }) => {
-  // API 응답 데이터를 그대로 사용 (이미 정렬되어 있음)
   const above1 = aboveUsers?.[0] || null;
   const above2 = aboveUsers?.[1] || null;
   const below1 = belowUsers?.[0] || null;

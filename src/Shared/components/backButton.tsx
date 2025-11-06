@@ -7,6 +7,7 @@ type BackButtonProps = {
   className?: string;
   ariaLabel?: string; // 접근성 라벨 (기본: "뒤로가기")
   to?: string | number; // 이동할 경로. 미지정 시 navigate(-1)로 뒤로가기
+  state?: unknown; // navigate 시 전달할 state
 };
 
 export const BackButton = ({
@@ -15,6 +16,7 @@ export const BackButton = ({
   className,
   ariaLabel = '뒤로가기',
   to,
+  state,
 }: BackButtonProps) => {
   const navigate = useNavigate();
   const onClick = () => {
@@ -27,7 +29,7 @@ export const BackButton = ({
     } else if (to === '-1') {
       navigate(-1);
     } else {
-      navigate(to);
+      navigate(to, { state });
     }
   };
   return (

@@ -64,7 +64,6 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
       { totalScore },
       {
         onSuccess: (data) => {
-          // 투자성향 관련 쿼리 캐시 무효화
           queryClient.invalidateQueries({ queryKey: ['users', 'me', 'propensity'] });
           navigate('/test/result', {
             state: {

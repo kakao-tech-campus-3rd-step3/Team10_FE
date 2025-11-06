@@ -30,7 +30,6 @@ export const QuizResultPage = () => {
   const isRecordPage = topicId === 'wrong' || topicId === 'bookmark';
   const isReviewMode = isReview === true;
 
-  // 현재 페이지의 퀴즈 목록 가져오기
   const currentPageForQuery = currentPage ?? 0;
   const { data: quizListData } = useQueryApi<QuizListResponse>(
     ['topics', topicId || '', currentPageForQuery],
@@ -38,7 +37,6 @@ export const QuizResultPage = () => {
     { enabled: !isRecordPage && !isReviewMode },
   );
 
-  // 다음 페이지의 첫 번째 퀴즈 확인 (현재 페이지의 마지막 퀴즈인 경우)
   const nextPageIndex = currentPageForQuery + 1;
   const PAGE_SIZE = 10;
   const totalPages = totalQuizCount ? Math.ceil(totalQuizCount / PAGE_SIZE) : 0;
@@ -70,13 +68,10 @@ export const QuizResultPage = () => {
 
   const quizzes = quizListData?.quizzes || [];
 
-  // 다음 퀴즈 찾기: 현재 페이지에서 다음 퀴즈가 있으면 사용
   let nextQuiz = !isReviewMode ? findNextQuiz(quizzes, quizId) : null;
 
-  // 현재 페이지에서 다음 퀴즈를 못 찾았고, 현재 퀴즈가 현재 페이지의 마지막인 경우
   const isLastInCurrentPage = quizzes.length > 0 && quizzes[quizzes.length - 1]?.quizId === quizId;
 
-  // 현재 페이지의 마지막 퀴즈이고, 다음 페이지가 있는 경우
   if (
     !nextQuiz &&
     !isReviewMode &&
@@ -86,11 +81,9 @@ export const QuizResultPage = () => {
     nextPageQuizListData.quizzes &&
     nextPageQuizListData.quizzes.length > 0
   ) {
-    // 다음 페이지의 첫 번째 퀴즈를 다음 퀴즈로 설정
     nextQuiz = nextPageQuizListData.quizzes[0];
   }
 
-  // 복습 모드일 때 다음 복습 퀴즈 찾기
   let nextReviewQuiz = null;
   if (isReviewMode && reviewQuizzes && currentReviewIndex !== undefined) {
     const nextIndex = currentReviewIndex + 1;
@@ -101,7 +94,6 @@ export const QuizResultPage = () => {
 
   const handleNextQuestion = () => {
     if (isReviewMode && nextReviewQuiz) {
-      // 다음 복습 퀴즈로 이동
       navigate(`/quiz/review/${nextReviewQuiz.quizId}`, {
         state: {
           isReview: true,
@@ -110,10 +102,8 @@ export const QuizResultPage = () => {
         },
       });
     } else if (!isReviewMode && nextQuiz) {
-      // 일반 모드일 때 다음 퀴즈로 이동
       const nextPath = getNextQuizPath(Number(topicId), nextQuiz.quizId);
 
-      // 다음 퀴즈가 다음 페이지에 있는 경우 페이지 정보 업데이트
       const currentPageIndex = currentPage ?? 0;
       const isNextQuizInNextPage =
         nextPageQuizListData?.quizzes?.some((q) => q.quizId === nextQuiz.quizId) ?? false;
@@ -131,7 +121,6 @@ export const QuizResultPage = () => {
 
   const handleBackToList = () => {
     if (isReviewMode) {
-      // 복습 모드일 때는 모든 복습을 완료했거나 사용자가 나가기를 선택한 경우 토픽 선택 페이지로
       navigate('/topics');
       queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
     } else if (isRecordPage) {
@@ -139,7 +128,6 @@ export const QuizResultPage = () => {
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'wrong'] });
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
     } else {
-      // 현재 페이지 정보를 유지하기 위해 state로 전달
       const currentPageFromState = location.state?.currentPage ?? 0;
       navigate(`/topics/${topicId}/quizzes`, {
         state: {
@@ -148,11 +136,9 @@ export const QuizResultPage = () => {
           currentPage: currentPageFromState,
         },
       });
-      // 쿼리 무효화는 하지 않고, 페이지 정보만 전달하여 페이지네이션 유지
     }
   };
 
-  // 복습 모드일 때 모든 복습 퀴즈 완료 여부
   const isLastReviewQuiz = isReviewMode && !nextReviewQuiz;
 
   return (
@@ -214,11 +200,13 @@ export const QuizResultPage = () => {
           <LastQuizMessage>모든 복습 퀴즈를 완료했습니다!</LastQuizMessage>
         )}
         <ButtonRow>
-          <ButtonContainer onClick={handleBackToList}>
-            <QuizConfirmButton
-              text={isReviewMode && isLastReviewQuiz ? '토픽 선택하기' : '목록 보기'}
-            />
-          </ButtonContainer>
+          {(!isReviewMode || (isReviewMode && isLastReviewQuiz)) && (
+            <ButtonContainer onClick={handleBackToList}>
+              <QuizConfirmButton
+                text={isReviewMode && isLastReviewQuiz ? '토픽 선택하기' : '목록 보기'}
+              />
+            </ButtonContainer>
+          )}
           {((!isRecordPage && !isReviewMode && nextQuiz) || (isReviewMode && nextReviewQuiz)) && (
             <ButtonContainer onClick={handleNextQuestion}>
               <QuizConfirmButton text="다음 문제" />

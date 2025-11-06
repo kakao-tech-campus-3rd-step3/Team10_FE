@@ -21,7 +21,6 @@ export const AttendancePage: React.FC = () => {
     refetchOnMount: true,
   });
 
-  // 예외 처리
   if (isLoading) {
     return (
       <PageContainer role="status" aria-live="polite" aria-label="로딩 중">
@@ -151,7 +150,6 @@ const ProgressContainer = styled.div`
   max-width: 300px;
 `;
 
-// 박스에 대한 css
 const BaseBox = styled.div`
   width: 48px;
   height: 48px;
@@ -161,12 +159,10 @@ const BaseBox = styled.div`
   justify-content: center;
 `;
 
-// 빈 박스
 const EmptyBox = styled(BaseBox)`
   background-color: ${theme.colors.line};
 `;
 
-// 체크된 박스
 const CheckedBox = styled(BaseBox)`
   background-color: ${theme.colors.secondary};
   & svg path {

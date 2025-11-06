@@ -25,9 +25,7 @@ interface NicknameUpdateRequest {
   nickname: string;
 }
 
-interface NicknameUpdateResponse {
-  // API 응답 구조에 따라 조정 가능
-}
+interface NicknameUpdateResponse {}
 
 type PageMode = 'create' | 'edit';
 
@@ -43,7 +41,6 @@ export const CharacterCreatePage = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // edit 모드일 때 현재 닉네임 가져오기
   const { data: homeData } = useQueryApi<HomeResponse>(['page', 'home'], '/page/home', {
     enabled: mode === 'edit',
   });
@@ -51,12 +48,10 @@ export const CharacterCreatePage = ({
   const [name, setName] = useState(initialNickname);
   const [isNameValid, setIsNameValid] = useState(false);
 
-  // edit 모드일 때 현재 닉네임으로 초기화
   useEffect(() => {
     if (mode === 'edit' && homeData?.nickname) {
       setName(homeData.nickname);
     } else if (mode === 'create') {
-      // 신규 가입 모드일 때 sessionStorage에 저장된 닉네임이 있으면 사용
       const savedNickname = sessionStorage.getItem('temp_nickname');
       if (savedNickname) {
         setName(savedNickname);
@@ -69,12 +64,12 @@ export const CharacterCreatePage = ({
     NicknameUpdateRequest
   >('/users/me/nickname', {
     onSuccess: () => {
-      // 홈 데이터 캐시 무효화하여 새 닉네임 반영
       queryClient.invalidateQueries({ queryKey: ['page', 'home'] });
+      queryClient.invalidateQueries({ queryKey: ['page', 'mypage'] });
+      queryClient.invalidateQueries({ queryKey: ['user', 'ranking'] });
       navigate('/home');
     },
     onError: (error: AxiosError) => {
-      // 404 에러는 중복 닉네임을 의미
       if (error.response?.status === 404) {
         alert('이미 사용중인 닉네임 입니다. 다른 닉네임으로 시도해주세요.');
       } else {
@@ -89,19 +84,15 @@ export const CharacterCreatePage = ({
 
   const handleConfirm = async () => {
     if (mode === 'edit') {
-      // 닉네임 변경 모드
       updateNickname({ nickname: name });
     } else {
-      // 캐릭터 생성 모드 (기존 로직)
       try {
         sessionStorage.setItem('temp_nickname', name);
         console.log('닉네임 저장:', name);
 
         const loginUrl = getKakaoLoginUrl();
         window.location.href = loginUrl;
-      } catch {
-        // sessionStorage 저장 실패는 무시 (비정상적이지만 로그인은 계속 진행)
-      }
+      } catch {}
     }
   };
 

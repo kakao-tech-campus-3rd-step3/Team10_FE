@@ -30,7 +30,7 @@ export interface CategoryContentDetail {
   subtitle: string;
   content: string;
 }
-// 전체 컨텐츠 데이터
+
 export const allContents: SlideContent[] = [
   {
     id: 1,

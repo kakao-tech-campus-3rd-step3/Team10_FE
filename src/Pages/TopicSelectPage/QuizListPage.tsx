@@ -19,7 +19,6 @@ export const QuizListPage = () => {
   const totalQuizCount = location.state?.totalQuizCount || 0;
   const [currentPage, setCurrentPage] = useState(0);
 
-  // location.state에서 페이지 정보가 있으면 업데이트
   useEffect(() => {
     if (location.state?.currentPage !== undefined) {
       setCurrentPage(location.state.currentPage);

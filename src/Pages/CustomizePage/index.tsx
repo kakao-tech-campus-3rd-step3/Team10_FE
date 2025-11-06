@@ -12,7 +12,6 @@ import { toAbsoluteUrl } from '@/utils/urlUtils';
 import { api } from '@/Apis/axios';
 import { useQueryClient } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/Shared/components/LoadingSpinner';
-// 코스튬 미리보기 이미지들
 import Costume0 from '@/assets/CustomizeImg/0.webp';
 import Costume1 from '@/assets/CustomizeImg/1.webp';
 import Costume2 from '@/assets/CustomizeImg/2.webp';
@@ -22,7 +21,6 @@ import Costume5 from '@/assets/CustomizeImg/5.webp';
 import Costume6 from '@/assets/CustomizeImg/6.webp';
 import Costume7 from '@/assets/CustomizeImg/7.webp';
 
-// 코스튬 id -> 미리보기 이미지 매핑
 const costumePreviewMap: Record<number, string> = {
   0: Costume0,
   1: Costume1,
@@ -64,13 +62,11 @@ export const CustomizePage = () => {
 
   const queryClient = useQueryClient();
 
-  // 코스튬 선택 시 미리보기만 업데이트 (API 호출 없음)
   const handleCostumeSelect = (costumeId: number) => {
     setSelectedId(costumeId);
-    setIsImageLoading(true); // 이미지 변경 시 로딩 상태로 설정
+    setIsImageLoading(true);
   };
 
-  // 제출하기 버튼 클릭 시 API 호출 후 alert 표시
   const handleWearCostume = async () => {
     if (selectedId == null) return;
 
@@ -82,7 +78,6 @@ export const CustomizePage = () => {
         queryClient.invalidateQueries({ queryKey: ['page', 'home'] }),
         queryClient.invalidateQueries({ queryKey: ['usernickname'] }),
       ]);
-      // 성공 시 alert 표시
       alert('착용하기 완료');
     } catch (err) {
       alert('착용하기에 실패했습니다. 다시 시도해주세요.');
@@ -101,7 +96,6 @@ export const CustomizePage = () => {
 
   const previewCharacterSrc = getPreviewCharacterSrc();
 
-  // 이미지 변경 시 로딩 상태로 설정
   useEffect(() => {
     setIsImageLoading(true);
   }, [previewCharacterSrc]);

@@ -7,16 +7,17 @@ type HeaderProps = {
   title: string;
   hasPrevPage: boolean;
   backButtonTo?: string | number; // 백버튼이 이동할 경로. 미지정 시 BackButton 기본 동작
+  backButtonState?: unknown; // 백버튼 클릭 시 전달할 state
 };
 
-export const Header = ({ title, hasPrevPage, backButtonTo }: HeaderProps) => {
+export const Header = ({ title, hasPrevPage, backButtonTo, backButtonState }: HeaderProps) => {
   const navigate = useNavigate();
   const onTitleClick = () => {
     navigate('/home');
   };
   return (
     <Container role="banner">
-      {hasPrevPage && <BackButton to={backButtonTo} />}
+      {hasPrevPage && <BackButton to={backButtonTo} state={backButtonState} />}
       <Title onClick={onTitleClick} role="button" aria-label="홈으로 이동" tabIndex={0}>
         {title}
       </Title>

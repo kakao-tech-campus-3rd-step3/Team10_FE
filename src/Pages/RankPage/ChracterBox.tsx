@@ -21,7 +21,6 @@ export const ChracterBox = ({
     3: Rank3,
   };
 
-  // 닉네임이 4글자 이상이면 4글자만 표시하고 ... 추가
   const displayName = name.length > 4 ? `${name.slice(0, 4)}...` : name;
 
   return (

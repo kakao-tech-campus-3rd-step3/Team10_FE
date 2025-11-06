@@ -27,7 +27,6 @@ export const HomePage = () => {
     isLoading: propensityIsLoading,
   } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
 
-  // 복습 퀴즈 확인 (수동으로만 호출)
   const { refetch: refetchReviewQuizzes } = useQueryApi<ReviewQuizResponse>(
     ['quiz', 'review'],
     '/quiz/review',
@@ -37,11 +36,9 @@ export const HomePage = () => {
   );
 
   const handleInvestmentTest = async () => {
-    // 복습 퀴즈 확인
     const { data } = await refetchReviewQuizzes();
 
     if (data?.reviewQuizzes && data.reviewQuizzes.length > 0) {
-      // 복습 퀴즈가 있으면 첫 번째 복습 퀴즈로 이동
       navigate(`/quiz/review/${data.reviewQuizzes[0].quizId}`, {
         state: {
           isReview: true,
@@ -50,7 +47,6 @@ export const HomePage = () => {
         },
       });
     } else {
-      // 복습 퀴즈가 없으면 토픽 선택 페이지로 이동
       navigate('/topics');
     }
   };
