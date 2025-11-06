@@ -22,6 +22,7 @@ export const GlobalStyles = () => {
           overflow-x: hidden;
           overflow-y: auto;
           -webkit-overflow-scrolling: touch;
+          scrollbar-gutter: stable;
         }
         a {
           color: inherit;

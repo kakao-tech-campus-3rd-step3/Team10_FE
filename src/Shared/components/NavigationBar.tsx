@@ -29,21 +29,23 @@ export const NavigationBar = () => {
 export default NavigationBar;
 
 const NavWrapper = styled.nav`
-  position: fixed;
+  position: sticky;
   top: ${theme.spacing(15)};
-  left: 50%;
-  transform: translateX(-50%) translateZ(0);
   width: 100%;
-  height: ${theme.spacing(15)};
   max-width: 720px;
+  margin: 0 auto;
+  height: ${theme.spacing(15)};
+  min-height: ${theme.spacing(15)};
+  max-height: ${theme.spacing(15)};
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-bottom: 1px solid ${theme.colors.line};
   background-color: ${theme.colors.background};
   z-index: 9999;
-  -webkit-transform: translateX(-50%) translateZ(0);
-  will-change: transform;
+  will-change: top;
+  box-sizing: border-box;
+  flex-shrink: 0;
 `;
 
 const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`

@@ -26,13 +26,14 @@ export const Header = ({ title, hasPrevPage, backButtonTo }: HeaderProps) => {
 export default Header;
 
 const Container = styled.header`
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%) translateZ(0);
   width: 100%;
   max-width: 720px;
+  margin: 0 auto;
   height: ${theme.spacing(15)};
+  min-height: ${theme.spacing(15)};
+  max-height: ${theme.spacing(15)};
   padding: ${theme.spacing(5)};
   display: flex;
   align-items: center;
@@ -40,8 +41,9 @@ const Container = styled.header`
   border-bottom-left-radius: ${theme.spacing(5)};
   border-bottom-right-radius: ${theme.spacing(5)};
   z-index: 10000;
-  -webkit-transform: translateX(-50%) translateZ(0);
-  will-change: transform;
+  will-change: top;
+  box-sizing: border-box;
+  flex-shrink: 0;
 `;
 const Title = styled.h1`
   color: ${theme.colors.text};
