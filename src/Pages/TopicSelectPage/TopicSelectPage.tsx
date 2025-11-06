@@ -30,7 +30,7 @@ export const TopicSelectPage = () => {
 
   if (error) {
     return (
-      <Container>
+      <Container $hasTopNav={false} $hasHeader={true}>
         <Header hasPrevPage={true} title="" />
         <QuizListContainer>
           <QuizListTitle role="alert" aria-live="assertive">
@@ -42,7 +42,7 @@ export const TopicSelectPage = () => {
   }
 
   return (
-    <Container>
+    <Container $hasTopNav={false} $hasHeader={true}>
       <Header hasPrevPage={true} title="" />
       <QuizListContainer role="main" aria-label="퀴즈 토픽 선택 페이지">
         <QuizListImage src={QuizListImg} alt="퀴즈 목록 아이콘" />

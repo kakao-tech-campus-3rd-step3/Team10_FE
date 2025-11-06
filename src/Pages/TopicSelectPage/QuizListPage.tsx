@@ -37,7 +37,7 @@ export const QuizListPage = () => {
 
   if (isLoading) {
     return (
-      <Container $hasBottomNav={false}>
+      <Container $hasTopNav={false}>
         <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} />
         <QuizListContainer>
           <LoadingText>퀴즈 목록을 불러오는 중...</LoadingText>
@@ -48,7 +48,7 @@ export const QuizListPage = () => {
 
   if (error) {
     return (
-      <Container $hasBottomNav={false}>
+      <Container $hasTopNav={false}>
         <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} backButtonTo={'/topics'} />
         <QuizListContainer>
           <ErrorText>퀴즈 목록을 불러오는데 실패했습니다.</ErrorText>
@@ -94,7 +94,7 @@ export const QuizListPage = () => {
   };
 
   return (
-    <Container $hasBottomNav={false}>
+    <Container $hasTopNav={false}>
       <Header hasPrevPage={true} title={topicName || '퀴즈 목록'} backButtonTo={'/topics'} />
       <QuizListContainer>
         <QuizListTitle>{topicName} 퀴즈</QuizListTitle>

@@ -4,20 +4,22 @@ import type { ReactNode } from 'react';
 
 type ContainerProps = {
   $scrollable?: boolean;
-  $hasBottomNav?: boolean; // 하단 네비게이션 바가 있는지 여부
+  $hasTopNav?: boolean; // 상단 네비게이션 바가 있는지 여부 (Header + NavigationBar)
+  $hasHeader?: boolean; // Header만 있는지 여부 (NavigationBar 없음)
   children?: ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Container = ({
   $scrollable,
-  $hasBottomNav = true,
+  $hasTopNav = true,
+  $hasHeader = false,
   children,
   ...props
 }: ContainerProps) => {
   return (
     <StyledContainer {...props}>
+      {$hasTopNav ? <TopSpacer /> : $hasHeader ? <HeaderSpacer /> : <SafeAreaSpacer />}
       <ScrollableArea $scrollable={$scrollable}>{children}</ScrollableArea>
-      {$hasBottomNav ? <BottomSpacer /> : <SafeAreaSpacer />}
     </StyledContainer>
   );
 };
@@ -44,7 +46,15 @@ const ScrollableArea = styled.div<{ $scrollable?: boolean }>`
   flex-direction: column;
 `;
 
-const BottomSpacer = styled.div`
+const TopSpacer = styled.div`
+  width: 100%;
+  height: ${theme.spacing(30)};
+  background-color: transparent;
+  flex-shrink: 0;
+  z-index: -100;
+`;
+
+const HeaderSpacer = styled.div`
   width: 100%;
   height: ${theme.spacing(15)};
   background-color: transparent;

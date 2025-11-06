@@ -93,7 +93,7 @@ export const TestPage = ({ onSubmit }: TestPageProps) => {
   }
 
   return (
-    <Container $scrollable={true}>
+    <Container $scrollable={true} $hasTopNav={false} $hasHeader={false}>
       <TestHeader title="" hasPrevPage={true} onBack={handleBack} />
       <FormCard onSubmit={handleSubmit} role="form" aria-label="투자성향 진단 테스트 폼">
         <CardHead role="group" aria-label="테스트 헤더">

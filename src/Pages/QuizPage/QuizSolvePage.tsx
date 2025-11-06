@@ -107,7 +107,7 @@ export const QuizSolvePage = () => {
 
   if (isLoading) {
     return (
-      <Container $hasBottomNav={false}>
+      <Container $hasTopNav={false} $hasHeader={true}>
         <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
           퀴즈를 불러오는 중...
         </LoadingMessage>
@@ -117,7 +117,7 @@ export const QuizSolvePage = () => {
 
   if (error || !quizData) {
     return (
-      <Container $hasBottomNav={false}>
+      <Container $hasTopNav={false} $hasHeader={true}>
         <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
           퀴즈를 불러오는데 실패했습니다.
         </ErrorMessage>
@@ -172,7 +172,7 @@ export const QuizSolvePage = () => {
   };
 
   return (
-    <Container $scrollable $hasBottomNav={false}>
+    <Container $scrollable $hasTopNav={false} $hasHeader={true}>
       <Header title={headerTitle} hasPrevPage={true} backButtonTo={backButtonPath} />
       <Space />
       <QuizHeader

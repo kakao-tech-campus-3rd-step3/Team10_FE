@@ -31,7 +31,7 @@ export const TierPage = () => {
 
   if (isLoading) {
     return (
-      <Container $scrollable={true} $hasBottomNav={false}>
+      <Container $scrollable={true} $hasTopNav={false} $hasHeader={true}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
           <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
@@ -44,7 +44,7 @@ export const TierPage = () => {
 
   if (isError || !userTier) {
     return (
-      <Container $scrollable={true} $hasBottomNav={false}>
+      <Container $scrollable={true} $hasTopNav={false} $hasHeader={true}>
         <Header title="티어 페이지" hasPrevPage={true} />
         <ContentWrapper>
           <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
@@ -56,7 +56,7 @@ export const TierPage = () => {
   }
 
   return (
-    <Container $scrollable={true} $hasBottomNav={false}>
+    <Container $scrollable={true} $hasTopNav={false}>
       <Header title="티어 페이지" hasPrevPage={true} />
       <ContentWrapper>
         <TierCard role="region" aria-label="티어 정보">

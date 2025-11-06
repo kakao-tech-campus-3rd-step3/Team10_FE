@@ -37,7 +37,7 @@ export const SharingPage = () => {
 
   if (myPageIsLoading || testResultIsLoading) {
     return (
-      <Container $scrollable $hasBottomNav={false}>
+      <Container $scrollable $hasTopNav={false} $hasHeader={true}>
         <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
         <Spacing />
         <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
@@ -49,7 +49,7 @@ export const SharingPage = () => {
 
   if (myPageError || testResultError || !myPageData || !testResultData) {
     return (
-      <Container $scrollable $hasBottomNav={false}>
+      <Container $scrollable $hasTopNav={false} $hasHeader={true}>
         <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
         <Spacing />
         <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
@@ -65,7 +65,7 @@ export const SharingPage = () => {
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
 
   return (
-    <Container $scrollable $hasBottomNav={false}>
+    <Container $scrollable $hasTopNav={false}>
       <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
       <Spacing />
       <CaptureSession ref={captureRef} role="region" aria-label="공유할 콘텐츠">

@@ -56,7 +56,7 @@ export const AttendancePage: React.FC = () => {
   };
 
   return (
-    <Container $scrollable $hasBottomNav={false}>
+    <Container $scrollable $hasTopNav={false}>
       <PageContainer role="main" aria-label="출석 체크 페이지">
         <Header>출석 체크</Header>
 

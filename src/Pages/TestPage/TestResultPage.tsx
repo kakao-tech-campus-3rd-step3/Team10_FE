@@ -44,7 +44,7 @@ export const TestResultPage = ({
   const resultImage = RESULT_IMAGES[resolvedTypeText] || RESULT_IMAGES['안정형'];
 
   return (
-    <Container $scrollable={true}>
+    <Container $scrollable={true} $hasTopNav={false} $hasHeader={true}>
       <Header title="" hasPrevPage={true} />
       <ResultCard ref={captureRef}>
         <CardHead>
