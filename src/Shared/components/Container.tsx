@@ -46,18 +46,16 @@ const ScrollableArea = styled.div<{ $scrollable?: boolean }>`
 
 const BottomSpacer = styled.div`
   width: 100%;
-  height: calc(${theme.spacing(15)} + env(safe-area-inset-bottom, 0px));
+  height: ${theme.spacing(15)};
   background-color: transparent;
   flex-shrink: 0;
   z-index: -100;
-  pointer-events: none;
 `;
 
 const SafeAreaSpacer = styled.div`
   width: 100%;
-  height: env(safe-area-inset-bottom, 0px);
+  height: 0;
   background-color: transparent;
   flex-shrink: 0;
   z-index: -100;
-  pointer-events: none;
 `;
