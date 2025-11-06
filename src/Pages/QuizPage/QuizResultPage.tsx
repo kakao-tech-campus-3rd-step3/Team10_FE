@@ -34,7 +34,7 @@ export const QuizResultPage = () => {
 
   if (!quizData) {
     return (
-      <Container>
+      <Container $hasBottomNav={false}>
         <ErrorMessage>퀴즈 결과를 불러올 수 없습니다.</ErrorMessage>
       </Container>
     );
@@ -91,7 +91,7 @@ export const QuizResultPage = () => {
   const isLastReviewQuiz = isReviewMode && !nextReviewQuiz;
 
   return (
-    <Container $scrollable>
+    <Container $scrollable $hasBottomNav={false}>
       <Space />
       <QuizHeader
         questionOrder={questionOrder}

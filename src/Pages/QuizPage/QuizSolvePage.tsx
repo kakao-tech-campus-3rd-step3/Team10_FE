@@ -71,6 +71,8 @@ export const QuizSolvePage = () => {
       }
       // 복습 퀴즈 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
+      // 출석체크 상태 캐시 무효화 (퀴즈를 풀면 출석체크가 업데이트되므로)
+      queryClient.invalidateQueries({ queryKey: ['attendanceStatus'] });
 
       // 복습 모드일 때와 일반 모드일 때 결과 페이지 경로가 다름
       const resultPath = isReview
@@ -105,16 +107,20 @@ export const QuizSolvePage = () => {
 
   if (isLoading) {
     return (
-      <Container>
-        <LoadingMessage>퀴즈를 불러오는 중...</LoadingMessage>
+      <Container $hasBottomNav={false}>
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          퀴즈를 불러오는 중...
+        </LoadingMessage>
       </Container>
     );
   }
 
   if (error || !quizData) {
     return (
-      <Container>
-        <ErrorMessage>퀴즈를 불러오는데 실패했습니다.</ErrorMessage>
+      <Container $hasBottomNav={false}>
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          퀴즈를 불러오는데 실패했습니다.
+        </ErrorMessage>
       </Container>
     );
   }
@@ -122,6 +128,9 @@ export const QuizSolvePage = () => {
   const { questionTitle, difficultyLevel, questionOrder, questionType, questionData, topicName } =
     quizData;
   const headerTitle = isReview ? '복습 퀴즈' : topicName;
+
+  // 백버튼 경로 설정: 일반 모드일 때는 해당 토픽의 퀴즈 목록으로, 복습 모드일 때는 홈으로
+  const backButtonPath = isReview ? '/home' : topicId ? `/topics/${topicId}/quizzes` : '/topics';
 
   const renderQuestionContent = () => {
     switch (questionType) {
@@ -163,8 +172,8 @@ export const QuizSolvePage = () => {
   };
 
   return (
-    <Container $scrollable>
-      <Header title={headerTitle} hasPrevPage={true} />
+    <Container $scrollable $hasBottomNav={false}>
+      <Header title={headerTitle} hasPrevPage={true} backButtonTo={backButtonPath} />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
@@ -175,7 +184,12 @@ export const QuizSolvePage = () => {
         onBookmarkChange={handleBookmarkChange}
       />
       {renderQuestionContent()}
-      <ConfirmButtonContainer onClick={handleConfirm}>
+      <ConfirmButtonContainer
+        onClick={handleConfirm}
+        role="button"
+        aria-label="답안 제출하기"
+        tabIndex={0}
+      >
         <QuizConfirmButton
           text={submitQuizMutation.isPending ? '제출 중...' : '제출하기'}
           disabled={submitQuizMutation.isPending}

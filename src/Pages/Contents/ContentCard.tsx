@@ -19,19 +19,29 @@ export const ContentCard = ({
   onClick,
 }: ContentCardProps) => {
   return (
-    <CardContainer $backgroundColor={backgroundColor} onClick={onClick}>
-      <CardTextContent>
+    <CardContainer
+      $backgroundColor={backgroundColor}
+      onClick={onClick}
+      role="button"
+      aria-label={`${title} 콘텐츠 보기: ${subtitle}`}
+      tabIndex={0}
+    >
+      <CardTextContent role="group" aria-label="콘텐츠 정보">
         <CardTitle>{title}</CardTitle>
         <CardSubtitle>{subtitle}</CardSubtitle>
         {hashtag && hashtag.length > 0 && (
-          <CardHashtags>
+          <CardHashtags role="list" aria-label="해시태그">
             {hashtag.map((tag, index) => (
-              <HashtagItem key={index}>#{tag}</HashtagItem>
+              <HashtagItem key={index} role="listitem">
+                #{tag}
+              </HashtagItem>
             ))}
           </CardHashtags>
         )}
       </CardTextContent>
-      <CardButton>{buttonText}</CardButton>
+      <CardButton type="button" aria-label={buttonText}>
+        {buttonText}
+      </CardButton>
     </CardContainer>
   );
 };

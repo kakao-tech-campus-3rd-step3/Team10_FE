@@ -17,6 +17,11 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
   const hasAboveUsers = data.above1 || data.above2;
   const hasBelowUsers = data.below1 || data.below2;
 
+  // 닉네임이 4글자 이상이면 4글자만 표시하고 ... 추가하는 함수
+  const truncateNickname = (nickname: string) => {
+    return nickname.length > 3 ? `${nickname.slice(0, 3)}...` : nickname;
+  };
+
   return (
     <Container>
       {hasAboveUsers ? (
@@ -28,29 +33,30 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
       ) : (
         <Spacer />
       )}
-      {data.above2 && (
-        <OtherRankBox>
-          <OtherInfoScript>{data.above2.rank}등</OtherInfoScript>
-          <OtherInfoScript>{data.above2.nickname}</OtherInfoScript>
-          <OtherInfoScript>
-            {data.above2.point}
-            {isScoreRank ? '점' : '일'}
-          </OtherInfoScript>
-        </OtherRankBox>
-      )}
       {data.above1 && (
         <OtherRankBox>
           <OtherInfoScript>{data.above1.rank}등</OtherInfoScript>
-          <OtherInfoScript>{data.above1.nickname}</OtherInfoScript>
+          <OtherInfoScript>{truncateNickname(data.above1.nickname)}</OtherInfoScript>
           <OtherInfoScript>
             {data.above1.point}
             {isScoreRank ? '점' : '일'}
           </OtherInfoScript>
         </OtherRankBox>
       )}
+      {data.above2 && (
+        <OtherRankBox>
+          <OtherInfoScript>{data.above2.rank}등</OtherInfoScript>
+          <OtherInfoScript>{truncateNickname(data.above2.nickname)}</OtherInfoScript>
+          <OtherInfoScript>
+            {data.above2.point}
+            {isScoreRank ? '점' : '일'}
+          </OtherInfoScript>
+        </OtherRankBox>
+      )}
+
       <MyRankBox>
         <MyInfoScript>{data.myRank}등</MyInfoScript>
-        <MyInfoScript>{data.myName}</MyInfoScript>
+        <MyInfoScript>{truncateNickname(data.myName)}</MyInfoScript>
         <MyInfoScript>
           {data.myScore}
           {isScoreRank ? '점' : '일'}
@@ -59,7 +65,7 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
       {data.below1 && (
         <OtherRankBox>
           <OtherInfoScript>{data.below1.rank}등</OtherInfoScript>
-          <OtherInfoScript>{data.below1.nickname}</OtherInfoScript>
+          <OtherInfoScript>{truncateNickname(data.below1.nickname)}</OtherInfoScript>
           <OtherInfoScript>
             {data.below1.point}
             {isScoreRank ? '점' : '일'}
@@ -69,7 +75,7 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
       {data.below2 && (
         <OtherRankBox>
           <OtherInfoScript>{data.below2.rank}등</OtherInfoScript>
-          <OtherInfoScript>{data.below2.nickname}</OtherInfoScript>
+          <OtherInfoScript>{truncateNickname(data.below2.nickname)}</OtherInfoScript>
           <OtherInfoScript>
             {data.below2.point}
             {isScoreRank ? '점' : '일'}

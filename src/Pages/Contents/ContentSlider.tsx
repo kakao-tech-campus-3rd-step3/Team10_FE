@@ -49,17 +49,19 @@ export const ContentSlider = ({ contents, onContentClick }: ContentSliderProps) 
   if (contents.length === 0) return null;
 
   return (
-    <SliderSection>
+    <SliderSection role="region" aria-label="추천 콘텐츠 슬라이더">
       <SliderContainer>
-        <SliderWrapper>
+        <SliderWrapper role="group" aria-label={`콘텐츠 슬라이더, ${currentIndex + 1}번째 콘텐츠`}>
           <SliderTrack
             style={{
               transform: `translateX(-${currentIndex * 100}%)`,
               width: `${contents.length * 100}%`,
             }}
+            role="list"
+            aria-label="콘텐츠 슬라이드 목록"
           >
             {contents.map((content) => (
-              <SlideItem key={content.id}>
+              <SlideItem key={content.id} role="listitem">
                 <ContentCard
                   title={content.title}
                   subtitle={content.subtitle}
@@ -75,23 +77,26 @@ export const ContentSlider = ({ contents, onContentClick }: ContentSliderProps) 
 
         {contents.length > 1 && (
           <>
-            <PrevButton onClick={goToPrevious}>
-              <ArrowIcon>‹</ArrowIcon>
+            <PrevButton onClick={goToPrevious} aria-label="이전 콘텐츠 보기">
+              <ArrowIcon aria-hidden="true">‹</ArrowIcon>
             </PrevButton>
-            <NextButton onClick={goToNext}>
-              <ArrowIcon>›</ArrowIcon>
+            <NextButton onClick={goToNext} aria-label="다음 콘텐츠 보기">
+              <ArrowIcon aria-hidden="true">›</ArrowIcon>
             </NextButton>
           </>
         )}
       </SliderContainer>
 
       {contents.length > 1 && (
-        <IndicatorContainer>
+        <IndicatorContainer role="tablist" aria-label="콘텐츠 슬라이드 인디케이터">
           {contents.map((_, index) => (
             <Indicator
               key={index}
               $isActive={index === currentIndex}
               onClick={() => goToSlide(index)}
+              role="tab"
+              aria-label={`${index + 1}번째 콘텐츠로 이동`}
+              aria-selected={index === currentIndex}
             />
           ))}
         </IndicatorContainer>

@@ -24,43 +24,79 @@ export const SharingPage = () => {
     copyToClipboard();
   };
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
-  const { data: testResultData } = useQueryApi<TestResult>(
-    ['users', 'me', 'propensity'],
-    '/users/me/propensity',
-  );
+  const {
+    data: myPageData,
+    error: myPageError,
+    isLoading: myPageIsLoading,
+  } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const {
+    data: testResultData,
+    error: testResultError,
+    isLoading: testResultIsLoading,
+  } = useQueryApi<TestResult>(['users', 'me', 'propensity'], '/users/me/propensity');
+
+  if (myPageIsLoading || testResultIsLoading) {
+    return (
+      <Container $scrollable $hasBottomNav={false}>
+        <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
+        <Spacing />
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          데이터를 불러오는 중...
+        </LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (myPageError || testResultError || !myPageData || !testResultData) {
+    return (
+      <Container $scrollable $hasBottomNav={false}>
+        <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
+        <Spacing />
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          데이터를 불러오는데 실패했습니다.
+        </ErrorMessage>
+      </Container>
+    );
+  }
+
   const resultDescription = testResultData?.propensityKoreanName
     ? DESCRIPTIONS[testResultData.propensityKoreanName]
     : undefined;
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
 
   return (
-    <Container>
-      <Header title="공유하기" hasPrevPage={true} />
+    <Container $scrollable $hasBottomNav={false}>
+      <Header title="공유하기" hasPrevPage={true} backButtonTo={-1} />
       <Spacing />
-      <CaptureSession ref={captureRef}>
-        <CharacterAndNicknameWrapper>
+      <CaptureSession ref={captureRef} role="region" aria-label="공유할 콘텐츠">
+        <CharacterAndNicknameWrapper role="group" aria-label="사용자 정보">
           <Space />
           <Character
             key={characterSrc}
             src={characterSrc}
-            alt="캐릭터"
+            alt="사용자 캐릭터"
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
             }}
           />
-          <NicknameBox>
-            <Nickname>{myPageData?.nickname}</Nickname>
+          <NicknameBox role="group" aria-label="닉네임">
+            <Nickname aria-label={`닉네임: ${myPageData?.nickname}`}>
+              {myPageData?.nickname}
+            </Nickname>
           </NicknameBox>
         </CharacterAndNicknameWrapper>
-        <ResultWrapper>
+        <ResultWrapper role="group" aria-label="투자 성향 결과">
           <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
           <ResultDescription>{resultDescription}</ResultDescription>
         </ResultWrapper>
       </CaptureSession>
-      <ButtonWrapper>
-        <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
-        <CopyButton onClick={handleCopyClick}>복사하기</CopyButton>
+      <ButtonWrapper role="group" aria-label="공유 액션 버튼">
+        <SaveButton onClick={handleSaveClick} aria-label="이미지 저장하기">
+          저장하기
+        </SaveButton>
+        <CopyButton onClick={handleCopyClick} aria-label="이미지 클립보드에 복사하기">
+          복사하기
+        </CopyButton>
       </ButtonWrapper>
     </Container>
   );
@@ -193,4 +229,22 @@ const CaptureSession = styled.div`
 `;
 const Space = styled.div`
   height: ${theme.spacing(10)};
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;

@@ -18,11 +18,17 @@ export const MyPage = () => {
   const { clearTokens } = useTokenCookies();
   const queryClient = useQueryClient();
 
-  const { data: myPageData } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
-  const { data: testResultData } = useQueryApi<TestResult>(
-    ['users', 'me', 'propensity'],
-    '/users/me/propensity',
-  );
+  const {
+    data: myPageData,
+    error: myPageError,
+    isLoading: myPageIsLoading,
+  } = useQueryApi<MyPageResponse>(['page', 'mypage'], '/page/mypage');
+  const {
+    data: testResultData,
+    error: testResultError,
+    isLoading: testResultIsLoading,
+  } = useQueryApi<TestResult>(['users', 'me', 'propensity'], '/users/me/propensity');
+
   const handleShareClick = () => {
     navigate('/sharing');
   };
@@ -33,36 +39,66 @@ export const MyPage = () => {
     navigate('/login');
   };
 
+  if (myPageIsLoading || testResultIsLoading) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="마이 페이지" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          데이터를 불러오는 중...
+        </LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (myPageError || testResultError || !myPageData || !testResultData) {
+    return (
+      <Container $scrollable={true}>
+        <Header title="마이 페이지" hasPrevPage={true} />
+        <NavigationBar />
+        <StatusActionBar />
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          데이터를 불러오는데 실패했습니다.
+        </ErrorMessage>
+      </Container>
+    );
+  }
+
   const characterSrc = toAbsoluteUrl(myPageData?.characterUri) || CharacterMain;
   const resultDescription = testResultData?.propensityKoreanName
     ? DESCRIPTIONS[testResultData.propensityKoreanName]
     : undefined;
 
   return (
-    <Container>
+    <Container $scrollable={true}>
       <Header title="마이 페이지" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
-      <CharacterAndNicknameWrapper>
+      <CharacterAndNicknameWrapper role="region" aria-label="사용자 정보">
         <Character
           key={characterSrc}
           src={characterSrc}
-          alt="캐릭터"
+          alt="사용자 캐릭터"
           onError={(e) => {
             e.currentTarget.src = CharacterMain;
           }}
         />
-        <NicknameBox>
-          <Nickname>{myPageData?.nickname}</Nickname>
+        <NicknameBox role="group" aria-label="닉네임">
+          <Nickname aria-label={`닉네임: ${myPageData?.nickname}`}>{myPageData?.nickname}</Nickname>
         </NicknameBox>
       </CharacterAndNicknameWrapper>
-      <ResultWrapper>
+      <ResultWrapper role="region" aria-label="투자 성향 결과">
         <ResultTitle>{testResultData?.propensityKoreanName}</ResultTitle>
         <ResultDescription>{resultDescription}</ResultDescription>
       </ResultWrapper>
-      <ButtonWrapper>
-        <ShareButton onClick={handleShareClick}>공유하기</ShareButton>
-        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      <ButtonWrapper role="group" aria-label="액션 버튼">
+        <ShareButton onClick={handleShareClick} aria-label="투자 성향 결과 공유하기">
+          공유하기
+        </ShareButton>
+        <LogoutButton onClick={handleLogout} aria-label="로그아웃">
+          로그아웃
+        </LogoutButton>
       </ButtonWrapper>
     </Container>
   );
@@ -182,4 +218,22 @@ const LogoutButton = styled.button`
   &:active {
     transform: scale(0.98);
   }
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #dc3545;
 `;

@@ -20,8 +20,10 @@ interface TopicResponse {
 
 export const TopicSelectPage = () => {
   const navigate = useNavigate();
-  const handleTopicButtonClick = (topicId: number, topicName: string) => {
-    navigate(`/topics/${topicId}/quizzes`, { state: { topicName } });
+  const handleTopicButtonClick = (topicId: number, topicName: string, totalQuizCount: number) => {
+    navigate(`/topics/${topicId}/quizzes`, {
+      state: { topicName, totalQuizCount },
+    });
   };
 
   const { data: quizListData, error } = useQueryApi<TopicResponse>(['topics'], '/topics');
@@ -31,7 +33,9 @@ export const TopicSelectPage = () => {
       <Container>
         <Header hasPrevPage={true} title="" />
         <QuizListContainer>
-          <QuizListTitle>에러가 발생했습니다</QuizListTitle>
+          <QuizListTitle role="alert" aria-live="assertive">
+            에러가 발생했습니다
+          </QuizListTitle>
         </QuizListContainer>
       </Container>
     );
@@ -40,13 +44,10 @@ export const TopicSelectPage = () => {
   return (
     <Container>
       <Header hasPrevPage={true} title="" />
-      <QuizListContainer>
-        <QuizListImage src={QuizListImg} />
+      <QuizListContainer role="main" aria-label="퀴즈 토픽 선택 페이지">
+        <QuizListImage src={QuizListImg} alt="퀴즈 목록 아이콘" />
         <QuizListTitle>분야를 선택 해주세요</QuizListTitle>
-        <QuizListDescription>
-          "경제 기초"를 제외한 분야는 새싹 단계 이상에서 잠금 해제 됩니다!
-        </QuizListDescription>
-        <QuizListButtonSection>
+        <QuizListButtonSection role="list" aria-label="토픽 목록">
           {quizListData?.topics?.map((topic) => (
             <TopicButton
               key={topic.topicId}
@@ -54,7 +55,9 @@ export const TopicSelectPage = () => {
               solvedQuizCount={topic.solvedQuizCount}
               totalQuizCount={topic.totalQuizCount}
               isAble={true}
-              onClick={() => handleTopicButtonClick(topic.topicId, topic.topicName)}
+              onClick={() =>
+                handleTopicButtonClick(topic.topicId, topic.topicName, topic.totalQuizCount)
+              }
             />
           ))}
         </QuizListButtonSection>
@@ -79,14 +82,6 @@ const QuizListTitle = styled.div`
   font-family: ${theme.font.bold.fontFamily};
   font-weight: ${theme.font.bold.fontWeight};
   color: #000000;
-`;
-const QuizListDescription = styled.div`
-  font-size: 12px;
-  font-family: ${theme.font.regular.fontFamily};
-  font-weight: ${theme.font.regular.fontWeight};
-  color: #000000;
-  opacity: 0.4;
-  margin-top: 8px;
 `;
 const QuizListButtonSection = styled.div`
   flex: 1;

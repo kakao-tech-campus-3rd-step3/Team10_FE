@@ -2,15 +2,24 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import BackButton from './backButton';
 import { useNavigate } from 'react-router-dom';
-export const Header = ({ title, hasPrevPage }: { title: string; hasPrevPage: boolean }) => {
+
+type HeaderProps = {
+  title: string;
+  hasPrevPage: boolean;
+  backButtonTo?: string | number; // 백버튼이 이동할 경로. 미지정 시 BackButton 기본 동작
+};
+
+export const Header = ({ title, hasPrevPage, backButtonTo }: HeaderProps) => {
   const navigate = useNavigate();
   const onTitleClick = () => {
     navigate('/home');
   };
   return (
-    <Container>
-      {hasPrevPage && <BackButton />}
-      <Title onClick={onTitleClick}>{title}</Title>
+    <Container role="banner">
+      {hasPrevPage && <BackButton to={backButtonTo} />}
+      <Title onClick={onTitleClick} role="button" aria-label="홈으로 이동" tabIndex={0}>
+        {title}
+      </Title>
     </Container>
   );
 };

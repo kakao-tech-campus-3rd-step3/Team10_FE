@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { MyRank } from './MyRank';
 import type { RankingUser } from './types';
 
@@ -7,51 +6,26 @@ export const MyRankSection = ({
   currentUser,
   aboveUsers,
   belowUsers,
-  topRankingUsers,
 }: {
   isScoreRank: boolean;
   currentUser: RankingUser;
   aboveUsers: RankingUser[];
   belowUsers: RankingUser[];
-  topRankingUsers: RankingUser[];
 }) => {
-  const availableUsers = useMemo(() => {
-    return topRankingUsers
-      .filter((user) => user.nickname !== currentUser.nickname)
-      .sort((a, b) => b.point - a.point);
-  }, [topRankingUsers, currentUser.nickname]);
-
-  const allAboveUsers = useMemo(() => {
-    const combined = [
-      ...(aboveUsers ?? []),
-      ...availableUsers.filter((user) => user.rank < currentUser.rank),
-    ];
-    const unique = Array.from(new Map(combined.map((user) => [user.nickname, user])).values());
-    return unique.sort((a, b) => b.point - a.point).slice(0, 2);
-  }, [aboveUsers, availableUsers, currentUser.rank]);
-
-  const allBelowUsers = useMemo(() => {
-    const combined = [
-      ...(belowUsers ?? []),
-      ...availableUsers.filter((user) => user.rank > currentUser.rank),
-    ];
-    const unique = Array.from(new Map(combined.map((user) => [user.nickname, user])).values());
-    return unique.sort((a, b) => a.rank - b.rank).slice(0, 2);
-  }, [belowUsers, availableUsers, currentUser.rank]);
-
-  const above1 = allAboveUsers[0];
-  const above2 = allAboveUsers[1];
-  const below1 = allBelowUsers[0];
-  const below2 = allBelowUsers[1];
+  // API 응답 데이터를 그대로 사용 (이미 정렬되어 있음)
+  const above1 = aboveUsers?.[0] || null;
+  const above2 = aboveUsers?.[1] || null;
+  const below1 = belowUsers?.[0] || null;
+  const below2 = belowUsers?.[1] || null;
 
   const data = {
-    above1: above1 || null,
-    above2: above2 || null,
+    above1,
+    above2,
     myRank: currentUser.rank,
     myName: currentUser.nickname,
     myScore: currentUser.point,
-    below1: below1 || null,
-    below2: below2 || null,
+    below1,
+    below2,
   };
 
   return <MyRank data={data} isScoreRank={isScoreRank} />;

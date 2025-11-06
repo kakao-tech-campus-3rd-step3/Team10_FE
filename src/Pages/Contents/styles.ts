@@ -5,7 +5,7 @@ export const ContentsPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 export const MoreButtonContainer = styled.div`

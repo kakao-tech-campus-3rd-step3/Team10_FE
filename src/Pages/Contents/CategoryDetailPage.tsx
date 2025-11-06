@@ -17,7 +17,7 @@ export const CategoryDetailPage = () => {
   if (!category) {
     return (
       <Container $scrollable={true}>
-        <Header title="카테고리 상세" hasPrevPage={true} />
+        <Header title="카테고리 상세" hasPrevPage={true} backButtonTo={'/contents'} />
         <NavigationBar />
         <DetailPageContainer>
           <ErrorMessage>해당 카테고리를 찾을 수 없습니다.</ErrorMessage>
@@ -28,7 +28,7 @@ export const CategoryDetailPage = () => {
 
   return (
     <Container $scrollable={true}>
-      <Header title={category.title} hasPrevPage={true} />
+      <Header title={category.title} hasPrevPage={true} backButtonTo={'/contents'} />
       <NavigationBar />
       <DetailPageContainer>
         <CategoryHeader>
@@ -56,7 +56,7 @@ const DetailPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 const CategoryHeader = styled.div`

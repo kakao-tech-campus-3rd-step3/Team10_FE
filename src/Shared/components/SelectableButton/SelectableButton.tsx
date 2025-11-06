@@ -7,9 +7,23 @@ type RankButtonProps = {
   onClick?: () => void;
 };
 
-export const SelectableButton = ({ $isActive, buttonText, onClick }: RankButtonProps) => {
+export const SelectableButton = ({
+  $isActive,
+  buttonText,
+  onClick,
+  role,
+  ariaSelected,
+  ariaLabel,
+}: RankButtonProps & { role?: string; ariaSelected?: boolean; ariaLabel?: string }) => {
   return (
-    <Button $isActive={$isActive} onClick={onClick}>
+    <Button
+      $isActive={$isActive}
+      onClick={onClick}
+      type="button"
+      role={role}
+      aria-selected={ariaSelected}
+      aria-label={ariaLabel}
+    >
       <ButtonText $isActive={$isActive}>{buttonText}</ButtonText>
     </Button>
   );

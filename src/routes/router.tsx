@@ -4,7 +4,7 @@ import MyPage from '@/Pages/MyPage';
 import SharingPage from '@/Pages/MyPage/SharingPage';
 import SplashPage from '@/Pages/StartPage/SplashPage';
 import LoginPage from '@/Pages/StartPage/LoginPage';
-import CharacterCreatePage from '@/Pages/StartPage/CharacterCreatePage';
+import { CharacterCreatePage } from '@/Pages/StartPage/CharacterCreatePage';
 import { KakaoCallbackPage } from '@/Pages/StartPage/KakaoCallbackPage';
 import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
@@ -180,6 +180,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <CustomizePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/nickname-edit',
+    element: (
+      <ProtectedRoute>
+        <CharacterCreatePage mode="edit" />
       </ProtectedRoute>
     ),
   },

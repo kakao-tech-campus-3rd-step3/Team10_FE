@@ -34,9 +34,16 @@ export const NameInput = ({ value, onChange, placeholder, onValidationChange }: 
         onChange={onChange}
         placeholder={placeholder}
         $isValid={isValid}
+        aria-label="닉네임 입력"
+        aria-invalid={!isValid}
+        aria-describedby={!isValid ? 'name-error' : undefined}
       />
       <ErrorMessageContainer>
-        {!isValid && <ErrorMessage>유효하지 않은 이름입니다</ErrorMessage>}
+        {!isValid && (
+          <ErrorMessage id="name-error" role="alert" aria-live="polite">
+            유효하지 않은 이름입니다
+          </ErrorMessage>
+        )}
       </ErrorMessageContainer>
     </InputContainer>
   );
