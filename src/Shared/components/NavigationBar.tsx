@@ -34,7 +34,7 @@ const NavWrapper = styled.nav`
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  height: ${theme.spacing(15)};
+  height: calc(${theme.spacing(15)} + env(safe-area-inset-bottom));
   max-width: 720px;
   display: flex;
   justify-content: space-around;
@@ -42,6 +42,7 @@ const NavWrapper = styled.nav`
   border-top: 1px solid ${theme.colors.line};
   background-color: ${theme.colors.background};
   z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
 `;
 
 const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`

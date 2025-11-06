@@ -17,7 +17,6 @@ export const MyRank = ({ data, isScoreRank }: { data: RankNeighborData; isScoreR
   const hasAboveUsers = data.above1 || data.above2;
   const hasBelowUsers = data.below1 || data.below2;
 
-  // 닉네임이 4글자 이상이면 4글자만 표시하고 ... 추가하는 함수
   const truncateNickname = (nickname: string) => {
     return nickname.length > 3 ? `${nickname.slice(0, 3)}...` : nickname;
   };
@@ -136,6 +135,8 @@ const OtherInfoScript = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -163,6 +164,8 @@ const MyInfoScript = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
