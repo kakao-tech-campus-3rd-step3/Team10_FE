@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { QuizListResponse } from '@/Pages/QuizPage/types';
 
 const PAGE_SIZE = 10;
@@ -18,6 +18,13 @@ export const QuizListPage = () => {
   const topicName = location.state?.topicName;
   const totalQuizCount = location.state?.totalQuizCount || 0;
   const [currentPage, setCurrentPage] = useState(0);
+
+  // location.state에서 페이지 정보가 있으면 업데이트
+  useEffect(() => {
+    if (location.state?.currentPage !== undefined) {
+      setCurrentPage(location.state.currentPage);
+    }
+  }, [location.state]);
 
   const {
     data: quizListData,
@@ -32,7 +39,13 @@ export const QuizListPage = () => {
   const totalPages = Math.ceil(totalQuizCount / PAGE_SIZE);
 
   const handleQuizClick = (quizId: number) => {
-    navigate(`/topics/${topicId}/quizzes/${quizId}`);
+    navigate(`/topics/${topicId}/quizzes/${quizId}`, {
+      state: {
+        currentPage,
+        topicName,
+        totalQuizCount,
+      },
+    });
   };
 
   if (isLoading) {

@@ -87,6 +87,10 @@ export const QuizSolvePage = () => {
           isReview: isReview || reviewState?.isReview,
           reviewQuizzes: reviewState?.reviewQuizzes,
           currentReviewIndex: reviewState?.currentReviewIndex,
+          // 페이지네이션 정보 전달
+          currentPage: location.state?.currentPage,
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
         },
       });
     } catch {

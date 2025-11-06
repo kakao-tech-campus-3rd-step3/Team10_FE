@@ -13,16 +13,41 @@ export const QuizResultPage = () => {
   const location = useLocation();
   const { topicId } = useParams<{ topicId?: string }>();
 
-  const { selectedAnswer, isCorrect, quizData, isReview, reviewQuizzes, currentReviewIndex } =
-    location.state as QuizResultState;
+  const {
+    selectedAnswer,
+    isCorrect,
+    quizData,
+    isReview,
+    reviewQuizzes,
+    currentReviewIndex,
+    currentPage,
+    totalQuizCount,
+  } = location.state as QuizResultState & {
+    currentPage?: number;
+    totalQuizCount?: number;
+  };
 
   const isRecordPage = topicId === 'wrong' || topicId === 'bookmark';
   const isReviewMode = isReview === true;
 
+  // 현재 페이지의 퀴즈 목록 가져오기
+  const currentPageForQuery = currentPage ?? 0;
   const { data: quizListData } = useQueryApi<QuizListResponse>(
-    ['topics', topicId || ''],
-    `/topics/${topicId || ''}`,
+    ['topics', topicId || '', currentPageForQuery],
+    `/topics/${topicId || ''}?page=${currentPageForQuery}&size=10`,
     { enabled: !isRecordPage && !isReviewMode },
+  );
+
+  // 다음 페이지의 첫 번째 퀴즈 확인 (현재 페이지의 마지막 퀴즈인 경우)
+  const nextPageIndex = currentPageForQuery + 1;
+  const PAGE_SIZE = 10;
+  const totalPages = totalQuizCount ? Math.ceil(totalQuizCount / PAGE_SIZE) : 0;
+  const hasNextPage = nextPageIndex < totalPages;
+
+  const { data: nextPageQuizListData } = useQueryApi<QuizListResponse>(
+    ['topics', topicId || '', nextPageIndex],
+    `/topics/${topicId || ''}?page=${nextPageIndex}&size=10`,
+    { enabled: !isRecordPage && !isReviewMode && hasNextPage },
   );
 
   const handleBookmarkChange = (quizId: number) => {
@@ -44,7 +69,26 @@ export const QuizResultPage = () => {
     quizData;
 
   const quizzes = quizListData?.quizzes || [];
-  const nextQuiz = !isReviewMode ? findNextQuiz(quizzes, quizId) : null;
+
+  // 다음 퀴즈 찾기: 현재 페이지에서 다음 퀴즈가 있으면 사용
+  let nextQuiz = !isReviewMode ? findNextQuiz(quizzes, quizId) : null;
+
+  // 현재 페이지에서 다음 퀴즈를 못 찾았고, 현재 퀴즈가 현재 페이지의 마지막인 경우
+  const isLastInCurrentPage = quizzes.length > 0 && quizzes[quizzes.length - 1]?.quizId === quizId;
+
+  // 현재 페이지의 마지막 퀴즈이고, 다음 페이지가 있는 경우
+  if (
+    !nextQuiz &&
+    !isReviewMode &&
+    isLastInCurrentPage &&
+    hasNextPage &&
+    nextPageQuizListData &&
+    nextPageQuizListData.quizzes &&
+    nextPageQuizListData.quizzes.length > 0
+  ) {
+    // 다음 페이지의 첫 번째 퀴즈를 다음 퀴즈로 설정
+    nextQuiz = nextPageQuizListData.quizzes[0];
+  }
 
   // 복습 모드일 때 다음 복습 퀴즈 찾기
   let nextReviewQuiz = null;
@@ -68,7 +112,20 @@ export const QuizResultPage = () => {
     } else if (!isReviewMode && nextQuiz) {
       // 일반 모드일 때 다음 퀴즈로 이동
       const nextPath = getNextQuizPath(Number(topicId), nextQuiz.quizId);
-      navigate(nextPath);
+
+      // 다음 퀴즈가 다음 페이지에 있는 경우 페이지 정보 업데이트
+      const currentPageIndex = currentPage ?? 0;
+      const isNextQuizInNextPage =
+        nextPageQuizListData?.quizzes?.some((q) => q.quizId === nextQuiz.quizId) ?? false;
+      const nextPageForState = isNextQuizInNextPage ? currentPageIndex + 1 : currentPageIndex;
+
+      navigate(nextPath, {
+        state: {
+          currentPage: nextPageForState,
+          topicName: location.state?.topicName,
+          totalQuizCount: totalQuizCount,
+        },
+      });
     }
   };
 
@@ -82,8 +139,16 @@ export const QuizResultPage = () => {
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'wrong'] });
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
     } else {
-      navigate(`/topics/${topicId}/quizzes`);
-      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+      // 현재 페이지 정보를 유지하기 위해 state로 전달
+      const currentPageFromState = location.state?.currentPage ?? 0;
+      navigate(`/topics/${topicId}/quizzes`, {
+        state: {
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
+          currentPage: currentPageFromState,
+        },
+      });
+      // 쿼리 무효화는 하지 않고, 페이지 정보만 전달하여 페이지네이션 유지
     }
   };
 
