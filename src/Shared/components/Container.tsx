@@ -17,7 +17,7 @@ export const Container = ({
   return (
     <StyledContainer {...props}>
       <ScrollableArea $scrollable={$scrollable}>{children}</ScrollableArea>
-      {$hasBottomNav && <BottomSpacer />}
+      {$hasBottomNav ? <BottomSpacer /> : <SafeAreaSpacer />}
     </StyledContainer>
   );
 };
@@ -46,7 +46,15 @@ const ScrollableArea = styled.div<{ $scrollable?: boolean }>`
 
 const BottomSpacer = styled.div`
   width: 100%;
-  height: ${theme.spacing(15)};
+  height: calc(${theme.spacing(15)} + env(safe-area-inset-bottom));
+  background-color: transparent;
+  flex-shrink: 0;
+  z-index: -100;
+`;
+
+const SafeAreaSpacer = styled.div`
+  width: 100%;
+  height: env(safe-area-inset-bottom);
   background-color: transparent;
   flex-shrink: 0;
   z-index: -100;
