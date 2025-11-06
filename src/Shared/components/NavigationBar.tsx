@@ -30,7 +30,7 @@ export default NavigationBar;
 
 const NavWrapper = styled.nav`
   position: fixed;
-  bottom: env(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -38,10 +38,12 @@ const NavWrapper = styled.nav`
   max-width: 720px;
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: stretch;
   border-top: 1px solid ${theme.colors.line};
   background-color: ${theme.colors.background};
   z-index: 1000;
+  box-sizing: border-box;
+  overflow: visible;
 `;
 
 const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`
@@ -62,6 +64,8 @@ const NavItem = styled.div<{ active?: boolean; $isLongText?: boolean }>`
   white-space: normal;
   height: 100%;
   line-height: 1.3;
+  box-sizing: border-box;
+  overflow: visible;
 
   ${(props) =>
     props.$isLongText &&
