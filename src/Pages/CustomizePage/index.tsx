@@ -20,6 +20,7 @@ import Costume4 from '@/assets/CustomizeImg/4.webp';
 import Costume5 from '@/assets/CustomizeImg/5.webp';
 import Costume6 from '@/assets/CustomizeImg/6.webp';
 import Costume7 from '@/assets/CustomizeImg/7.webp';
+import { useNavigate } from 'react-router-dom';
 
 const costumePreviewMap: Record<number, string> = {
   0: Costume0,
@@ -48,6 +49,7 @@ export const CustomizePage = () => {
   const costumeList: CostumeItem[] = costumeData?.costumeItems ?? [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (costumeList.length > 0) {
@@ -79,6 +81,7 @@ export const CustomizePage = () => {
         queryClient.invalidateQueries({ queryKey: ['usernickname'] }),
       ]);
       alert('착용하기 완료');
+      navigate('/home');
     } catch (err) {
       alert('착용하기에 실패했습니다. 다시 시도해주세요.');
     }
