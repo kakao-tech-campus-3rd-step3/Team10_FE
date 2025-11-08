@@ -622,3 +622,11 @@ describe('Component', () => {
 프로젝트 관련 문의사항이 있으시면 이슈를 생성해주세요.
 
 ---
+
+## 이게머니 FE 팀 구성원
+
+|                       [김도완](https://github.com/dowankim1024)                       |                       [성민기](https://github.com/wannagola)                       |                       [권소현](https://github.com/thgus0)                       |
+| :-----------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------: |
+| <img src="https://github.com/dowankim1024.png" alt="김도완" width="100" height="100"> | <img src="https://github.com/wannagola.png" alt="성민기" width="100" height="100"> | <img src="https://github.com/thgus0.png" alt="권소현" width="100" height="100"> |
+|                                          FE                                           |                                         FE                                         |                                       FE                                        |
+|                                      FE 테크리더                                      |                                       메이커                                       |                                     메이커                                      |
