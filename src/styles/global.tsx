@@ -19,6 +19,10 @@ export const GlobalStyles = () => {
           font-family: 'pretendard';
           background: #fff;
           color: #000000;
+          overflow-x: hidden;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-gutter: stable;
         }
         a {
           color: inherit;

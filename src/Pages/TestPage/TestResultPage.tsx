@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
-import ConfirmButton from './ConfirmButton';
-import TestResultImage from '@/assets/TestPage/kongsik_sleep.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
-import { DESCRIPTIONS } from './constants';
+import { DESCRIPTIONS, RESULT_IMAGES } from './constants';
+import { useRef, type RefObject } from 'react';
+import { useCaptureImage } from '../MyPage/useCaptureImage';
 
 interface TestResultPageProps {
   typeText?: string;
@@ -14,10 +14,25 @@ interface TestResultPageProps {
 
 export const TestResultPage = ({
   typeText = '안정형',
-  description = '“예금이나 적금 수준의 수익률을 기대하며, 투자원금에 손실이 발생하는 것을 원하지 않는다. 원금손실의 우려가 없는 상품에 투자하는 것이 바람직하다.”',
+  description = '"예금이나 적금 수준의 수익률을 기대하며, 투자원금에 손실이 발생하는 것을 원하지 않는다. 원금손실의 우려가 없는 상품에 투자하는 것이 바람직하다."',
 }: TestResultPageProps) => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const captureRef = useRef<HTMLDivElement>(null);
+  const { captureImage, copyToClipboard } = useCaptureImage(
+    captureRef as RefObject<HTMLElement>,
+    '투자성향_진단결과.png',
+  );
+  const navigate = useNavigate();
+  const handleSaveClick = () => {
+    captureImage();
+  };
+
+  const handleCopyClick = () => {
+    copyToClipboard();
+  };
+  const handleHomeClick = () => {
+    navigate('/home');
+  };
 
   const state = (location.state || {}) as {
     propensityKoreanName?: string;
@@ -26,25 +41,25 @@ export const TestResultPage = ({
 
   const resolvedTypeText = state.propensityKoreanName || typeText;
   const resolvedDescription = DESCRIPTIONS[resolvedTypeText] ?? description;
+  const resultImage = RESULT_IMAGES[resolvedTypeText] || RESULT_IMAGES['안정형'];
 
-  const handleGoHome = () => {
-    navigate('/home');
-  };
   return (
-    <Container $scrollable={true}>
+    <Container $scrollable={true} $hasTopNav={false} $hasHeader={true}>
       <Header title="" hasPrevPage={true} />
-      <ResultCard>
+      <ResultCard ref={captureRef}>
         <CardHead>
           <Title>투자성향 진단 테스트</Title>
         </CardHead>
         <Divider />
-        <Image src={TestResultImage} alt="테스트 결과 이미지" />
+        <Image src={resultImage} alt={`${resolvedTypeText} 투자자 타입 이미지`} />
         <Type>{resolvedTypeText}</Type>
         <Desc>{resolvedDescription}</Desc>
       </ResultCard>
-      <ButtonContainer onClick={handleGoHome}>
-        <ConfirmButton text="저장하기" />
-      </ButtonContainer>
+      <ButtonWrapper>
+        <SaveButton onClick={handleSaveClick}>저장하기</SaveButton>
+        <CopyButton onClick={handleCopyClick}>복사하기</CopyButton>
+        <HomeButton onClick={handleHomeClick}>홈으로 가기</HomeButton>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -117,9 +132,66 @@ const Desc = styled.p`
   white-space: pre-line;
 `;
 
-const ButtonContainer = styled.div`
+const ButtonWrapper = styled.div`
+  width: 90%;
+  margin: ${theme.spacing(4)} auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 45px;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+`;
+
+const SaveButton = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(4)};
+  background-color: ${theme.colors.secondary};
+  color: #fff;
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  border: none;
+  border-radius: ${theme.spacing(5)};
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const CopyButton = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(4)};
+  background-color: #ffffff;
+  color: ${theme.colors.secondary};
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  border: 2px solid ${theme.colors.secondary};
+  border-radius: ${theme.spacing(5)};
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f7f7f7;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+const HomeButton = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(4)};
+  background-color: #6d9873;
+  color: #fff;
+  font-family: ${theme.font.bold.fontFamily};
+  font-weight: ${theme.font.bold.fontWeight};
+  font-size: 16px;
+  border: none;
+  border-radius: ${theme.spacing(5)};
+  cursor: pointer;
 `;

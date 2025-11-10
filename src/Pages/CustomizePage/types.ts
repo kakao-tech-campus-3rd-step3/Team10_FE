@@ -1,8 +1,14 @@
 export type CostumeItem = {
-  costumeItemImageUrl: string;
-  isWorn: boolean;
   id: number;
+  isWorn: boolean;
+  costumeItemImageUrl: string;
 };
-
-export type wearReq = { id: number };
-export type wearRes = void;
+export type CostumeListResponse = {
+  costumeItems: CostumeItem[];
+};
+export interface HomeResponse {
+  characterUri: string;
+  nickname: string;
+  tierName: string;
+  testResult: string;
+}

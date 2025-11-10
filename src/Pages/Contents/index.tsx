@@ -34,19 +34,25 @@ export const ContentsPage = () => {
     <Container $scrollable={true}>
       <Header title="금융 콘텐츠" hasPrevPage={true} />
       <NavigationBar />
-      <ContentsPageContainer>
+      <ContentsPageContainer role="main" aria-label="금융 콘텐츠 페이지">
         <ContentSlider contents={slideContents} onContentClick={handleContentClick} />
 
         <MoreButtonContainer>
-          <MoreButton onClick={toggleAllContents}>
+          <MoreButton
+            onClick={toggleAllContents}
+            aria-label={showAllContents ? '콘텐츠 목록 접기' : '전체 콘텐츠 더보기'}
+            aria-expanded={showAllContents}
+          >
             {showAllContents ? '접기' : '더보기'}
-            <ButtonIcon $isExpanded={showAllContents}>▼</ButtonIcon>
+            <ButtonIcon $isExpanded={showAllContents} aria-hidden="true">
+              ▼
+            </ButtonIcon>
           </MoreButton>
         </MoreButtonContainer>
 
         {showAllContents && (
-          <AllContentsSection>
-            <AllContentsGrid>
+          <AllContentsSection role="region" aria-label="전체 콘텐츠 목록">
+            <AllContentsGrid role="list" aria-label="콘텐츠 카드 목록">
               {allContents.map((content) => (
                 <ContentCard
                   key={content.id}

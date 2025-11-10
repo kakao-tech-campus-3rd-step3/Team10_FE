@@ -21,10 +21,8 @@ export interface QueryOptions {
   cacheTime?: number;
 }
 
-// 쿼리 API 옵션 타입
 export interface QueryApiOptions<TData>
   extends Omit<UseQueryOptions<TData, AxiosError>, 'queryKey' | 'queryFn'> {
-  onError?: (error: AxiosError) => void;
   headers?: Record<string, string>;
 }
 export interface MutationOptions<TData = unknown, TVariables = unknown> {
@@ -33,7 +31,6 @@ export interface MutationOptions<TData = unknown, TVariables = unknown> {
   onSettled?: (data: TData | undefined, error: ApiError | null, variables: TVariables) => void;
 }
 
-// API 설정 관련 타입
 export interface ApiConfig {
   getBaseURL: () => string;
   timeout: number;
@@ -43,10 +40,8 @@ export interface ApiConfig {
   };
 }
 
-// HTTP 메서드 타입
 export type HttpMethod = 'post' | 'put' | 'delete' | 'patch';
 
-// 뮤테이션 API 옵션 타입
 export type MutationApiOptions<TData, TVariables> = Omit<
   UseMutationOptions<TData, AxiosError, TVariables>,
   'mutationFn'

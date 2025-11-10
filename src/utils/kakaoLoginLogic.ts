@@ -14,6 +14,14 @@ export const isNewUserError = (error: unknown): boolean => {
 };
 
 /**
+ * 중복 닉네임 에러인지 확인 (400 에러)
+ */
+export const isDuplicateNicknameError = (error: unknown): boolean => {
+  const axiosError = error as AxiosError;
+  return axiosError?.response?.status === 400;
+};
+
+/**
  * 회원가입 플로우를 사용해야 하는지 확인
  * sessionStorage에 닉네임이 저장되어 있는지 체크
  */
@@ -51,6 +59,9 @@ export const getErrorNavigationTarget = (error: unknown): string => {
   if (isNewUserError(error)) {
     return '/character-create';
   }
+  if (isDuplicateNicknameError(error)) {
+    return '/character-create';
+  }
   return '/login';
 };
 
@@ -70,7 +81,7 @@ export const getSuccessNavigationTarget = (): string => {
 export const getRedirectDelay = (target: string): number => {
   switch (target) {
     case '/home':
-      return 2000; // 회원가입 성공 시
+      return 1000; // 회원가입 성공 시
     case '/character-create':
       return 2000; // 신규 사용자
     case '/login':
@@ -82,11 +93,11 @@ export const getRedirectDelay = (target: string): number => {
 
 /**
  * 로그인 성공 시 지연 시간 결정
- * @param isRegistration - 회원가입 플로우인지 여부
+ * @param _isRegistration - 회원가입 플로우인지 여부 (현재 미사용, 즉시 이동)
  * @returns 지연 시간 (ms)
  */
-export const getLoginSuccessDelay = (isRegistration: boolean): number => {
-  return isRegistration ? 2000 : 3000;
+export const getLoginSuccessDelay = (_isRegistration: boolean): number => {
+  return 0; // 성공 시 즉시 이동
 };
 
 /**
@@ -107,6 +118,10 @@ export const getSuccessMessage = (isRegistration: boolean): string => {
 export const getErrorMessage = (error: unknown, kakaoErrorMessage?: string | null): string => {
   if (isNewUserError(error)) {
     return '새로운 계정이 생성되었습니다!';
+  }
+
+  if (isDuplicateNicknameError(error)) {
+    return '이미 사용중인 닉네임 입니다. 다른 닉네임으로 시도해주세요.';
   }
 
   if (kakaoErrorMessage) {

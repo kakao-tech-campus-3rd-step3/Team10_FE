@@ -5,6 +5,7 @@ import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { categoryContentsDetail } from './constants';
+import ReactMarkdown from 'react-markdown';
 
 export const CategoryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ export const CategoryDetailPage = () => {
   if (!category) {
     return (
       <Container $scrollable={true}>
-        <Header title="카테고리 상세" hasPrevPage={true} />
+        <Header title="카테고리 상세" hasPrevPage={true} backButtonTo={'/contents'} />
         <NavigationBar />
         <DetailPageContainer>
           <ErrorMessage>해당 카테고리를 찾을 수 없습니다.</ErrorMessage>
@@ -27,7 +28,7 @@ export const CategoryDetailPage = () => {
 
   return (
     <Container $scrollable={true}>
-      <Header title={category.title} hasPrevPage={true} />
+      <Header title={category.title} hasPrevPage={true} backButtonTo={'/contents'} />
       <NavigationBar />
       <DetailPageContainer>
         <CategoryHeader>
@@ -36,7 +37,9 @@ export const CategoryDetailPage = () => {
         </CategoryHeader>
 
         <CategoryBody>
-          <CategoryContent dangerouslySetInnerHTML={{ __html: category.content }} />
+          <CategoryContent>
+            <ReactMarkdown>{category.content}</ReactMarkdown>
+          </CategoryContent>
         </CategoryBody>
 
         <ActionButtonContainer>
@@ -53,7 +56,7 @@ const DetailPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 const CategoryHeader = styled.div`

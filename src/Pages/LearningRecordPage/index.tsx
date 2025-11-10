@@ -6,7 +6,7 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { RecordListSection } from './RecordListSection';
-import CharacterMain from '@/assets/HomeImg/character.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
 
 export const LearningRecordPage = () => {
   const [isIncorrect, setIsIncorrect] = useState<boolean>(true);
@@ -14,7 +14,7 @@ export const LearningRecordPage = () => {
     <Container $scrollable={true}>
       <Header title="학습 기록" hasPrevPage={true} />
       <NavigationBar />
-      <LearningRecordPageContainer>
+      <LearningRecordPageContainer role="main" aria-label="학습 기록 페이지">
         <SelectableButtonTabs
           isActive={isIncorrect}
           onSelect={setIsIncorrect}
@@ -23,8 +23,8 @@ export const LearningRecordPage = () => {
         />
         <RecordListSection isIncorrect={isIncorrect} />
       </LearningRecordPageContainer>
-      <CharacterSectionWrapper>
-        <Character src={CharacterMain} alt="캐릭터" />
+      <CharacterSectionWrapper role="region" aria-label="캐릭터">
+        <Character src={CharacterMain} alt="캐릭터 이미지" />
       </CharacterSectionWrapper>
     </Container>
   );

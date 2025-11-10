@@ -2,15 +2,16 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import NavigationBar from '@/Shared/components/NavigationBar';
 import { Container } from '@/Shared/components/Container';
-import CharacterMain from '@/assets/HomeImg/character.png';
-import QuizIcon from '@/assets/HomeImg/quiz.png';
-import NewsIcon from '@/assets/HomeImg/news.png';
+import CharacterMain from '@/assets/HomeImg/character.webp';
+import QuizIcon from '@/assets/HomeImg/quiz.webp';
+import NewsIcon from '@/assets/HomeImg/news.webp';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/Shared/components/Header';
 import { StatusActionBar } from '@/Shared/components/StatusActionBar';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import type { HomeResponse, PropensityResponse } from './types';
 import { toAbsoluteUrl } from '@/utils/urlUtils';
+import type { ReviewQuizResponse } from '@/Pages/QuizPage/types';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -26,8 +27,28 @@ export const HomePage = () => {
     isLoading: propensityIsLoading,
   } = useQueryApi<PropensityResponse>(['users', 'me', 'propensity'], '/users/me/propensity');
 
-  const handleInvestmentTest = () => {
-    navigate('/topics');
+  const { refetch: refetchReviewQuizzes } = useQueryApi<ReviewQuizResponse>(
+    ['quiz', 'review'],
+    '/quiz/review',
+    {
+      enabled: false,
+    },
+  );
+
+  const handleInvestmentTest = async () => {
+    const { data } = await refetchReviewQuizzes();
+
+    if (data?.reviewQuizzes && data.reviewQuizzes.length > 0) {
+      navigate(`/quiz/review/${data.reviewQuizzes[0].quizId}`, {
+        state: {
+          isReview: true,
+          reviewQuizzes: data.reviewQuizzes,
+          currentReviewIndex: 0,
+        },
+      });
+    } else {
+      navigate('/topics');
+    }
   };
   const goToTestPage = () => {
     navigate('/test');
@@ -36,27 +57,31 @@ export const HomePage = () => {
     navigate('/contents');
   };
 
-  if (homeIsLoading || propensityIsLoading) {
+  if (homeIsLoading) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
         <NavigationBar />
         <StatusActionBar />
         <HomePageContainer>
-          <LoadingMessage>홈 데이터를 불러오는 중...</LoadingMessage>
+          <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+            홈 데이터를 불러오는 중...
+          </LoadingMessage>
         </HomePageContainer>
       </Container>
     );
   }
 
-  if (homeError || !homeData || propensityError || !propensityData) {
+  if (homeError || !homeData) {
     return (
       <Container $scrollable={true}>
         <Header title="홈 화면" hasPrevPage={false} />
         <NavigationBar />
         <StatusActionBar />
         <HomePageContainer>
-          <ErrorMessage>홈 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+          <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+            홈 데이터를 불러오는데 실패했습니다.
+          </ErrorMessage>
         </HomePageContainer>
       </Container>
     );
@@ -64,8 +89,17 @@ export const HomePage = () => {
 
   const { characterUri, nickname } = homeData;
   const characterSrc = toAbsoluteUrl(characterUri) || CharacterMain;
-  const isTested = propensityData.isTested;
-  const testResult = propensityData.propensityKoreanName || '';
+
+  const isTested = propensityData?.isTested;
+  const testResult = propensityData?.propensityKoreanName || '';
+  let propensityText: string = '';
+  if (propensityIsLoading) {
+    propensityText = '나의 투자 성향을 불러오는 중...';
+  } else if (propensityError || !propensityData) {
+    propensityText = '나의 투자 성향을 불러오는데 실패했습니다';
+  } else if (!isTested) {
+    propensityText = '나의 투자 성향을 테스트 해보세요';
+  }
 
   return (
     <Container $scrollable={true}>
@@ -73,41 +107,54 @@ export const HomePage = () => {
       <NavigationBar />
       <StatusActionBar />
       <HomePageContainer>
-        <CharacterSectionWrapper>
+        <CharacterSectionWrapper role="region" aria-label="캐릭터 섹션">
           <Character
             key={characterSrc}
             src={characterSrc}
-            alt="캐릭터"
+            alt="사용자 캐릭터"
             onError={(e) => {
               e.currentTarget.src = CharacterMain;
             }}
           />
         </CharacterSectionWrapper>
-        <BottomSectionWrapper>
-          <NicknameBox>
-            <Nickname>{nickname}</Nickname>
+        <BottomSectionWrapper role="region" aria-label="사용자 정보 및 메뉴">
+          <NicknameBox role="group" aria-label="닉네임 정보">
+            <Nickname aria-label={`닉네임: ${nickname}`}>{nickname}</Nickname>
+            <NicknameChangeButton
+              type="button"
+              aria-label="닉네임 변경하기"
+              onClick={() => navigate('/nickname-edit')}
+            >
+              닉네임 변경하기
+            </NicknameChangeButton>
           </NicknameBox>
-          <InvestmentTypeBox>
+          <InvestmentTypeBox role="region" aria-label="투자 성향 정보">
             {isTested ? (
               <>
-                <InvestmentText>{testResult}</InvestmentText>
-                <RetestButton type="button" onClick={goToTestPage}>
+                <InvestmentText aria-label={`투자 성향: ${testResult}`}>
+                  {testResult}
+                </InvestmentText>
+                <RetestButton
+                  type="button"
+                  aria-label="투자 성향 테스트 다시하기"
+                  onClick={goToTestPage}
+                >
                   다시 테스트 하기
                 </RetestButton>
               </>
             ) : (
-              <TestButton type="button" onClick={goToTestPage}>
-                나의 투자 성향을 테스트 해보세요
+              <TestButton type="button" aria-label="투자 성향 테스트하기" onClick={goToTestPage}>
+                {propensityText}
               </TestButton>
             )}
           </InvestmentTypeBox>
-          <TwoButtonsWrapper>
-            <QuizButton onClick={handleInvestmentTest}>
-              <IconImg src={QuizIcon} alt="퀴즈 아이콘" />
+          <TwoButtonsWrapper role="group" aria-label="주요 메뉴">
+            <QuizButton onClick={handleInvestmentTest} aria-label="퀴즈 풀기">
+              <IconImg src={QuizIcon} alt="" aria-hidden="true" />
               <ButtonText>퀴즈 풀기</ButtonText>
             </QuizButton>
-            <FinanceButton onClick={goToContentsPage}>
-              <IconImg src={NewsIcon} alt="뉴스 아이콘" />
+            <FinanceButton onClick={goToContentsPage} aria-label="금융 콘텐츠 보기">
+              <IconImg src={NewsIcon} alt="" aria-hidden="true" />
               <ButtonText>금융 콘텐츠</ButtonText>
             </FinanceButton>
           </TwoButtonsWrapper>
@@ -168,6 +215,23 @@ const Nickname = styled.p`
   margin: 0;
 `;
 
+const NicknameChangeButton = styled.button`
+  background: transparent;
+  border: none;
+  font-family: ${theme.font.regular.fontFamily};
+  font-weight: ${theme.font.regular.fontWeight};
+  font-size: 12px;
+  color: ${theme.colors.text};
+  opacity: 0.7;
+  cursor: pointer;
+  margin-top: ${theme.spacing(1)};
+  padding: 0;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const InvestmentTypeBox = styled.div`
   width: 100%;
   padding: ${theme.spacing(2)};
@@ -193,7 +257,7 @@ const RetestButton = styled.button`
   border: none;
   font-family: ${theme.font.regular.fontFamily};
   font-weight: ${theme.font.regular.fontWeight};
-  font-size: 14px;
+  font-size: 12px;
   color: ${theme.colors.text};
   opacity: 0.85;
   cursor: pointer;

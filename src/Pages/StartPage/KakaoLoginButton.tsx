@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import KakaoLoginImg from '@/assets/StartPage/kakao_login_large_narrow.png';
+import KakaoLoginImg from '@/assets/StartPage/kakao_login_large_narrow.webp';
 import { useKakaoAuth } from '@/Apis/kakao';
 
 export const KakaoLoginButton = () => {

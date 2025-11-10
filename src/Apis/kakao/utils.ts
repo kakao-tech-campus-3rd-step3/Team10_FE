@@ -1,20 +1,34 @@
-// 카카오 로그인 관련 유틸리티 함수들
-
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
 const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
+/**
+ * 카카오 로그인 리다이렉트 URI 생성
+ * 현재 도메인을 기반으로 동적으로 생성 (커스텀 도메인 지원)
+ * @returns 카카오 로그인 리다이렉트 URI
+ */
+const getKakaoRedirectUri = (): string => {
+  if (KAKAO_REDIRECT_URI) {
+    return KAKAO_REDIRECT_URI;
+  }
+
+  const currentOrigin = window.location.origin;
+  return `${currentOrigin}/auth/kakao/callback`;
+};
 
 /**
  * 카카오 로그인 URL 생성
  * @returns 카카오 로그인 페이지 URL
  */
 export const getKakaoLoginUrl = (): string => {
-  if (!KAKAO_CLIENT_ID || !KAKAO_REDIRECT_URI) {
-    throw new Error('카카오 클라이언트 ID 또는 리다이렉트 URI가 설정되지 않았습니다.');
+  if (!KAKAO_CLIENT_ID) {
+    throw new Error('카카오 클라이언트 ID가 설정되지 않았습니다.');
   }
+
+  const redirectUri = getKakaoRedirectUri();
 
   const params = new URLSearchParams({
     client_id: KAKAO_CLIENT_ID,
-    redirect_uri: KAKAO_REDIRECT_URI,
+    redirect_uri: redirectUri,
     response_type: 'code',
   });
 

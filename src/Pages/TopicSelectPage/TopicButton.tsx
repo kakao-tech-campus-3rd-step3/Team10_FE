@@ -16,7 +16,14 @@ export const TopicButton = ({
   onClick,
 }: TopicButtonProps) => {
   return (
-    <Button onClick={isAble ? onClick : undefined} $isAble={isAble}>
+    <Button
+      onClick={isAble ? onClick : undefined}
+      $isAble={isAble}
+      type="button"
+      disabled={!isAble}
+      aria-label={`${title} 토픽 ${isAble ? `선택하기, 푼 문제 ${solvedQuizCount}개 중 전체 ${totalQuizCount}개` : '잠금 해제 필요'}`}
+      role="listitem"
+    >
       <Title $isAble={isAble}>{title}</Title>
       <Description $isAble={isAble}>
         {isAble

@@ -47,10 +47,17 @@ export const BookmarkIcon = ({
   };
 
   return (
-    <BookmarkBadge onClick={handleClick} $size={size}>
+    <BookmarkBadge
+      onClick={handleClick}
+      $size={size}
+      role="button"
+      aria-label={localBookmarkState ? '북마크 해제' : '북마크 추가'}
+      aria-pressed={localBookmarkState}
+    >
       <BookmarkImage
         src={localBookmarkState ? onBookmark : offBookmark}
-        alt={localBookmarkState ? 'on bookmark' : 'off bookmark'}
+        alt=""
+        aria-hidden="true"
         $size={size}
       />
     </BookmarkBadge>

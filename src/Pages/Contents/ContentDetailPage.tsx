@@ -5,6 +5,7 @@ import { Container } from '@/Shared/components/Container';
 import { Header } from '@/Shared/components/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { detailContents } from './constants';
+import ReactMarkdown from 'react-markdown';
 
 export const ContentDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ export const ContentDetailPage = () => {
   if (!content) {
     return (
       <Container $scrollable={true}>
-        <Header title="컨텐츠 상세" hasPrevPage={true} />
+        <Header title="컨텐츠 상세" hasPrevPage={true} backButtonTo={'/contents'} />
         <NavigationBar />
         <DetailPageContainer>
           <ErrorMessage>해당 컨텐츠를 찾을 수 없습니다.</ErrorMessage>
@@ -27,7 +28,7 @@ export const ContentDetailPage = () => {
 
   return (
     <Container $scrollable={true}>
-      <Header title={content.title} hasPrevPage={true} />
+      <Header title={content.title} hasPrevPage={true} backButtonTo={'/contents'} />
       <NavigationBar />
       <DetailPageContainer>
         <ContentHeader $backgroundColor={content.backgroundColor}>
@@ -41,7 +42,9 @@ export const ContentDetailPage = () => {
         </ContentHeader>
 
         <ContentBody>
-          <ContentText dangerouslySetInnerHTML={{ __html: content.content }} />
+          <ContentText>
+            <ReactMarkdown>{content.content}</ReactMarkdown>
+          </ContentText>
         </ContentBody>
 
         <ActionButtonContainer>
@@ -63,7 +66,7 @@ const DetailPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  min-height: 100vh;
+  flex: 1;
 `;
 
 const ContentHeader = styled.div<{ $backgroundColor: string }>`
@@ -104,7 +107,6 @@ const ContentText = styled.div`
   font-size: 16px;
   line-height: 1.8;
   color: ${theme.colors.text};
-  white-space: pre-line;
 `;
 
 const ActionButtonContainer = styled.div`

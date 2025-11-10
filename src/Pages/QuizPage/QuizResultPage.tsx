@@ -11,26 +11,53 @@ import { queryClient } from '@/Apis/queryClient';
 export const QuizResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { topicId } = useParams<{ topicId: string }>();
+  const { topicId } = useParams<{ topicId?: string }>();
 
-  const { selectedAnswer, isCorrect, quizData } = location.state as QuizResultState;
+  const {
+    selectedAnswer,
+    isCorrect,
+    quizData,
+    isReview,
+    reviewQuizzes,
+    currentReviewIndex,
+    currentPage,
+    totalQuizCount,
+  } = location.state as QuizResultState & {
+    currentPage?: number;
+    totalQuizCount?: number;
+  };
 
-  const isRecordPage = topicId === 'review' || topicId === 'bookmark';
+  const isRecordPage = topicId === 'wrong' || topicId === 'bookmark';
+  const isReviewMode = isReview === true;
 
+  const currentPageForQuery = currentPage ?? 0;
   const { data: quizListData } = useQueryApi<QuizListResponse>(
-    ['topics', topicId || ''],
-    `/topics/${topicId || ''}`,
-    { enabled: !isRecordPage },
+    ['topics', topicId || '', currentPageForQuery],
+    `/topics/${topicId || ''}?page=${currentPageForQuery}&size=10`,
+    { enabled: !isRecordPage && !isReviewMode },
+  );
+
+  const nextPageIndex = currentPageForQuery + 1;
+  const PAGE_SIZE = 10;
+  const totalPages = totalQuizCount ? Math.ceil(totalQuizCount / PAGE_SIZE) : 0;
+  const hasNextPage = nextPageIndex < totalPages;
+
+  const { data: nextPageQuizListData } = useQueryApi<QuizListResponse>(
+    ['topics', topicId || '', nextPageIndex],
+    `/topics/${topicId || ''}?page=${nextPageIndex}&size=10`,
+    { enabled: !isRecordPage && !isReviewMode && hasNextPage },
   );
 
   const handleBookmarkChange = (quizId: number) => {
     queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
-    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+    if (topicId) {
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
 
   if (!quizData) {
     return (
-      <Container>
+      <Container $hasTopNav={false}>
         <ErrorMessage>퀴즈 결과를 불러올 수 없습니다.</ErrorMessage>
       </Container>
     );
@@ -40,25 +67,82 @@ export const QuizResultPage = () => {
     quizData;
 
   const quizzes = quizListData?.quizzes || [];
-  const nextQuiz = findNextQuiz(quizzes, quizId);
+
+  let nextQuiz = !isReviewMode ? findNextQuiz(quizzes, quizId) : null;
+
+  const isLastInCurrentPage = quizzes.length > 0 && quizzes[quizzes.length - 1]?.quizId === quizId;
+
+  if (
+    !nextQuiz &&
+    !isReviewMode &&
+    isLastInCurrentPage &&
+    hasNextPage &&
+    nextPageQuizListData &&
+    nextPageQuizListData.quizzes &&
+    nextPageQuizListData.quizzes.length > 0
+  ) {
+    nextQuiz = nextPageQuizListData.quizzes[0];
+  }
+
+  let nextReviewQuiz = null;
+  if (isReviewMode && reviewQuizzes && currentReviewIndex !== undefined) {
+    const nextIndex = currentReviewIndex + 1;
+    if (nextIndex < reviewQuizzes.length) {
+      nextReviewQuiz = reviewQuizzes[nextIndex];
+    }
+  }
 
   const handleNextQuestion = () => {
-    const nextPath = getNextQuizPath(Number(topicId), nextQuiz?.quizId || null);
-    navigate(nextPath);
+    if (isReviewMode && nextReviewQuiz) {
+      navigate(`/quiz/review/${nextReviewQuiz.quizId}`, {
+        state: {
+          isReview: true,
+          reviewQuizzes,
+          currentReviewIndex: currentReviewIndex! + 1,
+        },
+      });
+    } else if (!isReviewMode && nextQuiz) {
+      const nextPath = getNextQuizPath(Number(topicId), nextQuiz.quizId);
+
+      const currentPageIndex = currentPage ?? 0;
+      const isNextQuizInNextPage =
+        nextPageQuizListData?.quizzes?.some((q) => q.quizId === nextQuiz.quizId) ?? false;
+      const nextPageForState = isNextQuizInNextPage ? currentPageIndex + 1 : currentPageIndex;
+
+      navigate(nextPath, {
+        state: {
+          currentPage: nextPageForState,
+          topicName: location.state?.topicName,
+          totalQuizCount: totalQuizCount,
+        },
+      });
+    }
   };
 
   const handleBackToList = () => {
-    if (isRecordPage) {
+    if (isReviewMode) {
+      navigate('/topics');
+      queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
+    } else if (isRecordPage) {
       navigate('/record');
-      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'review'] });
+      queryClient.invalidateQueries({ queryKey: ['learningRecord', 'wrong'] });
       queryClient.invalidateQueries({ queryKey: ['learningRecord', 'bookmark'] });
     } else {
-      navigate(`/topics/${topicId}/quizzes`);
-      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+      const currentPageFromState = location.state?.currentPage ?? 0;
+      navigate(`/topics/${topicId}/quizzes`, {
+        state: {
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
+          currentPage: currentPageFromState,
+        },
+      });
     }
   };
+
+  const isLastReviewQuiz = isReviewMode && !nextReviewQuiz;
+
   return (
-    <Container $scrollable>
+    <Container $scrollable $hasTopNav={false}>
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
@@ -109,14 +193,23 @@ export const QuizResultPage = () => {
         </ExplanationContainer>
       </ResultContainer>
       <ButtonsWrapper>
-        {!isRecordPage && !nextQuiz && <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>}
+        {!isReviewMode && !isRecordPage && !nextQuiz && (
+          <LastQuizMessage>마지막 문제입니다!</LastQuizMessage>
+        )}
+        {isReviewMode && isLastReviewQuiz && (
+          <LastQuizMessage>모든 복습 퀴즈를 완료했습니다!</LastQuizMessage>
+        )}
         <ButtonRow>
-          <ButtonContainer onClick={handleBackToList}>
-            <QuizConfirmButton text="목록 보기" />
-          </ButtonContainer>
-          {!isRecordPage && (
-            <ButtonContainer onClick={nextQuiz ? handleNextQuestion : undefined}>
-              <QuizConfirmButton text="다음 문제" disabled={!nextQuiz} />
+          {(!isReviewMode || (isReviewMode && isLastReviewQuiz)) && (
+            <ButtonContainer onClick={handleBackToList}>
+              <QuizConfirmButton
+                text={isReviewMode && isLastReviewQuiz ? '토픽 선택하기' : '목록 보기'}
+              />
+            </ButtonContainer>
+          )}
+          {((!isRecordPage && !isReviewMode && nextQuiz) || (isReviewMode && nextReviewQuiz)) && (
+            <ButtonContainer onClick={handleNextQuestion}>
+              <QuizConfirmButton text="다음 문제" />
             </ButtonContainer>
           )}
         </ButtonRow>

@@ -4,13 +4,12 @@ import MyPage from '@/Pages/MyPage';
 import SharingPage from '@/Pages/MyPage/SharingPage';
 import SplashPage from '@/Pages/StartPage/SplashPage';
 import LoginPage from '@/Pages/StartPage/LoginPage';
-import CharacterCreatePage from '@/Pages/StartPage/CharacterCreatePage';
+import { CharacterCreatePage } from '@/Pages/StartPage/CharacterCreatePage';
 import { KakaoCallbackPage } from '@/Pages/StartPage/KakaoCallbackPage';
 import HomePage from '@/Pages/HomePage';
 import QuizSolvePage from '@/Pages/QuizPage/QuizSolvePage';
 import QuizResultPage from '@/Pages/QuizPage/QuizResultPage';
 import { RankPage } from '@/Pages/RankPage';
-import ApiTestPage from '@/Pages/Dev/ApiTestPage';
 import TestPage from '@/Pages/TestPage/TestPage';
 import TestResultPage from '@/Pages/TestPage/TestResultPage';
 import { LearningRecordPage } from '@/Pages/LearningRecordPage';
@@ -70,6 +69,22 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: '/quiz/review/:quizId',
+    element: (
+      <ProtectedRoute>
+        <QuizSolvePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/quiz/review/:quizId/result',
+    element: (
+      <ProtectedRoute>
+        <QuizResultPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/mypage',
     element: (
       <ProtectedRoute>
@@ -93,7 +108,6 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  { path: '/dev/api-test', element: <ApiTestPage /> },
   {
     path: '/test',
     element: (
@@ -164,6 +178,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <CustomizePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/nickname-edit',
+    element: (
+      <ProtectedRoute>
+        <CharacterCreatePage mode="edit" />
       </ProtectedRoute>
     ),
   },

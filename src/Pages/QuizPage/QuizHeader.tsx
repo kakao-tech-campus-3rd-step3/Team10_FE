@@ -37,9 +37,9 @@ export const QuizHeader = ({
 }: QuizHeaderProps) => {
   const difficultyLabel = toKoreanDifficulty(difficultyLevel);
   return (
-    <HeaderContainer className={className}>
+    <HeaderContainer className={className} role="region" aria-label="퀴즈 문제 정보">
       <QuestionNumberContainer>
-        <QuestionNumber>문제 {questionOrder}</QuestionNumber>
+        <QuestionNumber aria-label={`문제 ${questionOrder}`}>문제 {questionOrder}</QuestionNumber>
         {quizId && (
           <BookmarkIcon
             quizId={quizId}
@@ -50,9 +50,15 @@ export const QuizHeader = ({
         )}
       </QuestionNumberContainer>
       <QuestionTextContainer>
-        <QuestionText>{questionText}</QuestionText>
+        <QuestionText role="heading" aria-level={2}>
+          {questionText}
+        </QuestionText>
       </QuestionTextContainer>
-      {difficultyLabel && <DifficultyText>(난이도 : {difficultyLabel})</DifficultyText>}
+      {difficultyLabel && (
+        <DifficultyText aria-label={`난이도: ${difficultyLabel}`}>
+          (난이도 : {difficultyLabel})
+        </DifficultyText>
+      )}
     </HeaderContainer>
   );
 };

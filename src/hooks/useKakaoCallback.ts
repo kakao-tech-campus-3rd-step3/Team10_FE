@@ -17,6 +17,7 @@ import {
   getErrorMessage,
   getStatusFromError,
   getRedirectDelay,
+  isDuplicateNicknameError,
 } from '@/utils/kakaoLoginLogic';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
@@ -51,9 +52,10 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
     setStatus('error');
     setMessage(errorMessage);
 
-    const delay = getRedirectDelay('/login');
+    const navigationTarget = error ? getErrorNavigationTarget(error) : '/login';
+    const delay = getRedirectDelay(navigationTarget);
     timeout.current = setTimeout(() => {
-      navigate('/login');
+      navigate(navigationTarget);
     }, delay);
   };
 
@@ -61,20 +63,24 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
    * 회원가입 처리
    */
   const handleRegistration = async (code: string, nickname: string) => {
-    const result = await registerWithCode({ code, nickname });
+    try {
+      const result = await registerWithCode({ code, nickname });
 
-    if (result.accessToken) {
-      setAccessToken(result.accessToken, 7);
-      clearSavedNickname();
+      if (result.accessToken) {
+        setAccessToken(result.accessToken, 7);
+        clearSavedNickname();
 
-      const isRegistration = true;
-      setStatus('success');
-      setMessage(getSuccessMessage(isRegistration));
+        const isRegistration = true;
+        setStatus('success');
+        setMessage(getSuccessMessage(isRegistration));
 
-      const delay = getLoginSuccessDelay(isRegistration);
-      timeout.current = setTimeout(() => {
-        navigate('/home');
-      }, delay);
+        const delay = getLoginSuccessDelay(isRegistration);
+        timeout.current = setTimeout(() => {
+          navigate('/home');
+        }, delay);
+      }
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -106,12 +112,13 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
       return;
     }
 
+    const savedNickname = getSavedNickname();
+    const isRegistrationFlow = savedNickname !== null;
+
     try {
       isProcessing.current = true;
       setStatus('loading');
       setMessage('로그인 처리 중...');
-
-      const savedNickname = getSavedNickname(); // 순수 함수 사용
 
       if (savedNickname) {
         await handleRegistration(authorizationCode, savedNickname);
@@ -127,7 +134,15 @@ export const useKakaoCallback = (): UseKakaoCallbackReturn => {
 
       const statusType = getStatusFromError(error);
       const errorMessage = getErrorMessage(error);
-      const navigationTarget = getErrorNavigationTarget(error);
+
+      // 닉네임 중복 에러인 경우 alert 표시
+      if (isDuplicateNicknameError(error)) {
+        alert(errorMessage);
+      }
+
+      const navigationTarget = isRegistrationFlow
+        ? '/character-create'
+        : getErrorNavigationTarget(error);
       const delay = getRedirectDelay(navigationTarget);
 
       setStatus(statusType);

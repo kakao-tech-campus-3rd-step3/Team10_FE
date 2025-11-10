@@ -1,29 +1,36 @@
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import Rank1 from '@/assets/RankImg/first.png';
-import Rank2 from '@/assets/RankImg/second.png';
-import Rank3 from '@/assets/RankImg/third.png';
+import Rank1 from '@/assets/RankImg/first.webp';
+import Rank2 from '@/assets/RankImg/second.webp';
+import Rank3 from '@/assets/RankImg/third.webp';
 
 export const ChracterBox = ({
   $rank,
   name,
   score,
+  kongSkinUrl,
 }: {
   $rank: number;
   name: string;
   score: number;
+  kongSkinUrl: string;
 }) => {
   const rankIconMap: Record<number, string> = {
     1: Rank1,
     2: Rank2,
     3: Rank3,
   };
+
+  const displayName = name.length > 4 ? `${name.slice(0, 4)}...` : name;
+
   return (
     <Container $rank={$rank}>
       <RankIcon $rank={$rank} src={rankIconMap[$rank]} alt={`${$rank} rank`} />
-      <ImageContainer $rank={$rank} />
+      <ImageWrapper $rank={$rank}>
+        <ImageContainer $rank={$rank} src={kongSkinUrl} alt="kong skin" />
+      </ImageWrapper>
       <InfoContainer $rank={$rank}>
-        <Name $rank={$rank}>{name}</Name>
+        <Name $rank={$rank}>{displayName}</Name>
         <Score $rank={$rank}>{score}</Score>
       </InfoContainer>
     </Container>
@@ -42,7 +49,7 @@ const Container = styled.div<{ $rank: number }>`
   flex: 1;
   min-width: 0;
 `;
-const ImageContainer = styled.div<{ $rank: number }>`
+const ImageWrapper = styled.div<{ $rank: number }>`
   width: ${({ $rank }) => ($rank === 1 ? '28vw' : '24vw')};
   max-width: ${({ $rank }) => ($rank === 1 ? '180px' : '160px')};
   min-width: ${({ $rank }) => ($rank === 1 ? '92px' : '80px')};
@@ -52,6 +59,16 @@ const ImageContainer = styled.div<{ $rank: number }>`
   background-color: ${({ $rank }) =>
     $rank === 1 ? '#AABCEC' : $rank === 2 ? '#B4B6BC' : '#FEBAC7'};
   border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  position: relative;
+`;
+
+const ImageContainer = styled.img<{ $rank: number }>`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: scale(1.5) translateY(16px);
 `;
 const InfoContainer = styled.div<{ $rank: number }>`
   width: ${({ $rank }) => ($rank === 1 ? '28vw' : '24vw')};

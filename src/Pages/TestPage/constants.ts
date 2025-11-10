@@ -1,3 +1,9 @@
+import ActiveInvestmentTypeImg from '@/assets/TestPage/Active_investment_type.webp';
+import AttackInvestmentTypeImg from '@/assets/TestPage/Attack_investment_type.webp';
+import RiskNeutralTypeImg from '@/assets/TestPage/Risk_neutral_type.webp';
+import SafetySeekingTypeImg from '@/assets/TestPage/Safety_seeking_type.webp';
+import StableTypeImg from '@/assets/TestPage/Stable_type.webp';
+
 export const Q1 = ['19세 이하', '20세~40세', '41세~50세', '51세~60세', '61세 이상'] as const;
 export const Q2 = [
   '6개월 이내',
@@ -51,13 +57,35 @@ export const Q7_SCORES = mapScores(Q7, [-6, 6, 12, 18]);
 
 export const DESCRIPTIONS: Record<string, string> = {
   안정형:
-    '“예금이나 적금 수준의 수익률을 기대하며, 투자원금에 손실이 발생하는 것을 원하지 않는다. 원금손실의 우려가 없는 상품에 투자하는 것이 바람직하다.”',
+    `🛡️ 원금 사수! 안정형\n\n` +
+    `수익이 낮아도 원금을 잃는 것은 절대 싫어요. 안전한 예금, 적금이 가장 마음 편해요.\n` +
+    `(추천 방향: 정기예금, 적금, 국채)`,
+
   안정추구형:
-    '“투자원금의 손실위험은 최소화하고, 이자소득이나 배당소득 수준의 안정적인 투자를 목표로 한다. 다만 수익을 위해 단기적인 손실을 수용할 수 있으며, 예·적금보다 높은 수익을 위해 자산 중의 일부를 변동성 높은 상품에 투자할 의향이 있다. 채권형 금융상품이 적당하다.”',
+    `🌱 차곡차곡! 안정추구형\n\n` +
+    `원금은 최대한 지키면서, 예금보다 조금 더 높은 수익을 원해요. 약간의 위험은 감수할 수 있어요.\n` +
+    `(추천 방향: 채권, 배당주 펀드, 우량주)`,
+
   위험중립형:
-    '“투자에는 그에 상응하는 투자위험이 있음을 충분히 인식하고 있으며, 예·적금보다 높은 수익을 기대할 수 있다면 일정수준의 손실위험을 감수할 수 있다. 적립식펀드나 주가연동상품처럼 중위험 펀드로 분류되는 상품을 선택하는 것이 좋다.”',
+    `⚖️ 균형 추구! 위험중립형\n\n` +
+    `예금보다 높은 수익을 원하며, 이를 위해 어느 정도의 손실 위험은 감수할 수 있어요. 위험과 수익의 균형이 중요해요.\n` +
+    `(추천 방향: 혼합형 펀드, 적립식 투자)`,
+
   적극투자형:
-    '“투자원금의 보전보다는 위험을 감내하더라도 높은 수준의 투자수익을 추구한다. 투자자금의 상당 부분을 주식, 주식형펀드 또는 파생상품 등의 위험자산에 투자할 의향이 있다. 국내외 주식형펀드와 원금비보장형 주가연계증권(ELS) 등 고수익·고위험 상품에 투자할 수 있다.”',
+    `📈 고수익 희망! 적극투자형\n\n` +
+    `원금을 지키는 것보다 높은 수익을 내는 것이 더 중요해요. 큰 손실 위험을 감수하더라도 주식 비중이 높은 곳에 투자할 수 있어요.\n` +
+    `(추천 방향: 주식형 펀드, 성장주)`,
+
   공격투자형:
-    '“시장평균수익률을 훨씬 넘어서는 높은 수준의 투자수익을 추구하며, 이를 위해 자산가치의 변동에 따른 손실위험을 적극 수용할 수 있다. 투자자금 대부분을 주식, 주식형펀드 또는 파생상품 등의 위험자산에 투자할 의향이 있다. 주식 비중이 70% 이상인 고위험 펀드가 적합하고, 자산의 10% 정도는 직접투자(주식)도 고려해볼 만하다.”',
+    `🚀 과감하게! 공격투자형\n\n` +
+    `시장 평균을 훨씬 넘는 고수익을 목표로 해요. 이를 위해 자산 가치가 크게 변동하는 매우 큰 위험도 적극 감수할 수 있어요.\n` +
+    `(추천 방향: 주식 직접투자, 고위험/고수익 펀드)`,
+};
+
+export const RESULT_IMAGES: Record<string, string> = {
+  안정형: StableTypeImg,
+  안정추구형: SafetySeekingTypeImg,
+  위험중립형: RiskNeutralTypeImg,
+  적극투자형: ActiveInvestmentTypeImg,
+  공격투자형: AttackInvestmentTypeImg,
 };

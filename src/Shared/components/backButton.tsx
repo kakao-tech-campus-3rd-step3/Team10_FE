@@ -6,6 +6,8 @@ type BackButtonProps = {
   color?: string; // 아이콘 색상(hex/rgb 등). 미지정 시 theme.colors.text
   className?: string;
   ariaLabel?: string; // 접근성 라벨 (기본: "뒤로가기")
+  to?: string | number; // 이동할 경로. 미지정 시 navigate(-1)로 뒤로가기
+  state?: unknown; // navigate 시 전달할 state
 };
 
 export const BackButton = ({
@@ -13,10 +15,22 @@ export const BackButton = ({
   color,
   className,
   ariaLabel = '뒤로가기',
+  to,
+  state,
 }: BackButtonProps) => {
   const navigate = useNavigate();
   const onClick = () => {
-    navigate(-1);
+    if (to === undefined) {
+      navigate('/home');
+      return;
+    }
+    if (typeof to === 'number') {
+      navigate(to);
+    } else if (to === '-1') {
+      navigate(-1);
+    } else {
+      navigate(to, { state });
+    }
   };
   return (
     <IconButton type="button" onClick={onClick} className={className} aria-label={ariaLabel}>
@@ -58,4 +72,4 @@ const ArrowLeftIcon = ({ size, color }: { size: number; color?: string }) => {
       />
     </svg>
   );
-}
+};

@@ -3,18 +3,27 @@ import QuestionButton from './QuestionButton';
 import QuizConfirmButton from './QuizConfirmButton';
 import QuizHeader from './QuizHeader';
 import { Container } from '@/Shared/components/Container';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryApi } from '@/Apis/useQueryApi';
 import { usePostApi } from '@/Apis/useMutationApi';
 import { useState } from 'react';
-import type { QuizData, QuizSubmitRequest } from './types';
+import type { QuizData, QuizSubmitRequest, ReviewQuiz } from './types';
 import Header from '@/Shared/components/Header';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const QuizSolvePage = () => {
   const navigate = useNavigate();
-  const { topicId, quizId } = useParams<{ topicId: string; quizId: string }>();
+  const location = useLocation();
+  const { topicId, quizId } = useParams<{ topicId?: string; quizId: string }>();
   const queryClient = useQueryClient();
+
+  const isReview = location.pathname.startsWith('/quiz/review');
+  const reviewState = location.state as {
+    isReview?: boolean;
+    reviewQuizzes?: ReviewQuiz[];
+    currentReviewIndex?: number;
+    from?: string;
+  } | null;
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | boolean | number | null>(null);
 
@@ -24,7 +33,9 @@ export const QuizSolvePage = () => {
     isLoading,
   } = useQueryApi<QuizData>(['quiz', quizId || ''], `/quiz/${quizId || ''}`);
 
-  const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(`/quiz/${quizId}/submit`);
+  const submitUrl = isReview ? `/quiz/review/${quizId}` : `/quiz/${quizId}/submit`;
+
+  const submitQuizMutation = usePostApi<void, QuizSubmitRequest>(submitUrl);
 
   const checkAnswer = (selectedAnswer: string | boolean | number, quizData: QuizData): boolean => {
     if (quizData.questionType === 'OX') {
@@ -52,11 +63,29 @@ export const QuizSolvePage = () => {
 
       await submitQuizMutation.mutateAsync({ isCorrect });
 
-      navigate(`/topics/${topicId}/quizzes/${quizId}/result`, {
+      queryClient.invalidateQueries({ queryKey: ['quiz', quizId || ''] });
+      queryClient.invalidateQueries({ queryKey: ['topics'] });
+      if (topicId) {
+        queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+      }
+      queryClient.invalidateQueries({ queryKey: ['quiz', 'review'] });
+      queryClient.invalidateQueries({ queryKey: ['attendanceStatus'] });
+
+      const resultPath = isReview
+        ? `/quiz/review/${quizId}/result`
+        : `/topics/${topicId}/quizzes/${quizId}/result`;
+
+      navigate(resultPath, {
         state: {
           selectedAnswer,
           isCorrect,
           quizData,
+          isReview: isReview || reviewState?.isReview,
+          reviewQuizzes: reviewState?.reviewQuizzes,
+          currentReviewIndex: reviewState?.currentReviewIndex,
+          currentPage: location.state?.currentPage,
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
         },
       });
     } catch {
@@ -70,26 +99,52 @@ export const QuizSolvePage = () => {
 
   const handleBookmarkChange = (quizId: number) => {
     queryClient.invalidateQueries({ queryKey: ['quiz', String(quizId)] });
-    queryClient.invalidateQueries({ queryKey: ['topics', topicId || ''] });
+    if (topicId) {
+      queryClient.invalidateQueries({ queryKey: ['topics', topicId] });
+    }
   };
 
   if (isLoading) {
     return (
-      <Container>
-        <LoadingMessage>퀴즈를 불러오는 중...</LoadingMessage>
+      <Container $hasTopNav={false} $hasHeader={true}>
+        <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+          퀴즈를 불러오는 중...
+        </LoadingMessage>
       </Container>
     );
   }
 
   if (error || !quizData) {
     return (
-      <Container>
-        <ErrorMessage>퀴즈를 불러오는데 실패했습니다.</ErrorMessage>
+      <Container $hasTopNav={false} $hasHeader={true}>
+        <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+          퀴즈를 불러오는데 실패했습니다.
+        </ErrorMessage>
       </Container>
     );
   }
 
-  const { questionTitle, difficultyLevel, questionOrder, questionType, questionData } = quizData;
+  const { questionTitle, difficultyLevel, questionOrder, questionType, questionData, topicName } =
+    quizData;
+  const headerTitle = isReview ? '복습 퀴즈' : topicName;
+
+  const backButtonPath =
+    reviewState?.from === 'record'
+      ? '/record'
+      : isReview
+        ? '/home'
+        : topicId
+          ? `/topics/${topicId}/quizzes`
+          : '/topics';
+
+  const backButtonState =
+    reviewState?.from === 'record' || isReview
+      ? undefined
+      : {
+          currentPage: location.state?.currentPage ?? 0,
+          topicName: location.state?.topicName,
+          totalQuizCount: location.state?.totalQuizCount,
+        };
 
   const renderQuestionContent = () => {
     switch (questionType) {
@@ -131,8 +186,13 @@ export const QuizSolvePage = () => {
   };
 
   return (
-    <Container $scrollable>
-      <Header title={quizData.topicName} hasPrevPage={true} />
+    <Container $scrollable $hasTopNav={false} $hasHeader={true}>
+      <Header
+        title={headerTitle}
+        hasPrevPage={true}
+        backButtonTo={backButtonPath}
+        backButtonState={backButtonState}
+      />
       <Space />
       <QuizHeader
         questionOrder={questionOrder}
@@ -143,7 +203,12 @@ export const QuizSolvePage = () => {
         onBookmarkChange={handleBookmarkChange}
       />
       {renderQuestionContent()}
-      <ConfirmButtonContainer onClick={handleConfirm}>
+      <ConfirmButtonContainer
+        onClick={handleConfirm}
+        role="button"
+        aria-label="답안 제출하기"
+        tabIndex={0}
+      >
         <QuizConfirmButton
           text={submitQuizMutation.isPending ? '제출 중...' : '제출하기'}
           disabled={submitQuizMutation.isPending}

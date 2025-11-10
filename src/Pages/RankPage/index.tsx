@@ -33,7 +33,9 @@ export const RankPage = () => {
         <NavigationBar />
         <StatusActionBar />
         <RankPageContainer>
-          <LoadingMessage>랭킹 데이터를 불러오는 중...</LoadingMessage>
+          <LoadingMessage role="status" aria-live="polite" aria-label="로딩 중">
+            랭킹 데이터를 불러오는 중...
+          </LoadingMessage>
         </RankPageContainer>
       </Container>
     );
@@ -46,7 +48,9 @@ export const RankPage = () => {
         <NavigationBar />
         <StatusActionBar />
         <RankPageContainer>
-          <ErrorMessage>랭킹 데이터를 불러오는데 실패했습니다.</ErrorMessage>
+          <ErrorMessage role="alert" aria-live="assertive" aria-label="오류 메시지">
+            랭킹 데이터를 불러오는데 실패했습니다.
+          </ErrorMessage>
         </RankPageContainer>
       </Container>
     );
@@ -57,7 +61,7 @@ export const RankPage = () => {
       <Header title="랭킹" hasPrevPage={true} />
       <NavigationBar />
       <StatusActionBar />
-      <RankPageContainer>
+      <RankPageContainer role="main" aria-label="랭킹 페이지">
         <SelectableButtonTabs
           isActive={isScoreRank}
           onSelect={setIsScoreRank}
@@ -69,7 +73,8 @@ export const RankPage = () => {
         <MyRankSection
           isScoreRank={isScoreRank}
           currentUser={rankingData.currentUser}
-          adjacentUsers={rankingData.adjacentUsers}
+          aboveUsers={rankingData.aboveUsers}
+          belowUsers={rankingData.belowUsers}
         />
       </RankPageContainer>
     </Container>

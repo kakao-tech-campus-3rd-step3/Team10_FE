@@ -2,29 +2,49 @@ import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import BackButton from './backButton';
 import { useNavigate } from 'react-router-dom';
-export const Header = ({ title, hasPrevPage }: { title: string; hasPrevPage: boolean }) => {
+
+type HeaderProps = {
+  title: string;
+  hasPrevPage: boolean;
+  backButtonTo?: string | number; // 백버튼이 이동할 경로. 미지정 시 BackButton 기본 동작
+  backButtonState?: unknown; // 백버튼 클릭 시 전달할 state
+};
+
+export const Header = ({ title, hasPrevPage, backButtonTo, backButtonState }: HeaderProps) => {
   const navigate = useNavigate();
   const onTitleClick = () => {
     navigate('/home');
   };
   return (
-    <Container>
-      {hasPrevPage && <BackButton />}
-      <Title onClick={onTitleClick}>{title}</Title>
+    <Container role="banner">
+      {hasPrevPage && <BackButton to={backButtonTo} state={backButtonState} />}
+      <Title onClick={onTitleClick} role="button" aria-label="홈으로 이동" tabIndex={0}>
+        {title}
+      </Title>
     </Container>
   );
 };
 export default Header;
 
 const Container = styled.header`
+  position: sticky;
+  top: 0;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
   height: ${theme.spacing(15)};
+  min-height: ${theme.spacing(15)};
+  max-height: ${theme.spacing(15)};
   padding: ${theme.spacing(5)};
   display: flex;
   align-items: center;
-  position: relative;
   background-color: ${theme.colors.background};
   border-bottom-left-radius: ${theme.spacing(5)};
   border-bottom-right-radius: ${theme.spacing(5)};
+  z-index: 10000;
+  will-change: top;
+  box-sizing: border-box;
+  flex-shrink: 0;
 `;
 const Title = styled.h1`
   color: ${theme.colors.text};

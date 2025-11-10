@@ -4,25 +4,27 @@ import type { RankingUser } from './types';
 export const MyRankSection = ({
   isScoreRank,
   currentUser,
-  adjacentUsers,
+  aboveUsers,
+  belowUsers,
 }: {
   isScoreRank: boolean;
   currentUser: RankingUser;
-  adjacentUsers: RankingUser[];
+  aboveUsers: RankingUser[];
+  belowUsers: RankingUser[];
 }) => {
-  const prev = adjacentUsers[0];
-  const next = adjacentUsers[1];
+  const above1 = aboveUsers?.[0] || null;
+  const above2 = aboveUsers?.[1] || null;
+  const below1 = belowUsers?.[0] || null;
+  const below2 = belowUsers?.[1] || null;
 
   const data = {
-    prevRank: prev?.rank ?? 0,
-    prevName: prev?.nickname ?? '',
-    prevScore: prev?.point ?? 0,
+    above1,
+    above2,
     myRank: currentUser.rank,
     myName: currentUser.nickname,
     myScore: currentUser.point,
-    nextRank: next?.rank ?? 0,
-    nextName: next?.nickname ?? '',
-    nextScore: next?.point ?? 0,
+    below1,
+    below2,
   };
 
   return <MyRank data={data} isScoreRank={isScoreRank} />;
